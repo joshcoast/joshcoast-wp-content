@@ -5,7 +5,7 @@ Tags: blocks, gutenberg, container, headline, grid, columns, page builder, wysiw
 Requires at least: 5.6
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,10 @@ Check out our [documentation](https://docs.generateblocks.com) for more informat
 To learn how to install GenerateBlocks Pro, check out our documentation [here](https://docs.generateblocks.com/article/installing-generateblocks-pro).
 
 == Changelog ==
+
+= 1.5.1 =
+* Fix: Filter editor.blockEdit breaking blocks
+* Fix: Tab buttons breaking when non-button siblings exist
 
 = 1.5.0 =
 * Feature: New Tabs block variation
