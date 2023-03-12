@@ -30,6 +30,7 @@ class GenerateBlocks_Pro_Tabs_Variation extends GenerateBlocks_Pro_Singleton {
 		add_action( 'generateblocks_block_one_time_css_data', [ $this, 'generate_css' ], 10, 3 );
 		add_action( 'generateblocks_block_css_data', [ $this, 'do_dynamic_css' ], 10, 3 );
 		add_filter( 'generateblocks_attr_container', [ $this, 'set_container_attributes' ], 10, 2 );
+		add_filter( 'generateblocks_attr_dynamic-button', [ $this, 'set_button_attributes' ], 10, 2 );
 		add_filter( 'generateblocks_after_container_open', [ $this, 'enqueue_scripts' ], 10, 2 );
 		add_filter( 'generateblocks_onboarding_user_meta_properties', [ $this, 'define_add_tab_item_onboarding_property' ], 10, 1 );
 	}
@@ -150,6 +151,26 @@ class GenerateBlocks_Pro_Tabs_Variation extends GenerateBlocks_Pro_Singleton {
 
 				if ( $settings['tabItemOpen'] ) {
 					$attributes['class'] .= ' gb-tabs__item-open';
+				}
+			}
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Set our Button block HTML attributes.
+	 *
+	 * @param array $attributes HTML attributes.
+	 * @param array $settings Block settings.
+	 */
+	public function set_button_attributes( $attributes, $settings ) {
+		if ( isset( $settings['variantRole'] ) ) {
+			if ( 'tab-button' === $settings['variantRole'] ) {
+				$attributes['class'] .= ' gb-tabs__button';
+
+				if ( $settings['tabItemOpen'] ) {
+					$attributes['class'] .= ' gb-block-is-current';
 				}
 			}
 		}

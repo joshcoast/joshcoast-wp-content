@@ -51,7 +51,9 @@ function joshcoastSearchResults($data) {
                 'post_type' => get_post_type(),
                 'title' => get_the_title(),
                 'permalink' => get_the_permalink(),
-                'authorName' => get_the_author()
+                'authorName' => get_the_author(),
+                'image' => get_the_post_thumbnail_url( 0, 'thumbnail' ),
+                'excerpt' => get_the_excerpt( 0 )
             ));
         }
     }

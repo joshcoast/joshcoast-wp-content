@@ -57,9 +57,15 @@ class Search {
                     ${searchResults.generalInfo.length ? '</ul>' : '' }
                 </div>
                 <div class="one-third">
-                    <h2>Clients</h2>
+                    <h2>Clients!</h2>
                     ${searchResults.client.length ? '<ul>' : `<p>No clients match that search. <a href="${ joshcoastData.root_url }/portfolio">View Full Portfolio</a></p>`}
-                    ${searchResults.client.map(item => `<li><a href='${item.permalink}'>${item.title}</a></li>`).join('')}
+                    ${searchResults.client.map(item => `
+                        <li>
+                            <a href='${item.permalink}'>${item.title} hi</a>
+                            <img src='${item.image}' />
+                            <p>${item.excerpt}</p>
+                        </li>
+                        `).join('')}
                     ${searchResults.client.length ? '</ul>' : '' }
                 </div>
                 <div class="one-third">

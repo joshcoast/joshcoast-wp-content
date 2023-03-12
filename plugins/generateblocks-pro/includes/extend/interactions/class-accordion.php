@@ -132,6 +132,10 @@ class GenerateBlocks_Pro_Block_Variant_Accordion extends GenerateBlocks_Pro_Sing
 	public function set_button_attributes( $attributes, $settings ) {
 		if ( isset( $settings['variantRole'] ) && 'accordion-toggle' === $settings['variantRole'] ) {
 			$attributes['class'] .= ' gb-accordion__toggle';
+
+			if ( $settings['accordionItemOpen'] ) {
+				$attributes['class'] .= ' gb-block-is-current';
+			}
 		}
 
 		return $attributes;
