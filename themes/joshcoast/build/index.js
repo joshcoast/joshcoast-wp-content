@@ -103,27 +103,27 @@ class Search {
             <div class="row">
                 <div class="one-third">
                     <h2>General Information</h2>
-                    ${searchResults.generalInfo.length ? '<ul>' : '<p>No General Information matches that search.</p>'}
-                    ${searchResults.generalInfo.map(item => `<li><a href='${item.permalink}'>${item.title}</a></li>`).join('')}
-                    ${searchResults.generalInfo.length ? '</ul>' : ''}
+                    ${searchResults.generalInfos.length ? '<ul>' : '<p>No General Information matches that search.</p>'}
+                    ${searchResults.generalInfos.map(item => `<li><a href='${item.permalink}'>${item.title}</a></li>`).join('')}
+                    ${searchResults.generalInfos.length ? '</ul>' : ''}
                 </div>
                 <div class="one-third">
                     <h2>Clients!</h2>
-                    ${searchResults.client.length ? '<ul>' : `<p>No clients match that search. <a href="${joshcoastData.root_url}/portfolio">View Full Portfolio</a></p>`}
-                    ${searchResults.client.map(item => `
+                    ${searchResults.clients.length ? '<ul>' : `<p>No clients match that search. <a href="${joshcoastData.root_url}/portfolio">View Full Portfolio</a></p>`}
+                    ${searchResults.clients.map(item => `
                         <li>
-                            <a href='${item.permalink}'>${item.title} hi</a>
+                            <a href='${item.permalink}'>${item.title}</a>
                             <img src='${item.image}' />
                             <p>${item.excerpt}</p>
                         </li>
                         `).join('')}
-                    ${searchResults.client.length ? '</ul>' : ''}
+                    ${searchResults.clients.length ? '</ul>' : ''}
                 </div>
                 <div class="one-third">
                     <h2>Blog</h2>
-                    ${searchResults.blog.length ? '<ul>' : `<p>No blogs match that search. <a href="${joshcoastData.root_url}/blog">View blog</a></p>`}
-                    ${searchResults.blog.map(item => `<li><a href='${item.permalink}'>${item.title}</a> ${item.post_type == 'post' ? `by ${item.authorName}` : ''} </li>`).join('')}
-                    ${searchResults.blog.length ? '</ul>' : ''}
+                    ${searchResults.blogs.length ? '<ul>' : `<p>No Notes match that search. <a href="${joshcoastData.root_url}/notes">View all Notes</a></p>`}
+                    ${searchResults.blogs.map(item => `<li><a href='${item.permalink}'>${item.title}</a> ${item.post_type == 'post' ? `by ${item.authorName}` : ''} </li>`).join('')}
+                    ${searchResults.blogs.length ? '</ul>' : ''}
                 </div>
             </div>
             `);

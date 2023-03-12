@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Custom Search Route
+ *
+ * The Big Idea Here is that we create an API that has perimeters for returning a json set of custom data.
+ * This end point will be used by javascript on the front end to pass it the term, get the json, and
+ * then display it.
+ *
+ * @perimeter term The search term we are searching for. Example: term=mysearchword
+ */
+
 add_action('rest_api_init', 'joshcoastRegisterSearch');
 
 function joshcoastRegisterSearch() {
@@ -10,6 +20,7 @@ function joshcoastRegisterSearch() {
         'callback' => 'joshcoastSearchResults'
     ));
 }
+
 // "$data" is our Parameter from the url in the API, you can name it whatever you want.
 function joshcoastSearchResults($data) {
     $mainQuery = new WP_Query(array(
@@ -24,39 +35,82 @@ function joshcoastSearchResults($data) {
 
     // Make an array that can sort our results into post types.
     $searchResults = array(
-        'generalInfo' => array(),
-        'client'   => array(),
-        'blog'        => array()
+        'generalInfos' => array(),
+        'clients'      => array(),
+        'blogs'        => array()
     );
 
     while($mainQuery->have_posts()) {
         $mainQuery->the_post();
         // Sort the post into post types.
         if ( get_post_type() == 'page' ) {
-            array_push($searchResults['generalInfo'], array(
-                'post_type' => get_post_type(),
-                'title' => get_the_title(),
-                'permalink' => get_the_permalink(),
+            array_push($searchResults['generalInfos'], array(
+                'post_type'  => get_post_type(),
+                'title'      => get_the_title(),
+                'permalink'  => get_the_permalink(),
                 'authorName' => get_the_author()
             ));
         } elseif ( get_post_type() == 'post' ) {
-            array_push($searchResults['blog'], array(
-                'post_type' => get_post_type(),
-                'title' => get_the_title(),
-                'permalink' => get_the_permalink(),
-                'authorName' => get_the_author()
+            array_push($searchResults['blogs'], array(
+                'post_type'  => get_post_type(),
+                'title'      => get_the_title(),
+                'permalink'  => get_the_permalink(),
+                'authorName' => get_the_author(),
+                'id'         => get_the_ID()
             ));
         } elseif ( get_post_type() == 'client' ) {
-            array_push($searchResults['client'], array(
-                'post_type' => get_post_type(),
-                'title' => get_the_title(),
-                'permalink' => get_the_permalink(),
+            array_push($searchResults['clients'], array(
+                'post_type'  => get_post_type(),
+                'title'      => get_the_title(),
+                'permalink'  => get_the_permalink(),
                 'authorName' => get_the_author(),
-                'image' => get_the_post_thumbnail_url( 0, 'thumbnail' ),
-                'excerpt' => get_the_excerpt( 0 )
+                'image'      => get_the_post_thumbnail_url( 0, 'thumbnail' ),
+                'excerpt'    => get_the_excerpt( 0 )
             ));
         }
     }
+
+    // If we have clients in the results, we want to include the related blog posts.
+    if ( $searchResults['clients']) {
+
+        // Build an array for each blog that was found that has arguments for the meta_query.
+        $programsMetaQuery = array('relation' => 'OR');
+
+        foreach($searchResults['blogs'] as $item ) {
+            array_push( $programsMetaQuery, array(
+                'key'     => 'related_blog_posts',
+                'compare' => 'LIKE',
+                'value'   => '"' . $item['id'] . '"'
+            ));
+        }
+
+        // Run the query that will find the related items.
+        $clientRelationshipQuery = new WP_Query(array(
+            'post_type'  => 'client',
+            'meta_query' => $programsMetaQuery
+        ));
+
+        while($clientRelationshipQuery->have_posts()) {
+            $clientRelationshipQuery->the_post();
+
+            if ( get_post_type() == 'client' ) {
+                array_push($searchResults['clients'], array(
+                    'post_type'  => get_post_type(),
+                    'title'      => get_the_title(),
+                    'permalink'  => get_the_permalink(),
+                    'authorName' => get_the_author(),
+                    'image'      => get_the_post_thumbnail_url( 0, 'thumbnail' ),
+                    'excerpt'    => get_the_excerpt( 0 )
+                ));
+            }
+        }
+
+        // Get rid of duplicates in clients.
+        $searchResults['clients'] = array_values( array_unique( $searchResults['clients'], SORT_REGULAR ) );
+    }
+
+
+
 
     return $searchResults;
 }
