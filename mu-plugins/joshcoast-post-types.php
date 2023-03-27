@@ -32,6 +32,10 @@ function client() {
 		'items_list_navigation' => __( 'Clients list navigation', 'joshcoast' ),
 		'filter_items_list'     => __( 'Filter Clients list', 'joshcoast' ),
 	);
+	$rewrite = [
+        'slug' => 'clients',
+		'with_front' => false,
+    ];
 	$args = array(
 		'label'                 => __( 'Client', 'joshcoast' ),
 		'description'           => __( 'A single client item.', 'joshcoast' ),
@@ -54,7 +58,8 @@ function client() {
 		'show_in_admin_bar'     => true,
 		'show_in_nav_menus'     => true,
 		'can_export'            => true,
-		'has_archive'           => true,
+		'has_archive'           => false,
+		'rewrite'               => $rewrite,
 		'exclude_from_search'   => false,
 		'publicly_queryable'    => true,
 		'capability_type'       => 'page',
