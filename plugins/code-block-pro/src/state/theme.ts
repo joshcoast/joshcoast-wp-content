@@ -1,5 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
-import create from 'zustand';
+import { useEffect, useState } from '@wordpress/element';
+import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { Attributes } from '../types';
 
@@ -15,7 +16,7 @@ type ThemeType = {
     previousLineNumbers?: boolean;
     updateThemeHistory: (settings: Partial<Attributes>) => void;
 };
-const path = '/wp/v2/settings';
+const path = '/code-block-pro/v1/settings';
 const getSettings = async (name: string) => {
     const allSettings = await apiFetch({ path });
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -81,3 +82,18 @@ export const useThemeStore = create<ThemeType>()(
         },
     ),
 );
+
+// const useThemeStoreReady =
+/* Hook useful for when you need to wait on the async state to hydrate */
+export const useThemeStoreReady = () => {
+    const [hydrated, setHydrated] = useState(useThemeStore.persist.hasHydrated);
+    useEffect(() => {
+        const unsubFinishHydration = useThemeStore.persist.onFinishHydration(
+            () => setHydrated(true),
+        );
+        return () => {
+            unsubFinishHydration();
+        };
+    }, []);
+    return hydrated;
+};

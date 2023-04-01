@@ -1,7 +1,7 @@
 import { useEffect, useRef } from '@wordpress/element';
 import { Theme } from 'shiki';
 import { useGlobalStore } from '../state/global';
-import { useThemeStore } from '../state/theme';
+import { useThemeStore, useThemeStoreReady } from '../state/theme';
 import { AttributesPropsAndSetter } from '../types';
 
 export const useDefaults = ({
@@ -32,6 +32,7 @@ export const useDefaults = ({
         previousDisablePadding,
         previousLineNumbers,
     } = useThemeStore();
+    const ready = useThemeStoreReady();
     const once = useRef(false);
 
     useEffect(() => {
@@ -106,5 +107,5 @@ export const useDefaults = ({
         requestAnimationFrame(() => {
             once.current = true;
         });
-    }, []);
+    }, [ready]);
 };

@@ -1740,6 +1740,10 @@ body .layout-grid > .article-content-col,
   margin-bottom: 80px;
 }
 
+.comment-content {
+  flex: 1;
+}
+
 .comment-form {
   display: grid;
   grid-column-gap: 15px;

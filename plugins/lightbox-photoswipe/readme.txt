@@ -3,8 +3,8 @@
 Contributors: awelzel
 Tags: attachments, images, gallery, lightbox, fancybox, photoswipe
 Requires at least: 5.3
-Tested up to: 6.1
-Stable tag: 5.0.21
+Tested up to: 6.2
+Stable tag: 5.0.30
 Donate link: https://paypal.me/ArnoWelzel
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -218,6 +218,22 @@ If you change any of the stylesheets or frontend scripts in `src/js` or `src/lib
 7. Example for the use in the frontend
 
 == Changelog ==
+
+= 5.0.30 =
+
+* Added options for maximum image width/height.
+
+= 5.0.23 =
+
+* Fixed missing header in backend settings.
+
+= 5.0.22 =
+
+* Update translations.
+
+PhotoSwipe 5 integration:
+
+* Added options to change background opacity and image padding.
 
 = 5.0.21 =
 
