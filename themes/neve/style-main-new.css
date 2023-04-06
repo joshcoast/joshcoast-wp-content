@@ -466,12 +466,10 @@ td {
   border-width: 4px;
 }
 
-.wp-block-separator.is-style-dots {
-  border-top: 4px dotted;
-}
-
 .wp-block-separator.is-style-dots::before {
-  content: none;
+  content: "";
+  border-top: 4px dotted;
+  display: block;
 }
 
 .alignfull {
@@ -1238,15 +1236,16 @@ form select {
   min-width: 45px;
   z-index: 1;
   --primarybtnborderwidth: var(--formfieldborderwidth);
-  --primarybtnbordercolor: var(--formfieldbordercolor);
   --primarybtnborderradius: var(--formfieldborderradius);
   --primarybtnpadding: var(--formfieldpadding);
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
   border-left: 0;
+  border-color: var(--formfieldbordercolor);
   position: relative;
   height: var(--height);
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .search-form .search-submit::before {
@@ -2167,7 +2166,6 @@ body.elementor-page .wrapper {
   z-index: 999900;
   visibility: hidden;
   display: flex;
-  transition: all 0.3s cubic-bezier(0.79, 0.14, 0.15, 0.86);
   height: 100vh;
   /* Close Button */
 }
@@ -2180,6 +2178,10 @@ body.elementor-page .wrapper {
 
 .header-menu-sidebar .navbar-toggle-wrapper button.navbar-toggle {
   position: relative;
+}
+
+.tcb {
+  transition: all 0.3s cubic-bezier(0.79, 0.14, 0.15, 0.86);
 }
 
 .header-menu-sidebar-bg {
@@ -2262,7 +2264,6 @@ body.elementor-page .wrapper {
 }
 
 .menu_sidebar_dropdown .header-menu-sidebar-inner {
-  transition: all 0.3s cubic-bezier(0.79, 0.14, 0.15, 0.86);
   max-height: 0;
   padding: 0;
 }
@@ -2272,7 +2273,6 @@ body.elementor-page .wrapper {
   bottom: 0;
   right: 0;
   opacity: 0;
-  transition: all 0.3s cubic-bezier(0.79, 0.14, 0.15, 0.86);
 }
 
 .menu_sidebar_full_canvas .header-menu-sidebar-inner {
