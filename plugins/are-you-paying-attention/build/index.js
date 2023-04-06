@@ -119,38 +119,87 @@ __webpack_require__.r(__webpack_exports__);
 // The WP Scripts we are using has made a way to recognise this import at a global level
 // and automatically grab the right component. So, no need to install this component with npm.
 // BUT we need to tell WordPress to load the components js file in the global scope.
-// SO check out plugins/are-you-paying-attention/index.php and the wp_register_script for 'wp-element'
+// SO check out plugins/are-you-paying-attention/index.php and the wp_register_script for 'wp-element'.
 
+
+// these wierd () just make it so the function get's called without a name.
+// The variables in this function are scoped to only this function.
+(function () {
+  let locked = false;
+  wp.data.subscribe(function () {
+    const results = wp.data.select("core/block-editor").getBlocks().filter(function (block) {
+      return block.name == "ourplugin/are-you-paying-attention" && block.attributes.correctAnswer == undefined;
+    });
+    if (results.length && locked == false) {
+      locked = true;
+      // Gray out the save/update button.
+      wp.data.dispatch("core/editor").lockPostSaving("noanswer");
+    }
+    if (!results.length && locked) {
+      locked = false;
+      // Allow the save/update button.
+      wp.data.dispatch("core/editor").unlockPostSaving("noanswer");
+    }
+  });
+})();
 wp.blocks.registerBlockType("ourplugin/are-you-paying-attention", {
   title: "Are You Paying Attention?",
   icon: "smiley",
   category: "common",
   attributes: {
-    skyColor: {
+    question: {
       type: "string"
     },
-    grassColor: {
-      type: "string"
+    answers: {
+      type: "array",
+      default: [""]
+    },
+    correctAnswer: {
+      type: "number",
+      default: undefined
     }
   },
   // The admin edit screen.
   edit: EditComponent,
+  // Don't save to the database, instead we will pass the props to PHP in index.php.
+  // We are doing this so when we edit the "front end" we won't need to re-save every post.
   save: function (props) {
     return null;
   }
 });
 
 // You can name this edit function anything, but in react you do want to use an
-// Uppercase at the start for components.
+// Uppercase at the start for components. This is what shows in the edit screen.
 function EditComponent(props) {
-  function updateSkyColor(event) {
+  function updateQuestion(value) {
     props.setAttributes({
-      skyColor: event.target.value
+      question: value
     });
   }
-  function updateGrassColor(event) {
+  function deleteAnswer(indexToDelete) {
+    // When we modify an array we don't want to mutate a property directly,
+    // so we make a copy of it first.
+    // The filter function: Will call the given function once for each item in the array.
+    // If in the body of the filter function we return true, that item will be included.
+    const newAnswers = props.attributes.answers.filter(function (x, index) {
+      // we want to compare the index we want to delete to the one that's in our filter.
+      return index != indexToDelete;
+    });
     props.setAttributes({
-      grassColor: event.target.value
+      answers: newAnswers
+    });
+
+    // If this answer was marked as the correct answer, we need to set correct
+    // answer back to undefined.
+    if (indexToDelete == props.attributes.correctAnswer) {
+      props.setAttributes({
+        correctAnswer: undefined
+      });
+    }
+  }
+  function markAsCorrect(index) {
+    props.setAttributes({
+      correctAnswer: index
     });
   }
 
@@ -158,14 +207,45 @@ function EditComponent(props) {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "paying-attention-edit-block"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
-    label: "Question:"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Answers:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexBlock, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
-    className: "mark-as-correct",
-    icon: "star-empty"
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-    isLink: true,
-    className: "attention-delete"
-  }, "Delete"))));
+    label: "Question:",
+    value: props.attributes.question,
+    onChange: updateQuestion,
+    sytle: {
+      fontSize: "20px"
+    }
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    style: {
+      fontSize: "13px",
+      margin: "20px 0 8px 0"
+    }
+  }, "Answers:"), props.attributes.answers.map(function (answer, index) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Flex, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexBlock, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+      value: answer,
+      onChange: newValue => {
+        const newAnswers = props.attributes.answers.concat([]);
+        newAnswers[index] = newValue;
+        props.setAttributes({
+          answers: newAnswers
+        });
+      }
+    })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+      onClick: () => markAsCorrect(index)
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
+      className: "mark-as-correct",
+      icon: props.attributes.correctAnswer === index ? "star-filled" : "star-empty"
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.FlexItem, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+      isLink: true,
+      className: "attention-delete",
+      onClick: () => deleteAnswer(index)
+    }, "Delete")));
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+    isPrimary: true,
+    onClick: () => {
+      props.setAttributes({
+        answers: props.attributes.answers.concat([""])
+      });
+    }
+  }, "Add another answer"));
 }
 
 /*

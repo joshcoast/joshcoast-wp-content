@@ -26,9 +26,14 @@ class AreYouPayingAttention {
 		));
 	}
 
+    // This theHTML function will only run if the block is being used.
 	function theHTML($attributes) {
-		ob_start(); ?>
-		<h1>The sky is <?php echo esc_html($attributes['skyColor']) ?> and the grass is <?php echo esc_html($attributes['grassColor']) ?> .</h1>
+        if (!is_admin()) {
+	        wp_enqueue_script('attentionFrontendScripts', plugin_dir_url(__FILE__) . 'build/frontend.js', array('wp-element'), 1.0, true);
+	        wp_enqueue_style('attentionFrontendStyles', plugin_dir_url(__FILE__) . 'build/frontend.css');
+        }
+        ob_start(); ?>
+		<div class="paying-attention-update-me"></div>
 		<?php return ob_get_clean();
 	}
 }
