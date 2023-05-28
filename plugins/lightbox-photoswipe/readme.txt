@@ -4,7 +4,7 @@ Contributors: awelzel
 Tags: attachments, images, gallery, lightbox, fancybox, photoswipe
 Requires at least: 5.3
 Tested up to: 6.2
-Stable tag: 5.0.30
+Stable tag: 5.0.35
 Donate link: https://paypal.me/ArnoWelzel
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -218,6 +218,29 @@ If you change any of the stylesheets or frontend scripts in `src/js` or `src/lib
 7. Example for the use in the frontend
 
 == Changelog ==
+
+= 5.0.34 =
+
+* Removed hooks for creating/deleting blogs as they are not needed any longer.
+
+= 5.0.34 =
+
+* Fixed a problem using the WordPress API which could lead to issues with qTranslate-XT (thanks to Herr Vigg for the hint).
+* Optimized backend code.
+
+= 5.0.33 =
+
+PhotoSwipe 5 integration:
+
+* Adjusted style for overlay captions (`.pswp__dynamic-caption--overlay`) so they are easier to read on front of bright images.
+
+= 5.0.32 =
+
+* Fixed a problem for sites which have a different URLs for site and frontend (thanks to Chris Whitford for the hint).
+
+= 5.0.31 =
+
+* Added support for [Multiple Domain Mapping on Single Site](https://wordpress.org/plugins/multiple-domain-mapping-on-single-site/) to process images on mapped domains correctly.
 
 = 5.0.30 =
 

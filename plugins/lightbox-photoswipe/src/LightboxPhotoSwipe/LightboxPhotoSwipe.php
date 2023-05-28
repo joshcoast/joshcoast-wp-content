@@ -2,12 +2,16 @@
 
 namespace LightboxPhotoSwipe;
 
+defined('ABSPATH') or die();
+
+include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
 /**
  * Main class for the plugin
  */
 class LightboxPhotoSwipe
 {
-    const VERSION = '5.0.30';
+    const VERSION = '5.0.35';
     const SLUG = 'lightbox-photoswipe';
     const META_VERSION = '12';
     const CACHE_EXPIRE_IMG_DETAILS = 86400;
@@ -23,6 +27,11 @@ class LightboxPhotoSwipe
     private $galleryId;
     private $obActive;
     private $obLevel;
+
+    private $baseUrlHttp;
+    private $baseUrlHttps;
+
+    private $domainMappings;
 
     /**
      * Constructor
@@ -51,8 +60,6 @@ class LightboxPhotoSwipe
                 add_filter('render_block', [$this, 'gutenbergBlock'], 10, 2);
             }
         }
-        add_action('wpmu_new_blog', [$this, 'onCreateBlog'], 10, 6);
-        add_filter('wpmu_drop_tables', [$this, 'onDeleteBlog']);
         add_action('plugins_loaded', [$this, 'init']);
         add_action('admin_menu', [$this, 'adminMenu']);
         add_action('admin_init', [$this, 'adminInit']);
@@ -65,6 +72,23 @@ class LightboxPhotoSwipe
 
         register_activation_hook($pluginFile, [$this, 'onActivate']);
         register_deactivation_hook($pluginFile, [$this, 'onDeactivate']);
+
+        // Support for "Multiple Domain Mapping on Single Site"
+        // https://wordpress.org/plugins/multiple-domain-mapping-on-single-site/
+
+        $this->domainMappings = false;
+        if (is_plugin_active('multiple-domain-mapping-on-single-site/multidomainmapping.php')) {
+            $this->domainMappings = get_option('falke_mdm_mappings');
+        }
+
+        $baseUrl = get_home_url();
+        if (substr($baseUrl, 0, 7) === 'http://') {
+            $this->baseUrlHttp = $baseUrl;
+            $this->baseUrlHttps = 'https://'.substr($baseUrl, 7);
+        } else {
+            $this->baseUrlHttps = $baseUrl;
+            $this->baseUrlHttp = 'http://'.substr($baseUrl, 8);
+        }
     }
 
     /**
@@ -257,8 +281,6 @@ class LightboxPhotoSwipe
 
         $use = true;
         $attr = '';
-        $baseurlHttp = get_site_url(null, null, 'http');
-        $baseurlHttps = get_site_url(null, null, 'https');
         $url = $matches[2];
 
         // Remove fragments and parameters from URL
@@ -277,7 +299,7 @@ class LightboxPhotoSwipe
             $params = '?'.$urlParts[1];
         }
 
-        // If URL is relative then add site URL
+        // If URL is relative then add home URL
         if (substr($file, 0,  7) !== 'http://' && substr($file, 0, 8) !== 'https://') {
             $file = get_home_url() . $file;
         }
@@ -312,12 +334,32 @@ class LightboxPhotoSwipe
                 foreach ($cdnUrls as $cdnUrl) {
                     $length = strlen($cdnUrl);
                     if ($length>0 && substr($file, 0, $length) === $cdnUrl) {
-                        $file = $baseurlHttp.'/'.ltrim(substr($file, $length),'/');
+                        $file = $this->baseUrlHttp.'/'.ltrim(substr($file, $length),'/');
                     }
                 }
             }
 
-            if (substr($file, 0, strlen($baseurlHttp)) === $baseurlHttp || substr($file, 0, strlen($baseurlHttps)) === $baseurlHttps) {
+            if ($this->optionsManager->getOption('support_multiple_domain_mapping')) {
+                if ($this->domainMappings !== false && is_array($this->domainMappings['mappings'])) {
+                    if (substr($file, 0, 7) === 'http://') {
+                        $fileSchemaPrefix = 'http://';
+                    } else {
+                        $fileSchemaPrefix = 'https://';
+                    }
+                    foreach ($this->domainMappings['mappings'] as $mapping) {
+                        if (isset($mapping['domain'])) {
+                            $mappingBaseUrl = $fileSchemaPrefix.$mapping['domain'];
+                            $length = strlen($mappingBaseUrl);
+                            if ($length > 0 && substr($file, 0, $length) === $mappingBaseUrl) {
+                                $file = $this->baseUrlHttp.'/'.ltrim(substr($file, $length), '/');
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (substr($file, 0, strlen($this->baseUrlHttp)) === $this->baseUrlHttp
+                || substr($file, 0, strlen($this->baseUrlHttps)) === $this->baseUrlHttps) {
                 $isLocal = true;
                 $params = '';
             }
@@ -338,8 +380,8 @@ class LightboxPhotoSwipe
             // If image is served by the website itself, try to get caption for local file
             if ($isLocal) {
                 // Remove domain part
-                $file = str_replace($baseurlHttp.'/', '', $file);
-                $file = str_replace($baseurlHttps.'/', '', $file);
+                $file = str_replace($this->baseUrlHttp.'/', '', $file);
+                $file = str_replace($this->baseUrlHttps.'/', '', $file);
 
                 // Remove leading slash
                 $file = ltrim($file, '/');
@@ -715,30 +757,6 @@ class LightboxPhotoSwipe
                 $this->optionsManager->setOption('disabled_post_ids', $disabledPostIdsCurrent, true);
             }
         }
-    }
-
-    /**
-     * Handler for creating a new blog
-     */
-    public function onCreateBlog($blog_id, $user_id, $domain, $path, $site_id, $meta)
-    {
-        if (is_plugin_active_for_network('lightbox-photoswipe/lightbox-photoswipe.php')) {
-            switch_to_blog($blog_id);
-            $this->createTables();
-            restore_current_blog();
-        }
-    }
-
-    /**
-     * Filter for deleting a blog
-     */
-    public function onDeleteBlog($tables): array
-    {
-        global $wpdb;
-
-        $tables[] = $wpdb->prefix . 'lightbox_photoswipe_img';
-
-        return $tables;
     }
 
     /**
