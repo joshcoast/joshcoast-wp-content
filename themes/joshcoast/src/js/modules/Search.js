@@ -17,7 +17,7 @@ class Search {
 
     // 2. Events
     events() {
-        this.openButton.on("click", this.openOverlay.bind(this));
+		this.openButton.on('click', this.openOverlay.bind(this));
         // the "on" method in jQuery sets the "this" to the element. We use the "bind()"
         // method to tell jQuery to not do that and set it to our object with "this".
         this.closeButton.on("click", this.closeOverlay.bind(this));

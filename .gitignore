@@ -21,3 +21,7 @@ node_modules/
 
 # ignore WP Migrate manifest files
 *-manifest
+
+*/.DS_Store
+*.DS_Store
+
