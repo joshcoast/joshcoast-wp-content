@@ -17,11 +17,8 @@ class AreYouPayingAttention {
 	}
 
 	function adminAssets() {
-		wp_register_style('quizeditcss', plugin_dir_url(__FILE__) . 'build/index.css');
-        wp_register_script('ourNewBlockType', plugin_dir_url(__FILE__) . 'build/index.js', array('wp-blocks'), 'wp-element', 'wp-editor');
-		register_block_type('ourplugin/are-you-paying-attention', array(
-			'editor_script' => 'ourNewBlockType',
-            'editor_style' => 'quizeditcss',
+		// The first arg is to tell wp what block we are using, this info is in block.json in our current directory
+		register_block_type(__DIR__, array(
             // This render_callback loads the json data from the database and turns it into an array
             // and passes it to the 'theHTML' function.
 			'render_callback' => array($this, 'theHTML')
@@ -32,8 +29,8 @@ class AreYouPayingAttention {
     // The $attributes argument is the array that's passed in by our "dynamic block type" register_block_type().
 	function theHTML($attributes) {
         if (!is_admin()) {
+			// Because we are using a PHP Render Callback function, we can't use the ""viewScript": [ "file:./view.js", "example-shared-view-script" ]," in our block.json. WP docs will tell you that you need to call this yourself like this if you use a PHP Render Callback function.
 	        wp_enqueue_script('attentionFrontendScripts', plugin_dir_url(__FILE__) . 'build/frontend.js', array('wp-element'), 1.0, true);
-	        wp_enqueue_style('attentionFrontendStyles', plugin_dir_url(__FILE__) . 'build/frontend.css');
         }
 
         ob_start();

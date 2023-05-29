@@ -61,13 +61,13 @@ function Quiz(props) {
     }
 
     return (
-        <div className="paying-attention-frontend" >
-           <p>{props.question}</p>
+        <div className="paying-attention-frontend" style={{backgroundColor: props.bgColor,  textAlign: props.theAlignment}} >
+           <p style={{color: props.textColor}}>{props.question}</p>
             <ul>
                 {props.answers.map(function(answer, index) {
                     // If they got it right, then we want to stop reacting to button pushes and change the css.
                     return (
-                    <li className={(isCorrectDelayed === true && index === props.correctAnswer ? "no-click" : "") + (isCorrectDelayed === true && index !== props.correctAnswer ? "fade-incorrect" : "")} onClick={isCorrect === true ? undefined : () => handleAnswer(index)}>
+                    <li className={(isCorrectDelayed === true && index === props.correctAnswer ? "no-click" : "") + (isCorrectDelayed === true && index !== props.correctAnswer ? "fade-incorrect" : "")} onClick={isCorrect === true ? undefined : () => handleAnswer(index)} >
                         {isCorrectDelayed === true && index === props.correctAnswer && (
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="bi bi-check2-circle" viewBox="0 0 16 16">
                                 <path

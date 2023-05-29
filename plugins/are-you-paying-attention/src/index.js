@@ -3,9 +3,11 @@ import "./index.scss"
 // and automatically grab the right component. So, no need to install this component with npm.
 // BUT we need to tell WordPress to load the components js file in the global scope.
 // SO check out plugins/are-you-paying-attention/index.php and the wp_register_script for 'wp-element'.
-import {TextControl, Flex, FlexBlock, FlexItem, Button, Icon} from "@wordpress/components"
+import { TextControl, Flex, FlexBlock, FlexItem, Button, Icon, PanelBody, PanelRow, ColorPicker } from "@wordpress/components"
+import { InspectorControls, BlockControls, AlignmentToolbar, useBlockProps } from "@wordpress/block-editor"
+import {SketchPicker} from "react-color"
 
-// these wierd () just make it so the function get's called without a name.
+// these wierd () just make it so the function gets called without a name.
 // The variables in this function are scoped to only this function.
 (function() {
     let locked = false
@@ -36,8 +38,20 @@ wp.blocks.registerBlockType("ourplugin/are-you-paying-attention", {
     attributes: {
         question: { type: "string" },
         answers: { type: "array", default: [""] },
-        correctAnswer: {type: "number", default: undefined}
+        correctAnswer: {type: "number", default: undefined},
+		bgColor: { type: "string", default: "#EBEBEB"},
+		textColor: { type: "string", default: "#1a1a1a"},
+		theAlignment: { type: "string", default: "left"}
     },
+	example: {
+		attributes: {
+			question: "What is my nbame?",
+			correctAnswer: 3,
+			answers: ['Meowsalot', 'Barksalot', 'Purrsloud', 'Josh'],
+			theAlignment: "center",
+			bgColor: "#CFE8F1"
+		}
+	},
     // The admin edit screen.
     edit: EditComponent,
 
@@ -51,6 +65,12 @@ wp.blocks.registerBlockType("ourplugin/are-you-paying-attention", {
 // You can name this edit function anything, but in react you do want to use an
 // Uppercase at the start for components. This is what shows in the edit screen.
 function EditComponent (props) {
+	// Tell wp to manage the block props (clicking on a block in the admin etc.)
+	// Make sure to give "blockProps" (can be named whatever btw) to the wrapper element
+	const blockProps = useBlockProps({
+		className: "paying-attention-edit-block",
+		style: { backgroundColor: props.attributes.bgColor, color: props.attributes.textColor }
+	})
 
     function updateQuestion(value) {
         props.setAttributes({question: value})
@@ -80,7 +100,27 @@ function EditComponent (props) {
 
     // "<TextControl /> is a component made by WP.
     return (
-        <div className="paying-attention-edit-block">
+		// blockProps is using the spread syntax. What ever properties live inside blockProps (see above) each one will be applied to this wrapper element.
+        <div {...blockProps} >
+			<BlockControls>
+				<AlignmentToolbar value={props.attributes.theAlignment} onChange={x => props.setAttributes({theAlignment: x})}/>
+			</BlockControls>
+			<InspectorControls>
+				<PanelBody title="Background Color" initialOpen={false}>
+					<SketchPicker
+						color={props.attributes.bgColor}
+						onChangeComplete={bgHex => props.setAttributes({bgColor: bgHex.hex})}
+						disableAlpha={true}
+					/>
+				</PanelBody>
+				<PanelBody title="Text Color" initialOpen={false}>
+					<SketchPicker
+						color={props.attributes.textColor}
+						onChangeComplete={textHex => props.setAttributes({textColor: textHex.hex})}
+						disableAlpha={true}
+					/>
+				</PanelBody>
+			</InspectorControls>
             <TextControl label='Question:' value={props.attributes.question} onChange={updateQuestion} sytle={{fontSize: "20px"}} />
             <p style={{fontSize: "13px", margin: "20px 0 8px 0"}}>Answers:</p>
             {props.attributes.answers.map(function(answer, index){

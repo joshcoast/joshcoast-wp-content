@@ -30,6 +30,7 @@
   font-size: 0.93rem;
   flex: 1;
   margin: 0 0 15px 0;
+  border: 1px solid #DBDBDB;
   padding: 0;
   list-style: none;
   cursor: pointer;
