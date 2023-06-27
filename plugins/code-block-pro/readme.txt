@@ -1,8 +1,8 @@
 === Code Block Pro - Beautiful Syntax Highlighting ===
-Contributors:      kbat82
+Contributors:      kbat82, dcooney
 Tags:              block, code, syntax, snippet, highlighter, JavaScript, php, vs code
 Tested up to:      6.2
-Stable tag:        1.18.0
+Stable tag:        1.20.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,6 +142,7 @@ Get more themes at [code-block-pro.com/themes](https://code-block-pro.com/themes
 - C#
 - CSS
 - CUE
+- Cypher (cql)
 - D
 - Dart
 - DAX
@@ -161,6 +162,7 @@ Get more themes at [code-block-pro.com/themes](https://code-block-pro.com/themes
 - Git Commit
 - Git Rebase
 - GLSL
+- Glimmer js/ts
 - Gnuplot
 - Go
 - GraphQL
@@ -181,6 +183,7 @@ Get more themes at [code-block-pro.com/themes](https://code-block-pro.com/themes
 - JSON
 - JSON5
 - JSONC
+- JSONL
 - JSONnet
 - JSSM
 - JSX
@@ -189,6 +192,7 @@ Get more themes at [code-block-pro.com/themes](https://code-block-pro.com/themes
 - Kusto
 - LaTeX
 - LESS
+- Ledger (Beancount)
 - Liquid
 - Lisp
 - Logo
@@ -199,6 +203,8 @@ Get more themes at [code-block-pro.com/themes](https://code-block-pro.com/themes
 - MATLAB
 - MDX
 - Mermaid
+- Narrat (nar)
+- Nextflow (nf)
 - Nginx
 - Nim
 - Nix
@@ -263,6 +269,7 @@ Get more themes at [code-block-pro.com/themes](https://code-block-pro.com/themes
 - VimL
 - Vue HTML
 - Vue
+- Vyper (vy)
 - WASM
 - Wenyan
 - WGSL
@@ -295,6 +302,21 @@ Themes are rendered inside the editor as you type or make changes, so the code b
 5. ANSI support for rendering control sequences
 
 == Changelog ==
+
+= 1.20.0 - 2023-06-25 =
+- Feature: Added the following languages: Ledger (Beancount), Cypher (cql), Glimmer js/ts, JSONL, Narrat (nar), Nextflow (nf), Vyper (vy)
+- Fix: Fixes an issue in the editor where some languages output an empty span tag that breaks the line number flow.
+
+= 1.19.0 - 2023-06-18 =
+- Feature: Add Fantasque Sans Mono (https://github.com/belluzj/fantasque-sans)
+- Feature: Add Comic Mono font (https://github.com/dtinth/comic-mono-font)
+- Tweak: Default to Jetbrains Mono font
+- Tweak: Rename the "Styling" panel to "Font Styling"
+- Tweak: Remove line highlights on hover when blurred
+- Tweak: Add minor adjustments for fonts to normalize line heights
+- Fix: Block will be auto-focused on insert - WP6.2 regression
+- Fix: Line highlight hover width was not rendering correctly
+- Fix: Line highlighter will find the longest line to use as the highlighter width
 
 = 1.18.0 - 2023-05-29 =
 - Feature: Adds option to output html entities

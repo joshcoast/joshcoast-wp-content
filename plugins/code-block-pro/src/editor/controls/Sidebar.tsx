@@ -102,11 +102,10 @@ export const SidebarControls = ({
                                 <span className="mb-2 block">
                                     {__('Recently Used', 'code-block-pro')}
                                 </span>
-                                <div className="flex gap-1">
+                                <div className="flex flex-col gap-1">
                                     {recentLanguages?.map((lang) => (
                                         <Button
                                             key={lang}
-                                            className="bg-gray-100 text-black no-underline p-1 px-2 "
                                             variant="link"
                                             onClick={() => setLanguage(lang)}>
                                             {languages[lang] ?? lang}
@@ -262,7 +261,7 @@ export const SidebarControls = ({
                 setAttributes={setAttributes}
             />
             <PanelBody
-                title={__('Styling', 'code-block-pro')}
+                title={__('Font Styling', 'code-block-pro')}
                 initialOpen={false}>
                 <div
                     className="code-block-pro-editor"
@@ -310,7 +309,7 @@ export const SidebarControls = ({
                 <div className="code-block-pro-editor" data-cy="clamp-fonts">
                     <div className="mt-6">
                         <CheckboxControl
-                            label={__('Clamp Values', 'code-block-pro')}
+                            label={__('Clamp Font Sizes', 'code-block-pro')}
                             help={__(
                                 'Check this if your font sizes are unusually large or tiny.',
                                 'code-block-pro',

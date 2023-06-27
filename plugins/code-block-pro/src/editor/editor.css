@@ -44,11 +44,13 @@
 .code-block-pro-editor pre .line {
     @apply relative inline-block w-full;
 }
-.code-block-pro-editor:not(.padding-disabled) pre .line:empty {
-    @apply block;
-}
-.code-block-pro-editor.padding-disabled.cbp-has-line-numbers pre .line:empty {
-    @apply block;
+.code-block-pro-editor pre {
+    .line:empty {
+        @apply block;
+    }
+    .line span:empty {
+        @apply inline-block;
+    }
 }
 .code-block-pro-editor.cbp-has-line-numbers
     pre
@@ -120,13 +122,4 @@
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         monospace; /* no !important */
     direction: ltr;
-}
-
-@font-face {
-    font-family: 'Code-Pro-Fira-Code';
-    src: url('../fonts/Code-Pro-Fira-Code.woff2') format('woff2');
-}
-@font-face {
-    font-family: 'Code-Pro-JetBrains-Mono';
-    src: url('../fonts/Code-Pro-JetBrains-Mono.woff2') format('woff2');
 }
