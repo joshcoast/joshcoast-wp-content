@@ -141,8 +141,8 @@ class Media_Item extends Smush_File {
 			? WP_SMUSH_PREMIUM_MAX_BYTES
 			: WP_SMUSH_MAX_BYTES;
 		$this->set_size_limit( $size_limit );
-		$this->array_utils  = new Array_Utils();
-		$this->fs           = new File_System();
+		$this->array_utils = new Array_Utils();
+		$this->fs          = new File_System();
 	}
 
 	public function size_limit_exceeded() {
@@ -841,14 +841,19 @@ class Media_Item extends Smush_File {
 	 * @return array|false
 	 */
 	private function attachment_metadata_as_size_metadata( $file_path ) {
+		$size_metadata = array(
+			// Size data is expected to have just the file name instead of path.
+			'file'      => $this->file_name_from_path( $file_path ),
+			// Size data is expected to have 'mime-type'.
+			'mime-type' => $this->get_mime_type(),
+		);
+		if ( $this->fs->file_exists( $file_path ) ) {
+			// Some older WP versions don't have filesize in wp_metadata.
+			$size_metadata['filesize'] = $this->fs->filesize( $file_path );
+		}
 		return array_merge(
 			$this->get_wp_metadata(),
-			array(
-				// Size data is expected to have just the file name instead of path
-				'file'      => $this->file_name_from_path( $file_path ),
-				// Size data is expected to have 'mime-type'
-				'mime-type' => $this->get_mime_type(),
-			)
+			$size_metadata
 		);
 	}
 
@@ -1127,5 +1132,12 @@ class Media_Item extends Smush_File {
 		}
 		$backup_size = $this->get_default_backup_size();
 		return $backup_size && $backup_size->file_exists();
+	}
+
+	public function is_large() {
+		$file_size = $this->get_full_or_scaled_size()->get_filesize();
+		$cut_off   = $this->plugin_settings->get_large_file_cutoff();
+
+		return $file_size > $cut_off;
 	}
 }

@@ -1,8 +1,3 @@
-// We never installed React, but when we enqueued the js on the front end, we unclouded
-// wp-element as a dependency. This has a WordPress version of React in it. When it sees
-// that we are trying to load react or reactDOM, it loads its own, and we never have to
-// download it separately. Witch is cool.
-
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import "./frontend.scss";
@@ -10,32 +5,12 @@ import "./frontend.scss";
 const divsToUpdate = document.querySelectorAll(".paying-attention-update-me");
 
 divsToUpdate.forEach(function (div) {
-    // Grab the json that we hid with css in index.php
-    // JSON.parse() is a method that all browsers have. Feed it a string and the browser will turn it into usable JSON.
-    // Get the JSON string from the current div's innerHTML of the pre tag.
     const data = JSON.parse(div.querySelector("pre").innerHTML);
-    // Use that json in our component we made.
-    // the ... syntax deconstructs the array given and grabs every element.
     ReactDOM.render(<Quiz {...data}/>, div);
     div.classList.remove("paying-attention-update-me");
 })
-
-// props is industry standard naming convention.
-// It's just anything we are passing into the component.
 function Quiz(props) {
-    // State is used to indicate the current state of the app.
-    // We never directly mutate it.
-    // We just give it a new value.
-    // When ever the state changes, React re-runs your function.
-    // useState function returns an array with two items.
-    // 1st one (in our case isCorrect) gives you easy access to that piece of state and value.
-    // 2nd one (in our case setIsCorrect) is a function you can call that lets us change the state.
     const [isCorrect, setIsCorrect] = useState(undefined);
-
-    // 1st argument is a function we want to run at a certain time.
-    // 2nd argument is WHEN we want the 1st argument function to run. What properties or piece of state are we watching
-    // for changes? In our case, when isCorrect changes, we want to set a time-out and wait for the animation to end,
-    // then change isCorrect back to undefined so that the state will change when we get a new wrong answer.
     const [isCorrectDelayed, setIsCorrectDelayed] = useState(undefined);
     useEffect(() => {
         if (isCorrect === false) {
@@ -51,8 +26,7 @@ function Quiz(props) {
         }
     }, [isCorrect])
     function handleAnswer(index) {
-        // Never search through and change the DOM directly in React.
-        // You need to use the "internal state" to let the JSX "REACT" to that state.
+
         if (index === props.correctAnswer) {
             setIsCorrect(true);
         } else {

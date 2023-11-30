@@ -18,16 +18,16 @@ export const ThemesPanel = ({
     const ready = useSettingsStoreReady();
     return (
         <PanelBody
-            title={__('Themes', 'code-block-pro')}
+            title={__('Theme', 'code-block-pro')}
             initialOpen={bringAttentionToThemes ?? false}>
             {ready && <ThemeFilter search={search} setSearch={setSearch} />}
             {ready && (
                 <ThemeSelect
                     {...attributes}
                     search={search}
-                    onClick={(slug: Theme) => {
-                        setAttributes({ theme: slug });
-                        updateThemeHistory({ ...attributes, theme: slug });
+                    onClick={(theme: Theme) => {
+                        setAttributes({ theme });
+                        updateThemeHistory({ theme });
                     }}
                 />
             )}

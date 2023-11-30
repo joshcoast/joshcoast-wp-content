@@ -18,7 +18,7 @@ export type Attributes = {
     editorHeight: string;
     headerType: string;
     headerString?: string;
-    footerType: string;
+    footerType?: string;
     footerString?: string;
     footerLink?: string;
     enableMaxHeight?: boolean;
@@ -29,7 +29,10 @@ export type Attributes = {
     footerLinkTarget?: boolean;
     disablePadding: boolean;
     startingLineNumber: string;
+    // Defunct - Removing it would require n attribute migration
+    // so it's easier to just leave it unused for new blocks.
     lineNumbersWidth: number;
+    highestLineNumber: number;
     enableHighlighting: boolean;
     highlightingHover: boolean;
     lineHighlights: string;
@@ -41,8 +44,10 @@ export type Attributes = {
     renderType: string;
     label: string;
     copyButton: boolean;
-    buttonTheme: string;
+    copyButtonType: string;
     useDecodeURI: boolean;
+    tabSize: number;
+    useTabs: boolean;
 };
 export interface AttributesPropsAndSetter {
     attributes: Attributes;
@@ -53,7 +58,6 @@ declare global {
     interface Window {
         codeBlockPro: {
             pluginUrl: string;
-            canSaveHtml: boolean;
         };
     }
 }

@@ -41,6 +41,11 @@ function generateblocks_pro_generate_css( $name, $settings, $css, $desktop_css, 
 		$css->add_property( 'color', $settings['textColorCurrent'] );
 		$css->add_property( 'border-color', $settings['borderColorCurrent'] );
 
+		if ( 'wrapper' === $settings['linkType'] && empty( $settings['display'] ) ) {
+			$css->set_selector( '.gb-container-' . $settings['uniqueId'] );
+			$css->add_property( 'display', 'block' );
+		}
+
 		if (
 			$settings['useInnerContainer'] &&
 			'hidden-link' === $settings['linkType'] &&
@@ -72,6 +77,10 @@ function generateblocks_pro_generate_css( $name, $settings, $css, $desktop_css, 
 					$backgroundSelector = generateblocks_pro_get_effect_selector( $settings['advBackgrounds'], $settings, '.gb-container-' . $settings['uniqueId'], $key );
 					$element = $backgroundSelector['element'];
 					$effectSelector = $backgroundSelector['selector'];
+
+					if ( ! isset( $value['type'] ) ) {
+						continue;
+					}
 
 					if ( 'gradient' === $value['type'] ) {
 						$gradientColorStopOneValue = '';
@@ -596,7 +605,7 @@ add_filter( 'generateblocks_css_output', 'generateblocks_pro_one_time_css' );
  * @param string $css The existing CSS on the page.
  */
 function generateblocks_pro_one_time_css( $css ) {
-	$css .= '.gb-container-link{position:absolute;top:0;right:0;bottom:0;left:0;z-index:99;}a.gb-container{display: block;}';
+	$css .= '.gb-container-link{position:absolute;top:0;right:0;bottom:0;left:0;z-index:99;}';
 
 	return $css;
 }

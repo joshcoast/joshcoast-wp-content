@@ -451,8 +451,9 @@ abstract class Abstract_Page {
 			return;
 		}
 
+		$cta_url                 = $this->settings->has_bulk_smush_page() ? Helper::get_page_url( 'smush-bulk' ) : '';
 		$this->modals['updated'] = array(
-			'cta_url' => Helper::get_recheck_images_link(),
+			'cta_url' => $cta_url,
 		);
 	}
 
@@ -1018,5 +1019,32 @@ abstract class Abstract_Page {
 		$args    = wp_parse_args( $args, $default );
 
 		return add_query_arg( $args, $this->upgrade_url );
+	}
+
+	public function get_connect_site_link() {
+		if ( WP_Smush::is_pro() || WP_Smush::is_expired() ) {
+			// Do not show connect site link for pro or expired users.
+			return;
+		}
+
+		if ( ! class_exists( '\WPMUDEV_Dashboard' ) ) {
+			return add_query_arg(
+				array(
+					'utm_source'   => 'smush',
+					'utm_medium'   => 'plugin',
+					'utm_campaign' => 'smush_ultra_existing',
+				),
+				'https://wpmudev.com/hub2/connect/'
+			);
+		}
+
+		$dashboard_path = 'admin.php?page=wpmudev';
+		if ( ! is_multisite() ) {
+			return admin_url( $dashboard_path );
+		}
+
+		if ( is_super_admin() ) {
+			return network_admin_url( $dashboard_path );
+		}
 	}
 }

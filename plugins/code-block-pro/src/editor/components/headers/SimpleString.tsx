@@ -3,7 +3,7 @@ import { Attributes, Lang } from '../../../types';
 import { findBackgroundColor, findTextColor } from '../../../util/colors';
 import { languages } from '../../../util/languages';
 
-export const SimpleString = (attributes: Partial<Attributes>) => {
+export const SimpleString = (attributes: Attributes) => {
     const { language, bgColor, textColor, headerString } = attributes;
     const bgC = colord(bgColor as AnyColor);
     let bg = bgC.isDark()

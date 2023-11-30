@@ -71,19 +71,6 @@
 .code-block-pro-editor.padding-disabled.cbp-has-line-numbers pre {
     @apply py-0;
 }
-/* Will make sure the line numbers are full width before calculating */
-.code-block-pro-editor.cbp-has-line-numbers
-    pre
-    .line.cbp-line-number-width-forced,
-.code-block-pro-editor.cbp-has-line-numbers pre .line.cbp-line-number-disabled {
-    @apply inline;
-}
-.code-block-pro-editor.cbp-has-line-numbers
-    pre
-    .line.cbp-line-number-width-forced::before {
-    width: auto !important;
-    position: initial;
-}
 .code-block-pro-editor .cbp-footer-link {
     @apply pointer-events-none no-underline;
 }
@@ -118,8 +105,66 @@
     display: block !important;
     @apply pointer-events-none;
 }
+.code-block-pro-editor .sidebar-copy-button svg {
+    @apply block;
+}
+.code-block-pro-editor .sidebar-copy-button .with-check {
+    @apply hidden;
+}
 .cbp-theme-preview {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         monospace; /* no !important */
     direction: ltr;
+}
+@font-face {
+    font-family: 'Code-Pro-Fira-Code';
+    src: url('../fonts/Code-Pro-Fira-Code.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Code-Pro-JetBrains-Mono';
+    src: url('../fonts/Code-Pro-JetBrains-Mono.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Code-Pro-JetBrains-Mono-NL';
+    src: url('../fonts/Code-Pro-JetBrains-Mono-NL.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Code-Pro-Comic-Mono';
+    src: url('../fonts/Code-Pro-Comic-Mono.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Code-Pro-Fantasque-Sans-Mono';
+    src: url('../fonts/Code-Pro-Fantasque-Sans-Mono.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Code-Pro-Cozette';
+    src: url('../fonts/Code-Pro-Cozette.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Code-Pro-Deja-Vu-Mono';
+    src: url('../fonts/Code-Pro-Deja-Vu-Mono.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Code-Pro-Monaspace-Argon';
+    src: url('../fonts/Code-Pro-Monaspace-Argon.woff') format('woff');
+}
+@font-face {
+    font-family: 'Code-Pro-Monaspace-Krypton';
+    src: url('../fonts/Code-Pro-Monaspace-Krypton.woff') format('woff');
+}
+@font-face {
+    font-family: 'Code-Pro-Monaspace-Neon';
+    src: url('../fonts/Code-Pro-Monaspace-Neon.woff') format('woff');
+}
+@font-face {
+    font-family: 'Code-Pro-Monaspace-Radon';
+    src: url('../fonts/Code-Pro-Monaspace-Radon.woff') format('woff');
+}
+@font-face {
+    font-family: 'Code-Pro-Monaspace-Xenon';
+    src: url('../fonts/Code-Pro-Monaspace-Xenon.woff') format('woff');
+}
+@font-face {
+    font-family: 'Code-Pro-Geist-Mono';
+    src: url('../fonts/Code-Pro-Geist-Mono.woff2') format('woff2');
 }

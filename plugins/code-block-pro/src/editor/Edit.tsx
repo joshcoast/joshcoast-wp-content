@@ -1,28 +1,29 @@
 import {
     useCallback,
+    useState,
     useEffect,
     useLayoutEffect,
     useRef,
 } from '@wordpress/element';
-import { escapeHTML } from '@wordpress/escape-html';
 import { applyFilters } from '@wordpress/hooks';
-import { decodeEntities } from '@wordpress/html-entities';
 import { sprintf, __ } from '@wordpress/i18n';
 import Editor from 'react-simple-code-editor';
+import { useCanEditHTML } from '../hooks/useCanEditHTML';
 import { useDefaults } from '../hooks/useDefaults';
 import { useTheme } from '../hooks/useTheme';
 import { useLanguageStore } from '../state/language';
 import { AttributesPropsAndSetter, Lang } from '../types';
 import { parseJSONArrayWithRanges } from '../util/arrayHelpers';
+import { decode, encode } from '../util/code';
 import { computeLineHighlightColor } from '../util/colors';
+import { getTextWidth } from '../util/fonts';
 import { getEditorLanguage } from '../util/languages';
 import { MissingPermissionsTip } from './components/misc/MissingPermissions';
 
 export const Edit = ({
     attributes,
     setAttributes,
-    canEdit,
-}: AttributesPropsAndSetter & { canEdit: boolean }) => {
+}: AttributesPropsAndSetter) => {
     const {
         language,
         theme,
@@ -30,13 +31,10 @@ export const Edit = ({
         bgColor: backgroundColor,
         textColor: color,
         disablePadding,
-        lineNumbersWidth,
         lineNumbers,
         startingLineNumber,
         footerType,
         fontSize,
-        fontFamily,
-        lineHeight,
         lineBlurs,
         lineHighlights,
         enableBlurring,
@@ -46,11 +44,16 @@ export const Edit = ({
         enableMaxHeight,
         editorHeight,
         useDecodeURI,
+        tabSize,
+        useTabs,
     } = attributes;
 
     const textAreaRef = useRef<HTMLDivElement>(null);
+    const canEdit = useCanEditHTML();
+    const [editorLeftPadding, setEditorLeftPadding] = useState(0);
+    const codeAreaRef = useRef<HTMLDivElement>(null);
     const handleChange = (code: string) =>
-        setAttributes({ code: encode(code) });
+        setAttributes({ code: encode(code, attributes) });
     const { previousLanguage } = useLanguageStore();
     const { highlighter, error, loading } = useTheme({
         theme,
@@ -58,17 +61,6 @@ export const Edit = ({
     });
     const hasFooter = footerType && footerType !== 'none';
     useDefaults({ attributes, setAttributes });
-
-    const decode = useCallback(
-        (code: string) =>
-            useDecodeURI ? decodeURIComponent(code) : decodeEntities(code),
-        [useDecodeURI],
-    );
-    const encode = useCallback(
-        (code: string) =>
-            useDecodeURI ? encodeURIComponent(code) : escapeHTML(code),
-        [useDecodeURI],
-    );
 
     const getHighlights = useCallback(() => {
         if (!enableHighlighting) return [];
@@ -95,13 +87,13 @@ export const Edit = ({
             bgColor: highlighter.getBackgroundColor(),
             textColor: highlighter.getForegroundColor(),
         });
-    }, [theme, highlighter, setAttributes]);
+    }, [theme, highlighter, setAttributes, canEdit]);
 
     useEffect(() => {
         if (!highlighter) return;
         const l = (language ?? previousLanguage) as Lang | 'ansi';
         const lang = getEditorLanguage(l);
-        const c = decode(code);
+        const c = decode(code, { useDecodeURI });
         const lineOptions = [
             ...getHighlights(),
             ...getBlurs(),
@@ -130,6 +122,7 @@ export const Edit = ({
         highlighter,
         seeMoreAfterLine,
         seeMoreTransition,
+        canEdit,
         color,
         code,
         enableMaxHeight,
@@ -141,44 +134,38 @@ export const Edit = ({
         lineBlurs,
         getBlurs,
         getHighlights,
-        decode,
+        useDecodeURI,
     ]);
 
     useLayoutEffect(() => {
-        if (!textAreaRef.current) return;
+        if (!codeAreaRef.current) return;
         if (!lineNumbers) {
             setAttributes({ lineNumbersWidth: undefined });
             return;
         }
-        // Get the last line (assumingly the widest)
-        const lastLine = Array.from(
-            textAreaRef?.current?.querySelectorAll('.line') ?? [],
-        )?.at(-1) as HTMLElement;
-        // Make sure there are no width constraints
-        lastLine?.classList?.add('cbp-line-number-width-forced');
-        const lastLineWidth = lastLine?.getBoundingClientRect()?.width ?? 0;
-        // Add .cbp-line-number-disabled to disable the line number
-        lastLine?.classList.add('cbp-line-number-disabled');
-        // Re calculate the width of the last line
-        const newWidth = lastLine?.getBoundingClientRect()?.width ?? 0;
-        // Remove the classes
-        lastLine?.classList.remove('cbp-line-number-disabled');
-        lastLine?.classList?.remove('cbp-line-number-width-forced');
-        // Calculate the difference
-        if (lastLineWidth - newWidth > 0) {
-            setAttributes({ lineNumbersWidth: lastLineWidth - newWidth - 12 });
-        }
+
+        // Calulate the line numbers width
+        const codeLines = codeAreaRef?.current?.querySelectorAll('.line');
+        const highestLineNumber =
+            Number(startingLineNumber ?? 0) + (codeLines?.length ?? 0);
+        if (!codeLines?.[0]) return;
+        setAttributes({ highestLineNumber });
+
+        // Used for the editor, which requires px values
+        const { font } = getComputedStyle(codeLines?.[0]);
+        setEditorLeftPadding(getTextWidth(String(highestLineNumber), font));
     }, [
         lineNumbers,
         startingLineNumber,
         code,
         loading,
+        canEdit,
         error,
         textAreaRef,
+        codeAreaRef,
         setAttributes,
         fontSize,
-        fontFamily,
-        lineHeight,
+        loading,
     ]);
 
     if (!loading && !highlighter) {
@@ -207,9 +194,11 @@ export const Edit = ({
         );
     }
 
+    if (canEdit === undefined) return null;
+
     return (
         <div
-            ref={textAreaRef}
+            ref={codeAreaRef}
             style={{
                 maxHeight: Number(editorHeight)
                     ? Number(editorHeight)
@@ -217,23 +206,26 @@ export const Edit = ({
                 overflow: Number(editorHeight) ? 'auto' : undefined,
             }}>
             {canEdit ? null : (
-                <div className="absolute inset-0 z-10 bg-white bg-opacity-70">
+                <div className="absolute inset-0 z-10">
                     <MissingPermissionsTip />
                 </div>
             )}
             <Editor
-                value={decode(code)}
+                value={decode(code, { useDecodeURI })}
                 onValueChange={handleChange}
                 // eslint-disable-next-line jsx-a11y/no-autofocus -- Only autofocus in the unintended case that there is no code (e.g. on initial insert)
                 autoFocus={!code}
+                tabSize={useTabs ? 1 : tabSize || 2}
+                insertSpaces={!useTabs}
                 padding={{
                     top: disablePadding ? 0 : 16,
                     bottom: disablePadding || hasFooter ? 0 : 16,
                     left: (() => {
                         if (!lineNumbers && disablePadding) return 0;
                         if (!lineNumbers) return 16;
-                        if (disablePadding) return (lineNumbersWidth ?? 0) + 16;
-                        return (lineNumbersWidth ?? 0) + 32;
+                        if (disablePadding)
+                            return (editorLeftPadding ?? 0) + 16;
+                        return (editorLeftPadding ?? 0) + 32;
                     })(),
                     right: 0,
                 }}
@@ -246,11 +238,11 @@ export const Edit = ({
                 onKeyDown={(e: any) =>
                     e.key === 'Tab' &&
                     // Tab lock here. Pressing Escape will unlock.
-                    textAreaRef.current?.querySelector('textarea')?.focus()
+                    codeAreaRef.current?.querySelector('textarea')?.focus()
                 }
                 highlight={(code: string) =>
                     highlighter
-                        ?.codeToHtml(decode(code), {
+                        ?.codeToHtml(decode(code, { useDecodeURI }), {
                             lang: getEditorLanguage(
                                 language ?? previousLanguage,
                             ),

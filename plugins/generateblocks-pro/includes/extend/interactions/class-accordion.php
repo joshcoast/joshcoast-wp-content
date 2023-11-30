@@ -35,6 +35,8 @@ class GenerateBlocks_Pro_Block_Variant_Accordion extends GenerateBlocks_Pro_Sing
 		add_filter( 'generateblocks_after_container_close', [ $this, 'close_accordion_content_container' ], 100, 3 );
 		add_filter( 'generateblocks_onboarding_user_meta_properties', [ $this, 'define_add_accordion_item_onboarding_property' ], 10, 1 );
 		add_filter( 'register_block_type_args', [ $this, 'block_type_args' ], 10, 2 );
+		add_action( 'wp_footer', [ $this, 'faq_schema_script' ] );
+		add_filter( 'render_block', [ $this, 'gather_schema_data' ], 10, 3 );
 	}
 
 	/**
@@ -46,6 +48,7 @@ class GenerateBlocks_Pro_Block_Variant_Accordion extends GenerateBlocks_Pro_Sing
 		$defaults['container']['accordionItemOpen'] = false;
 		$defaults['container']['accordionMultipleOpen'] = false;
 		$defaults['container']['accordionTransition'] = '';
+		$defaults['button']['accordionItemOpen'] = false;
 
 		return $defaults;
 	}
@@ -270,7 +273,10 @@ class GenerateBlocks_Pro_Block_Variant_Accordion extends GenerateBlocks_Pro_Sing
 
 			$args['provides_context'] = array_merge(
 				$args['provides_context'],
-				[ 'generateblocks-pro/accordionTransition' => 'accordionTransition' ]
+				[
+					'generateblocks-pro/accordionTransition' => 'accordionTransition',
+					'generateblocks-pro/faqSchema' => 'faqSchema',
+				]
 			);
 
 			if ( ! isset( $args['uses_context'] ) || ! is_array( $args['uses_context'] ) ) {
@@ -279,11 +285,160 @@ class GenerateBlocks_Pro_Block_Variant_Accordion extends GenerateBlocks_Pro_Sing
 
 			$args['uses_context'] = array_merge(
 				$args['uses_context'],
-				[ 'generateblocks-pro/accordionTransition' ]
+				[
+					'generateblocks-pro/accordionTransition',
+					'generateblocks-pro/faqSchema',
+				]
+			);
+		}
+
+		if ( 'generateblocks/button' === $name ) {
+			if ( ! isset( $args['provides_context'] ) || ! is_array( $args['provides_context'] ) ) {
+				$args['provides_context'] = [];
+			}
+
+			$args['provides_context'] = array_merge(
+				$args['provides_context'],
+				[
+					'generateblocks-pro/faqSchema' => 'faqSchema',
+				]
+			);
+
+			if ( ! isset( $args['uses_context'] ) || ! is_array( $args['uses_context'] ) ) {
+				$args['uses_context'] = [];
+			}
+
+			$args['uses_context'] = array_merge(
+				$args['uses_context'],
+				[
+					'generateblocks-pro/faqSchema',
+				]
 			);
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Remove all HTML and line-breaks/whitespace from the content.
+	 *
+	 * @param string $content The block content.
+	 */
+	public static function strip_html( $content ) {
+		$allowed_tags = [ '<h1>', '<h2>', '<h3>', '<h4>', '<h5>', '<h6>', '<br>', '<ol>', '<ul>', '<li>', '<a>', '<p>', '<b>', '<strong>', '<i>', '<em>' ];
+		$allowed_tags = implode( '', $allowed_tags );
+		$block_text = strip_tags( $content, $allowed_tags );
+		$block_text = preg_replace( "/\n/", '', $block_text ); // Remove new lines.
+
+		return $block_text;
+	}
+
+	/**
+	 * Gather FAQ schema from accordions.
+	 *
+	 * @since 1.6.0
+	 * @param string   $block_content The block content.
+	 * @param array    $block The block attributes/data.
+	 * @param WP_Block $instance The block instance.
+	 * @return array
+	 */
+	public function gather_schema_data( $block_content, $block, $instance ) {
+		if (
+			isset( $block['attrs']['variantRole'] ) &&
+			isset( $instance->context ) &&
+			! empty( $instance->context['generateblocks-pro/faqSchema'] )
+		) {
+			if ( 'accordion-toggle' === $block['attrs']['variantRole'] ) {
+				add_filter(
+					'generateblocks_faq_schema_data',
+					function( $data ) use ( $block_content ) {
+						$data[] = [ 'question' => self::strip_html( $block_content ) ];
+
+						return $data;
+					},
+					1
+				);
+			}
+
+			if ( 'accordion-content' === $block['attrs']['variantRole'] ) {
+				add_filter(
+					'generateblocks_faq_schema_data',
+					function( $data ) use ( $block_content ) {
+						foreach ( $data as $key => $info ) {
+							// If we have a question but no answer, assume this is the answer.
+							if ( ! empty( $info['question'] ) && empty( $info['answer'] ) ) {
+								preg_match( '/<img.+src=[\'"](?P<src>.+?)[\'"].*>/i', $block_content, $image );
+
+								if ( ! empty( $image['src'] ) ) {
+									$data[ $key ]['image'] = $image['src'];
+								}
+
+								$data[ $key ]['answer'] = self::strip_html( $block_content );
+								break;
+							}
+						}
+
+						return $data;
+					},
+					2
+				);
+			}
+		}
+
+		return $block_content;
+	}
+
+	/**
+	 * Output the accordion FAQ schema to the footer.
+	 *
+	 * @since 1.6.0
+	 */
+	public function faq_schema_script() {
+		$faq_schema_data = apply_filters(
+			'generateblocks_faq_schema_data',
+			[]
+		);
+
+		if ( empty( $faq_schema_data ) ) {
+			return;
+		}
+
+		// Remove any duplicated questions/answers.
+		// @see https://stackoverflow.com/a/308955.
+		$serialized = array_map( 'json_encode', $faq_schema_data );
+		$unique = array_unique( $serialized );
+		$faq_schema_data = array_values( array_intersect_key( $faq_schema_data, $unique ) );
+
+		$faq_schema = [
+			'@context' => 'https://schema.org',
+			'@type' => 'FAQPage',
+			'name' => get_the_title(),
+			'mainEntity' => [],
+		];
+
+		foreach ( $faq_schema_data as $data ) {
+			$question = [
+				'@type' => 'Question',
+				'name' => $data['question'],
+				'acceptedAnswer' => [
+					'@type' => 'Answer',
+					'text' => $data['answer'],
+				],
+			];
+
+			if ( ! empty( $data['image'] ) ) {
+				$question['acceptedAnswer']['image'] = [
+					'@type' => 'ImageObject',
+					'contentUrl' => esc_url_raw( $data['image'] ),
+				];
+			}
+
+			$faq_schema['mainEntity'][] = $question;
+		}
+
+		if ( count( $faq_schema['mainEntity'] ) > 0 ) {
+			printf( '<script type="application/ld+json">%s</script>', wp_json_encode( $faq_schema ) );
+		}
 	}
 }
 

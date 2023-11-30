@@ -79,6 +79,7 @@ function generateblocks_pro_do_block_editor_assets() { // phpcs:ignore
 			'generateblocksVersion' => GENERATEBLOCKS_VERSION,
 			'generateblocksProVersion' => GENERATEBLOCKS_PRO_VERSION,
 			'blockStyles' => function_exists( 'generateblocks_get_default_styles' ) ? generateblocks_get_default_styles() : array(),
+			'showIncompatibleGlobalStyles' => apply_filters( 'generateblocks_show_incompatible_global_styles', false ),
 		)
 	);
 

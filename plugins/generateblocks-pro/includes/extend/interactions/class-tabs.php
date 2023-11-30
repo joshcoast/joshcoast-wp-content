@@ -47,6 +47,7 @@ class GenerateBlocks_Pro_Tabs_Variation extends GenerateBlocks_Pro_Singleton {
 		$defaults['container']['borderColorCurrent'] = false;
 		$defaults['container']['backgroundColorCurrent'] = '';
 		$defaults['container']['textColorCurrent'] = '';
+		$defaults['button']['tabItemOpen'] = false;
 
 		return $defaults;
 	}

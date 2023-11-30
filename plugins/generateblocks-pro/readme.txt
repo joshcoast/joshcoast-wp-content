@@ -2,10 +2,10 @@
 Contributors: edge22
 Donate link: https://generateblocks.com
 Tags: blocks, gutenberg, container, headline, grid, columns, page builder, wysiwyg, block editor
-Requires at least: 5.6
-Tested up to: 6.1
-Requires PHP: 5.6
-Stable tag: 1.5.2
+Requires at least: 5.9
+Tested up to: 6.2
+Requires PHP: 7.2
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,21 @@ Check out our [documentation](https://docs.generateblocks.com) for more informat
 To learn how to install GenerateBlocks Pro, check out our documentation [here](https://docs.generateblocks.com/article/installing-generateblocks-pro).
 
 == Changelog ==
+
+= 1.6.0 =
+* Feature: Add FAQ schema option to accordions
+* Fix: Block label should not be synced with styles changes (GB 1.8.0)
+* Fix: Dynamic accordion button undefined index
+* Fix: Dynamic tab button undefined index
+* Fix: PHP Warning: Undefined array key "type"
+* Fix: Fix: Container Link display setting
+* Tweak: Require at least PHP 7.2
+* Tweak: Add current Container border color support (GB 1.8.0)
+* Tweak: Add Global Style block version to attributes
+* Tweak: Don't show incompatible Global Styles in dropdown
+* Languages: Add es_ES translation
+* Languages: Add cs_CZ translation
+* Languages: Add fi translation
 
 = 1.5.2 =
 * Tweak: Improve tab templates on mobile

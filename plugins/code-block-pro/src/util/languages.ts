@@ -12,13 +12,15 @@ export const codeAliases = {
     cpp: ['arduino'],
     csharp: ['c#', 'cs'],
     cypher: ['cql'],
+    docker: ['dockerfile'],
     erlang: ['erl'],
-    fsharp: ['f#'],
+    fsharp: ['f#', 'fs'],
     gjs: ['glimmer-js'],
     gts: ['glimmer-ts'],
     haskell: ['hs'],
     handlebars: ['hbs'],
     'html-ruby-erb': ['erb'],
+    ini: ['properties'],
     java: ['javafx'],
     javascript: ['jscript', 'js'],
     jssm: ['fsl'],
@@ -37,7 +39,8 @@ export const codeAliases = {
     ruby: ['rb'],
     rust: ['rs'],
     shaderlab: ['shader'],
-    shellscript: ['shell', 'sh'],
+    shellscript: ['shell', 'sh', 'git-commit', 'git-rebase'],
+    sellsession: ['console'],
     stylus: ['styl'],
     typescript: ['ts'],
     vb: ['cmd'],
@@ -61,14 +64,17 @@ export const removeAliases = (
     langs: typeof defaultLanguages,
 ): Partial<typeof defaultLanguages> => {
     const aliasesToRemove = Object.values(codeAliases).flat();
-    return Object.keys(langs).reduce((acc, key) => {
-        if (!aliasesToRemove.includes(key)) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            acc[key as Lang] = langs[key as Lang];
-        }
-        return acc;
-    }, {} as Partial<typeof defaultLanguages>);
+    return Object.keys(langs).reduce(
+        (acc, key) => {
+            if (!aliasesToRemove.includes(key)) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                acc[key as Lang] = langs[key as Lang];
+            }
+            return acc;
+        },
+        {} as Partial<typeof defaultLanguages>,
+    );
 };
 
 export const languages = removeAliases(defaultLanguages);

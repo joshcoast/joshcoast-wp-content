@@ -16,7 +16,14 @@ type ThemeType = {
     previousLineNumbers?: boolean;
     previousHighlightingHover?: boolean;
     previousCopyButton: boolean;
-    previousButtonTheme: string;
+    previousCopyButtonType: string;
+    previousTabSize: number;
+    previousUseTabs?: boolean;
+    // previousEnableMaxHeight?: boolean;
+    // previousSeeMoreAfterLine?: string;
+    previousSeeMoreType?: string;
+    previousSeeMoreString?: string;
+    previousSeeMoreTransition?: boolean;
     updateThemeHistory: (settings: Partial<Attributes>) => void;
 };
 const path = '/code-block-pro/v1/settings';
@@ -32,13 +39,21 @@ const defaultSettings = {
     previousFontFamily: 'Code-Pro-JetBrains-Mono',
     previousFontSize: '.875rem',
     previousHeaderType: 'headlights',
-    previousFooterType: undefined,
-    previousClampFonts: undefined,
-    previousDisablePadding: undefined,
-    previousLineNumbers: undefined,
-    previousHighlightingHover: undefined,
+    previousFooterType: 'none',
+    previousClampFonts: false,
+    previousDisablePadding: false,
+    previousLineNumbers: false,
+    previousHighlightingHover: false,
     previousCopyButton: true,
-    previousButtonTheme: 'heroicons',
+    previousCopyButtonType: 'heroicons',
+    previousTabSize: 2,
+    previousUseTabs: false,
+    // TODO: maybe impliment these with an extra UI to make them optional
+    // previousEnableMaxHeight: undefined,
+    // previousSeeMoreAfterLine: undefined,
+    previousSeeMoreType: '',
+    previousSeeMoreString: '',
+    previousSeeMoreTransition: false,
 };
 const storage = {
     getItem: async (name: string) => {
@@ -65,27 +80,31 @@ const storage = {
         return undefined;
     },
 };
+
 export const useThemeStore = create<ThemeType>()(
     persist(
         devtools(
             (set) => ({
                 ...defaultSettings,
-                updateThemeHistory(attributes) {
-                    set((state) => ({
-                        ...state,
-                        previousTheme: attributes.theme,
-                        previousLineHeight: attributes.lineHeight,
-                        previousFontFamily: attributes.fontFamily,
-                        previousFontSize: attributes.fontSize,
-                        previousHeaderType: attributes.headerType,
-                        previousFooterType: attributes.footerType,
-                        previousClampFonts: attributes.clampFonts,
-                        previousDisablePadding: attributes.disablePadding,
-                        previousLineNumbers: attributes.lineNumbers,
-                        previousHighlightingHover: attributes.highlightingHover,
-                        previousCopyButton: attributes.copyButton,
-                        previousButtonTheme: attributes.buttonTheme,
-                    }));
+                updateThemeHistory(attributes: Partial<Attributes>) {
+                    set((state) => {
+                        return Object.keys(attributes).reduce<
+                            Partial<ThemeType>
+                        >(
+                            (acc, attr) => {
+                                const att = attr as keyof Attributes;
+                                const fmted = `previous${
+                                    attr.charAt(0).toUpperCase() + attr.slice(1)
+                                }` as keyof ThemeType;
+                                const keyExists =
+                                    Object.keys(state).includes(fmted);
+                                return keyExists
+                                    ? { ...acc, [fmted]: attributes[att] }
+                                    : acc;
+                            },
+                            { ...state },
+                        );
+                    });
                 },
             }),
             { name: 'Code Block Pro Theme Settings' },

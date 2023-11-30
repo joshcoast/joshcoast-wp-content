@@ -13,6 +13,7 @@ import { useDispatch } from '@wordpress/data';
 import { store as editPostStore } from '@wordpress/edit-post';
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { useCanEditHTML } from '../../hooks/useCanEditHTML';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useGlobalStore } from '../../state/global';
 import { useLanguageStore } from '../../state/language';
@@ -28,6 +29,7 @@ import {
 import { FooterSelect } from '../components/FooterSelect';
 import { HeaderSelect } from '../components/HeaderSelect';
 import { HeightPanel } from '../components/HeightPanel';
+import { SlotFactory } from '../components/SlotFactory';
 import { ThemesPanel } from '../components/ThemesPanel';
 import { MissingPermissionsTip } from '../components/misc/MissingPermissions';
 import { BlurControl } from './BlurControl';
@@ -36,8 +38,7 @@ import { HighlightingControl } from './HighlightingControl';
 export const SidebarControls = ({
     attributes,
     setAttributes,
-    canEdit,
-}: AttributesPropsAndSetter & { canEdit: boolean }) => {
+}: AttributesPropsAndSetter) => {
     const [language, setLanguage] = useLanguage({ attributes, setAttributes });
     const { recentLanguages } = useLanguageStore();
     const { updateThemeHistory } = useThemeStore();
@@ -46,13 +47,18 @@ export const SidebarControls = ({
     const languagesSorted = new Map(
         Object.entries(languages).sort((a, b) => a[1].localeCompare(b[1])),
     );
-
+    const canEdit = useCanEditHTML();
     const footersNeedingLinks = ['simpleStringEnd', 'simpleStringStart'];
-
-    const showHeaderTextEdit = ['simpleString'].includes(headerType);
-    const showFooterTextEdit = footersNeedingLinks.includes(footerType);
-    const showFooterLinkEdit = footersNeedingLinks.includes(footerType);
-    const showFooterLinkTargetEdit = footersNeedingLinks.includes(footerType);
+    const showHeaderTextEdit = [
+        'simpleString',
+        'pillString',
+        'stringSmall',
+    ].includes(headerType);
+    const showFooterTextEdit = footersNeedingLinks.includes(footerType ?? '');
+    const showFooterLinkEdit = footersNeedingLinks.includes(footerType ?? '');
+    const showFooterLinkTargetEdit = footersNeedingLinks.includes(
+        footerType ?? '',
+    );
     const [bringAttention, setBringAttention] = useState<string | false>(false);
     const { openGeneralSidebar, closeGeneralSidebar } =
         useDispatch(editPostStore);
@@ -65,9 +71,68 @@ export const SidebarControls = ({
         });
     }, [bringAttentionToPanel, closeGeneralSidebar, openGeneralSidebar]);
 
+    if (!canEdit)
+        return (
+            <InspectorControls>
+                {canEdit ? null : <MissingPermissionsTip />}
+            </InspectorControls>
+        );
+
     return (
         <InspectorControls>
-            {canEdit ? null : <MissingPermissionsTip />}
+            <SlotFactory
+                name="CodeBlockPro.Sidebar.Start"
+                attributes={attributes}
+                setAttributes={setAttributes}
+            />
+            <PanelBody
+                title={__('Line Settings', 'code-block-pro')}
+                initialOpen={false}>
+                <div className="code-block-pro-editor">
+                    <BaseControl id="code-block-pro-show-line-numbers">
+                        <CheckboxControl
+                            data-cy="show-line-numbers"
+                            label={__('Line numbers', 'code-block-pro')}
+                            help={__(
+                                'Enable line numbers and set a starting number.',
+                                'code-block-pro',
+                            )}
+                            checked={attributes.lineNumbers}
+                            onChange={(lineNumbers) => {
+                                setAttributes({ lineNumbers });
+                                updateThemeHistory({ lineNumbers });
+                            }}
+                        />
+                        {attributes.lineNumbers && (
+                            <BaseControl id="code-block-pro-line-number-start">
+                                <TextControl
+                                    id="code-block-pro-line-number-start"
+                                    spellCheck={false}
+                                    autoComplete="off"
+                                    label={__('Start from', 'code-block-pro')}
+                                    onChange={(startingLineNumber) => {
+                                        setAttributes({ startingLineNumber });
+                                    }}
+                                    value={attributes.startingLineNumber}
+                                />
+                            </BaseControl>
+                        )}
+                    </BaseControl>
+                    <HighlightingControl
+                        attributes={attributes}
+                        setAttributes={setAttributes}
+                    />
+                    <BlurControl
+                        attributes={attributes}
+                        setAttributes={setAttributes}
+                    />
+                </div>
+            </PanelBody>
+            <ThemesPanel
+                bringAttentionToThemes={bringAttention === 'theme-select'}
+                attributes={attributes}
+                setAttributes={setAttributes}
+            />
             <PanelBody
                 title={__('Language', 'code-block-pro')}
                 initialOpen={bringAttention === 'language-select'}>
@@ -118,52 +183,6 @@ export const SidebarControls = ({
                 </div>
             </PanelBody>
             <PanelBody
-                title={__('Line Settings', 'code-block-pro')}
-                initialOpen={false}>
-                <div className="code-block-pro-editor">
-                    <BaseControl id="code-block-pro-show-line-numbers">
-                        <CheckboxControl
-                            data-cy="show-line-numbers"
-                            label={__('Line numbers', 'code-block-pro')}
-                            help={__(
-                                'Enable line numbers and set a starting number.',
-                                'code-block-pro',
-                            )}
-                            checked={attributes.lineNumbers}
-                            onChange={(lineNumbers) => {
-                                setAttributes({ lineNumbers });
-                                updateThemeHistory({
-                                    ...attributes,
-                                    lineNumbers,
-                                });
-                            }}
-                        />
-                        {attributes.lineNumbers && (
-                            <BaseControl id="code-block-pro-line-number-start">
-                                <TextControl
-                                    id="code-block-pro-line-number-start"
-                                    spellCheck={false}
-                                    autoComplete="off"
-                                    label={__('Start from', 'code-block-pro')}
-                                    onChange={(startingLineNumber) => {
-                                        setAttributes({ startingLineNumber });
-                                    }}
-                                    value={attributes.startingLineNumber}
-                                />
-                            </BaseControl>
-                        )}
-                    </BaseControl>
-                    <HighlightingControl
-                        attributes={attributes}
-                        setAttributes={setAttributes}
-                    />
-                    <BlurControl
-                        attributes={attributes}
-                        setAttributes={setAttributes}
-                    />
-                </div>
-            </PanelBody>
-            <PanelBody
                 title={__('Header Type', 'code-block-pro')}
                 initialOpen={false}>
                 {showHeaderTextEdit && (
@@ -185,7 +204,7 @@ export const SidebarControls = ({
                     attributes={attributes}
                     onClick={(headerType) => {
                         setAttributes({ headerType });
-                        updateThemeHistory({ ...attributes, headerType });
+                        updateThemeHistory({ headerType });
                     }}
                 />
             </PanelBody>
@@ -235,10 +254,7 @@ export const SidebarControls = ({
                             checked={attributes.footerLinkTarget}
                             onChange={(footerLinkTarget) => {
                                 setAttributes({ footerLinkTarget });
-                                updateThemeHistory({
-                                    ...attributes,
-                                    footerLinkTarget,
-                                });
+                                updateThemeHistory({ footerLinkTarget });
                             }}
                         />
                     </BaseControl>
@@ -247,12 +263,12 @@ export const SidebarControls = ({
                     attributes={attributes}
                     onClick={(footerType) => {
                         setAttributes({ footerType });
-                        updateThemeHistory({ ...attributes, footerType });
+                        updateThemeHistory({ footerType });
                     }}
                 />
             </PanelBody>
-            <ThemesPanel
-                bringAttentionToThemes={bringAttention === 'theme-select'}
+            <SlotFactory
+                name="CodeBlockPro.Sidebar.Middle"
                 attributes={attributes}
                 setAttributes={setAttributes}
             />
@@ -271,7 +287,7 @@ export const SidebarControls = ({
                         value={attributes.fontSize}
                         onChange={(fontSize) => {
                             setAttributes({ fontSize });
-                            updateThemeHistory({ ...attributes, fontSize });
+                            updateThemeHistory({ fontSize });
                         }}
                     />
                 </div>
@@ -285,10 +301,7 @@ export const SidebarControls = ({
                         value={attributes.lineHeight}
                         onChange={(lineHeight) => {
                             setAttributes({ lineHeight });
-                            updateThemeHistory({
-                                ...attributes,
-                                lineHeight,
-                            });
+                            updateThemeHistory({ lineHeight });
                         }}
                     />
                 </div>
@@ -299,10 +312,7 @@ export const SidebarControls = ({
                         value={attributes.fontFamily}
                         onChange={(fontFamily) => {
                             setAttributes({ fontFamily });
-                            updateThemeHistory({
-                                ...attributes,
-                                fontFamily,
-                            });
+                            updateThemeHistory({ fontFamily });
                         }}
                     />
                 </div>
@@ -317,10 +327,7 @@ export const SidebarControls = ({
                             checked={attributes.clampFonts}
                             onChange={(clampFonts) => {
                                 setAttributes({ clampFonts });
-                                updateThemeHistory({
-                                    ...attributes,
-                                    clampFonts,
-                                });
+                                updateThemeHistory({ clampFonts });
                             }}
                         />
                     </div>
@@ -344,32 +351,66 @@ export const SidebarControls = ({
                         checked={attributes.disablePadding}
                         onChange={(disablePadding) => {
                             setAttributes({ disablePadding });
-                            updateThemeHistory({
-                                ...attributes,
-                                disablePadding,
-                            });
+                            updateThemeHistory({ disablePadding });
                         }}
                     />
                 </BaseControl>
                 <BaseControl id="code-block-pro-decode-uri">
                     <CheckboxControl
                         data-cy="use-decode-uri"
-                        label={__('Allow HTML Entites', 'code-block-pro')}
+                        label={__(
+                            'Encode special characters',
+                            'code-block-pro',
+                        )}
                         help={__(
-                            'Select this to allow HTML entities such as &lt; and &gt; to be displayed.',
+                            'Select this to allow HTML entities such as &lt; and &gt; and others to be displayed. You may need to re-add the code after changing this',
                             'code-block-pro',
                         )}
                         checked={attributes.useDecodeURI}
                         onChange={(useDecodeURI) => {
                             setAttributes({ useDecodeURI });
-                            updateThemeHistory({
-                                ...attributes,
-                                useDecodeURI,
-                            });
+                            updateThemeHistory({ useDecodeURI });
+                        }}
+                    />
+                </BaseControl>
+                <BaseControl id="code-block-pro-editor-tab-size">
+                    <TextControl
+                        spellCheck={false}
+                        autoComplete="off"
+                        type="number"
+                        data-cy="editor-tab-size"
+                        label={__('Editor tab size', 'code-block-pro')}
+                        help={__(
+                            'The number of spaces to insert when pressing tab key.',
+                            'code-block-pro',
+                        )}
+                        value={attributes.tabSize}
+                        onChange={(size) => {
+                            const tabSize = size ? Number(size) : undefined;
+                            setAttributes({ tabSize });
+                            updateThemeHistory({ tabSize });
+                        }}
+                    />
+                    <CheckboxControl
+                        data-cy="use-tabs"
+                        label={__('Use Real Tabs', 'code-block-pro')}
+                        help={__(
+                            'Inserts an actual tab character instead of a space. The width defined above.',
+                            'code-block-pro',
+                        )}
+                        checked={attributes.useTabs}
+                        onChange={(useTabs) => {
+                            setAttributes({ useTabs });
+                            updateThemeHistory({ useTabs });
                         }}
                     />
                 </BaseControl>
             </PanelBody>
+            <SlotFactory
+                name="CodeBlockPro.Sidebar.End"
+                attributes={attributes}
+                setAttributes={setAttributes}
+            />
         </InspectorControls>
     );
 };

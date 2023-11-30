@@ -21,13 +21,17 @@ const handleCopyButton = () => {
             const code = b?.dataset?.encoded
                 ? decodeURIComponent(decodeURIComponent(b?.dataset?.code))
                 : b?.dataset?.code;
-            copy(code ?? '', {
+            const content = window.cbpCopyOverride?.(code, button) ?? code;
+            copy(content ?? '', {
                 format: 'text/plain',
+                onCopy: (code) => {
+                    window.cbpCopyCallback?.(code, button);
+                    b.classList.add('cbp-copying');
+                    setTimeout(() => {
+                        b.classList.remove('cbp-copying');
+                    }, 2_000);
+                },
             });
-            b.classList.add('cbp-copying');
-            setTimeout(() => {
-                b.classList.remove('cbp-copying');
-            }, 2_000);
         };
         ['click', 'keydown'].forEach((evt) =>
             button.addEventListener(evt, handler),
@@ -58,9 +62,17 @@ const handleHighlighter = () => {
         // If the code block expands, we need to recalculate the width
         new ResizeObserver(() => {
             // find the longest line
+            const lines = codeBlock.querySelectorAll('span.line');
             codeBlock.style.setProperty('--cbp-block-width', 'unset');
-            const longestLine = Array.from(highlighters).reduce((a, b) =>
+            const longestLine = Array.from(lines).reduce((a, b) =>
                 a.offsetWidth > b.offsetWidth ? a : b,
+            );
+            const highestLineHeight = Array.from(lines).reduce((a, b) =>
+                a.offsetHeight > b.offsetHeight ? a : b,
+            );
+            codeBlock.style.setProperty(
+                '--cbp-block-height',
+                highestLineHeight.offsetHeight + 'px',
             );
             codeBlock.style.setProperty(
                 '--cbp-block-width',

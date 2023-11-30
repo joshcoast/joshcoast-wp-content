@@ -261,7 +261,6 @@ class Core extends Stats {
 
 		$upgrade_url = add_query_arg(
 			array(
-				'coupon'       => 'SMUSH30OFF',
 				'utm_source'   => 'smush',
 				'utm_medium'   => 'plugin',
 				'utm_campaign' => 'smush_bulksmush_inline_filesizelimit',
@@ -281,7 +280,7 @@ class Core extends Stats {
 			'all_smushed'             => esc_html__( 'All attachments have been smushed. Awesome!', 'wp-smushit' ),
 			'error_size_limit'        => WP_Smush::is_pro() ? '' : sprintf(
 				/* translators: %1$s - opening a link <a>, %2$s - Close the link </a> */
-				esc_html__( 'Are you hitting the 5MB "size limit exceeded" warning? %1$sUpgrade to Smush Pro%2$s to optimize unlimited image files up to 32Mb each.', 'wp-smushit' ),
+				esc_html__( 'Are you hitting the 5MB "size limit exceeded" warning? %1$sUpgrade to Smush Pro%2$s to optimize unlimited image files up to 256Mb each.', 'wp-smushit' ),
 				'<a href="' . esc_url( $upgrade_url ) . '" target="_blank">',
 				'</a>'
 			),
@@ -352,6 +351,8 @@ class Core extends Stats {
 				'token'            => $product_analytics->get_token(),
 				'unique_id'        => $product_analytics->get_unique_id(),
 				'super_properties' => $product_analytics->get_super_properties(),
+				'debug'            => defined( 'WP_SMUSH_MIXPANEL_DEBUG' ) && WP_SMUSH_MIXPANEL_DEBUG
+										&& defined( 'WP_SMUSH_VERSION' ) && strpos( WP_SMUSH_VERSION, 'beta' ),
 			)
 		);
 
