@@ -1,5 +1,4 @@
 <?php
-
 namespace LightboxPhotoSwipe;
 
 /**
@@ -63,6 +62,7 @@ class OptionsManager
         'padding_bottom' => [ 'default' => '0' ],
         'max_width' => [ 'default' => '' ],
         'max_height' => [ 'default' => '' ],
+        'use_transients' => [ 'default' => '1' ],
     ];
 
     public $options;

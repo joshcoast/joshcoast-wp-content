@@ -392,7 +392,7 @@ class Post_Grid_1{
                         $wraper_before .= '</div>';
                     }
 
-                    $colClass = ($attr['gridStyle'] == 'style1' || $attr['gridStyle'] == 'style2') ? 'ultp-block-column-'.json_decode(json_encode($attr['columns']), True)['lg'] : '';
+                    $colClass = ($attr['gridStyle'] == 'style1' || $attr['gridStyle'] == 'style2') ? 'ultp-block-column-'.json_decode(wp_json_encode($attr['columns']), True)['lg'] : '';
 
                     $wraper_before .= '<div class="ultp-block-items-wrap ultp-block-row ultp-pg1a-'.$attr['gridStyle'].' '.$colClass.' ultp-'.$attr['layout'].'">';
                     $idx = ($attr['paginationShow'] && ($attr['paginationType'] == 'loadMore')) ? ( $noAjax ? 1 : 0 ) : 0;
@@ -484,7 +484,7 @@ class Post_Grid_1{
                             $idx ++;
                         endwhile;
                         if($attr['queryUnique']) {
-                            $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".json_encode($unique_ID)." data-current-unique-posts= ".json_encode($current_unique_posts)."> </span>";
+                            $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".wp_json_encode($unique_ID)." data-current-unique-posts= ".wp_json_encode($current_unique_posts)."> </span>";
                         }
                         if ($attr['paginationShow'] && ($attr['paginationType'] == 'loadMore')) {
                             $wraper_after .= '<span class="ultp-loadmore-insert-before"></span>';

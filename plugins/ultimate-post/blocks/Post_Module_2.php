@@ -511,7 +511,7 @@ class Post_Module_2{
                             $idx ++;
                         endwhile;
                         if($attr['queryUnique']) {
-                            $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".json_encode($unique_ID)." data-current-unique-posts= ".json_encode($current_unique_posts)."> </span>";
+                            $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".wp_json_encode($unique_ID)." data-current-unique-posts= ".wp_json_encode($current_unique_posts)."> </span>";
                         }
                         $bigloop = '<div class="ultp-big-post-module2">'.$bigloop.'</div>';
                         $post_loop = $bigloop.'<div class="ultp-small-post-module2">'.$post_loop.'</div>';

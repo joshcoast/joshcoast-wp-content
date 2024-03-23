@@ -48,7 +48,7 @@ class PostXOxygenElement extends OxyEl {
 				wp_reset_postdata();
 			}
 		} else {
-			if ( isset($_GET['action']) && strpos(sanitize_key($_GET['action']), 'oxy_render_oxy') !== false ) {
+			if ( isset($_GET['action']) && strpos(sanitize_key($_GET['action']), 'oxy_render_oxy') !== false ) {    // @codingStandardsIgnoreLine
 				echo '<p style="text-align:center;">'.sprintf( esc_html__( 'Pick a Template from your saved ones. Or create a template from: %s.' , 'ultimate-post' ) . ' ', '<strong><i>' . esc_html( 'Dashboard > PostX > Saved Templates', 'ultimate-post' ) . '</i></strong>' ).'</p>';
 			}
 		}

@@ -76,7 +76,7 @@ class Post_Reading_Time {
                         $content .= ultimate_post()->svg_icon($attr["readIconStyle"]); 
                     }
                     $content .= '<div>';
-                        $content .= ceil(mb_strlen(strip_tags(get_the_content( null,  false, get_the_ID() )))/1200);
+                        $content .= ceil(mb_strlen(wp_strip_all_tags(get_the_content( null,  false, get_the_ID() )))/1200);
                     $content .= '</div>';
                     if ($attr["readLabel"]) {
                         $content .= '<span class="ultp-read-label">'.$attr["readLabelText"].'</span>';

@@ -214,7 +214,7 @@ class Builder {
         if (isset($widget_area['array_version'])) { unset($widget_area['array_version']); }
         ?>
 
-        <input type="hidden" name="postx-type" value="<?php echo esc_attr(sanitize_text_field(isset($_GET['postx_type']) ? $_GET['postx_type'] : $p_type)); ?>"/>
+        <input type="hidden" name="postx-type" value="<?php echo esc_attr(isset($_GET['postx_type']) ? sanitize_text_field($_GET['postx_type']) : $p_type); // @codingStandardsIgnoreLine ?>"/>   
         <p>
             <label><?php echo esc_html__('Container Width', 'ultimate-post'); ?></label>
             <input type="number" style="width:100%" name="container-width" value="<?php echo esc_attr($width ? $width : 1140); ?>"/>
@@ -297,13 +297,31 @@ class Builder {
                         }
                         break;
                     case 'header':
-                        $settings['header'][$post_id] = ['include/header/entire_site'];
+                        if ( isset($settings['header']) ) {
+                            if ( !isset($settings['header'][$post_id]) ) {
+                                $settings['header'][$post_id] = ['include/header/entire_site'];
+                            }
+                        } else {
+                            $settings['header'][$post_id] = ['include/header/entire_site'];
+                        }
                         break;
                     case 'footer':
-                        $settings['footer'][$post_id] = ['include/footer/entire_site'];
+                        if ( isset($settings['footer']) ) {
+                            if ( !isset($settings['footer'][$post_id]) ) {
+                                $settings['footer'][$post_id] = ['include/footer/entire_site'];
+                            }
+                        } else {
+                            $settings['footer'][$post_id] = ['include/footer/entire_site'];
+                        }
                         break;
                     case '404':
-                        $settings['404'][$post_id] = ['include/404'];
+                        if ( isset($settings['404']) ) {
+                            if ( !isset($settings['404'][$post_id]) ) {
+                                $settings['404'][$post_id] = ['include/404'];
+                            }
+                        } else {
+                            $settings['404'][$post_id] = ['include/404'];
+                        }
                     default:
                         break;
                 }

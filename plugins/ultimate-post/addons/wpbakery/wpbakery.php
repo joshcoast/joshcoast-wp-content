@@ -26,7 +26,7 @@ if ( ! class_exists( 'PostX_WPBakery_Widget' ) ) {
             
             if ( $templates && $templates != 'empty' ) {
                 ultimate_post()->register_scripts_common();
-                if (isset($_GET['vc_editable'])) {
+                if (isset($_GET['vc_editable'])) {  // @codingStandardsIgnoreLine
                     $output .= ultimate_post()->set_css_style($templates, true);
                 } else {
                     ultimate_post()->set_css_style($templates);
@@ -45,7 +45,7 @@ if ( ! class_exists( 'PostX_WPBakery_Widget' ) ) {
                     wp_reset_postdata();
                 }
             } else {
-                if ( isset($_GET['vc_editable']) ) {
+                if ( isset($_GET['vc_editable']) ) {    // @codingStandardsIgnoreLine
                     $output .= '<p style="text-align:center;">'.sprintf( esc_html__( 'Pick a Template from your saved ones. Or create a template from: %s.' , 'ultimate-post' ) . ' ', '<strong><i>' . esc_html( 'Dashboard > PostX > Saved Templates', 'ultimate-post' ) . '</i></strong>' ).'</p>';
                 }
             }

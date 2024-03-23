@@ -72,14 +72,14 @@ class Gutenberg_Post_Blocks_Widget extends \Elementor\Widget_Base {
                 }
             echo '</div>';
         } else {
-            if (isset($_GET['action']) && $_GET['action'] == 'elementor') {
+            if (isset($_GET['action']) && $_GET['action'] == 'elementor') { // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended	
                 echo '<p style="text-align:center;">'.sprintf( esc_html__( 'Pick a Template from your saved ones. Or create a template from: %s.' , 'ultimate-post' ) . ' ', '<strong><i>' . esc_html( 'Dashboard > PostX > Saved Templates', 'ultimate-post' ) . '</i></strong>' ).'</p>';
             }
         }
     }
 
     public function set_inline_css($id) {
-        if (isset($_GET['action']) || isset($_POST['action'])) { //phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (isset($_GET['action']) || isset($_POST['action'])) { //phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.NonceVerification.Recommended
             echo ultimate_post()->set_css_style($id, true); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         } else {
             ultimate_post()->set_css_style($id);

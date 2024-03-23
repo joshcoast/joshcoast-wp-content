@@ -37,18 +37,19 @@ class Compatibility{
 	 * @since v.2.9.8
 	 */
     public function ultp_revisionary_copy_postmeta_callback($from_post, $to_post_id, $args) {
+        global $wp_filesystem;
+        if (! $wp_filesystem ) {
+            require_once( ABSPATH . 'wp-admin/includes/file.php' );
+            WP_Filesystem();
+        }
         $css_meta = get_post_meta( $to_post_id, '_ultp_css', true );
         $upload_dir_url = wp_get_upload_dir();
         $upload_css_dir_url = trailingslashit( $upload_dir_url['basedir'] );
         $css_dir_path = $upload_css_dir_url."ultimate-post/ultp-css-{$to_post_id}.css";
+        
         if (file_exists( $css_dir_path )) {
-            $css = file_get_contents($css_dir_path);
+            $css = $wp_filesystem->get_contents($css_dir_path);
             if ($css_meta != $css) {
-                global $wp_filesystem;
-                if (! $wp_filesystem ) {
-                    require_once( ABSPATH . 'wp-admin/includes/file.php' );
-                    WP_Filesystem();
-                }
                 $wp_filesystem->put_contents( $css_dir_path, $css_meta ); 
             }
         }
@@ -161,7 +162,7 @@ class Compatibility{
                         'builder_post_tag'          => 'yes',
                         'builder_post_title'        => 'yes',
                         'builder_post_view_count'   => 'yes',
-                        'save_version' => rand(1, 1000)
+                        'save_version' => wp_rand(1, 1000)
                     );
                     $addon_data = ultimate_post()->get_setting();
                     foreach ($set_settings as $key => $value) {

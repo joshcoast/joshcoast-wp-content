@@ -133,6 +133,10 @@
     src: url('../fonts/Code-Pro-Comic-Mono.ttf') format('truetype');
 }
 @font-face {
+    font-family: 'Code-Pro-Roboto-Mono';
+    src: url('../fonts/Code-Pro-Roboto-Mono.ttf') format('truetype');
+}
+@font-face {
     font-family: 'Code-Pro-Fantasque-Sans-Mono';
     src: url('../fonts/Code-Pro-Fantasque-Sans-Mono.woff2') format('woff2');
 }
@@ -167,4 +171,8 @@
 @font-face {
     font-family: 'Code-Pro-Geist-Mono';
     src: url('../fonts/Code-Pro-Geist-Mono.woff2') format('woff2');
+}
+@font-face {
+    font-family: 'Code-Pro-Hack';
+    src: url('../fonts/Code-Pro-Hack.woff2') format('woff2');
 }

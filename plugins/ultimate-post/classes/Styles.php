@@ -21,9 +21,9 @@ class Styles {
 	 */
     public function __construct() {
 		$this->require_block_css();
-		add_action('rest_api_init', array($this, 'save_block_css_callback'));
-		add_action('wp_ajax_disable_google_font', array($this, 'disable_google_font_callback'));
-		add_action('after_delete_post', array($this, 'ultp_delete_post_callback'), 10, 2); // Delete Plugin Data CSS file delete Action
+		add_action( 'rest_api_init', array( $this, 'save_block_css_callback' ) );
+		add_action( 'wp_ajax_disable_google_font', array( $this, 'disable_google_font_callback' ) );
+		add_action( 'after_delete_post', array( $this, 'ultp_delete_post_callback' ), 10, 2 ); // Delete Plugin Data CSS file delete Action
 	}
 
 	/**
@@ -36,8 +36,8 @@ class Styles {
 		$upload = wp_upload_dir();
 		$upload_dir = $upload['basedir'];
 		$upload_dir_path = $upload_dir . "/ultimate-post/ultp-css-{$post_id}.css";
-		if ( file_exists($upload_dir_path) ) {
-			wp_delete_file($upload_dir_path);
+		if ( file_exists( $upload_dir_path ) ) {
+			wp_delete_file( $upload_dir_path );
 		}
 	}
 
@@ -48,33 +48,37 @@ class Styles {
      * @return STRING
      */
     public function disable_google_font_callback() {
-		if (! (isset($_REQUEST['wpnonce']) && wp_verify_nonce(sanitize_key(wp_unslash($_REQUEST['wpnonce'])), 'ultp-nonce'))){
+		if ( ! ( isset( $_REQUEST['wpnonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_REQUEST['wpnonce'] ) ), 'ultp-nonce' ) ) ) {
             return ;
         }
+		if(!ultimate_post()->permission_check_for_restapi()){
+			return;
+		}
 		
 		global $wp_filesystem;
-		if (! $wp_filesystem ) {
+		if ( ! $wp_filesystem ) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			WP_Filesystem();
 		}
-		$upload_dir_url = wp_upload_dir();
-		$dir = trailingslashit($upload_dir_url['basedir']).'ultimate-post/';
-		$css_dir = glob($dir.'*.css');
-		$exclude_typo = implode('|', ['Arial','Tahoma','Verdana','Helvetica','Times New Roman','Trebuchet MS','Georgia']);
 
-		if (count($css_dir) > 0) {
-			foreach( $css_dir as $key => $value ) {
-				$css = $wp_filesystem->get_contents($value);
-				$filter_css = preg_replace('/(@import)[\w\s:\/?=,;.\'()+]*;/m', '', $css); // Remove Import Font
-				$final_css = preg_replace('/(font-family:)((?!'.$exclude_typo.')[\w\s:,\\\'-])*;/mi', '', $filter_css); // Font Replace Except Default Font
+		$upload_dir_url = wp_upload_dir();
+		$dir = trailingslashit( $upload_dir_url['basedir'] ) . 'ultimate-post/';
+		$css_dir = glob( $dir . '*.css' );
+		$exclude_typo = implode( '|', ['Arial','Tahoma','Verdana','Helvetica','Times New Roman','Trebuchet MS','Georgia'] );
+
+		if ( count( $css_dir ) > 0 ) {
+			foreach ( $css_dir as $key => $value ) {
+				$css = $wp_filesystem->get_contents( $value );
+				$filter_css = preg_replace( '/(@import)[\w\s:\/?=,;.\'()+]*;/m', '', $css ); // Remove Import Font
+				$final_css = preg_replace( '/(font-family:)((?!'.$exclude_typo.')[\w\s:,\\\'-])*;/mi', '', $filter_css ); // Font Replace Except Default Font
 				$wp_filesystem->put_contents( $value, $final_css ); // Update CSS File
 			}
 		}
 
 		global $wpdb;
-		$results = $wpdb->get_results( "SELECT * FROM $wpdb->postmeta WHERE `meta_key`='_ultp_css'" );
-		if (!empty($results)) {
-			foreach ($results as $key => $value) {
+		$results = $wpdb->get_results( "SELECT * FROM $wpdb->postmeta WHERE `meta_key`='_ultp_css'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( ! empty( $results ) ) {
+			foreach ( $results as $key => $value ) {
 				$filter_css = preg_replace('/(@import)[\w\s:\/?=,;.\'()+]*;/m', '', $value->meta_value); // Remove Import Font
 				$final_css = preg_replace('/(font-family:)((?!'.$exclude_typo.')[\w\s:,\\\'-])*;/mi', '', $filter_css); // Font Replace Except Default Font
 				update_option($value->meta_key, $final_css);
@@ -158,9 +162,10 @@ class Styles {
 	 */
 	public function global_settings_action($server) {
 		$post = $server->get_params();
-		if (isset($post['type'])) {
-			if ($post['type'] == 'set') {
-				update_option('postx_global', $post['data']);
+		$post_type = isset($post['type'])?ultimate_post()->ultp_rest_sanitize_params($post['type']):'';
+		if ($post_type && ultimate_post()->permission_check_for_restapi()) {
+			if ($post_type == 'set') {				
+				update_option('postx_global', ultimate_post()->ultp_rest_sanitize_params( $post['data']));
 				return ['success' => true];
 			} else {
 				return ['success' => true, 'data' => get_option('postx_global', [])];
@@ -179,22 +184,23 @@ class Styles {
 	 */
 	public function appened_css_call($server) {
 		global $wp_filesystem;
-		if (! $wp_filesystem ) {
+		if ( ! $wp_filesystem ) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 		}
 		$post = $server->get_params();
 		$css = $post['inner_css'];
-		$post_id = (int) sanitize_text_field($post['post_id']);
-		if ($post_id) {
+		$post_id = isset($post['post_id'])? (int) ultimate_post()->ultp_rest_sanitize_params($post['post_id']):0;
+		if ( $post_id && 'wp_block'===get_post_type($post_id) ) {
+			
 			$upload_dir_url = wp_upload_dir();
 			$filename = "ultp-css-{$post_id}.css";
 			$dir = trailingslashit($upload_dir_url['basedir']).'ultimate-post/';
-			update_post_meta($post_id, '_wopb_css', $css);
+			update_post_meta($post_id, '_ultp_css', $css);
 			WP_Filesystem( false, $upload_dir_url['basedir'], true );
-			if (! $wp_filesystem->is_dir( $dir ) ) {
+			if ( ! $wp_filesystem->is_dir( $dir ) ) {
 				$wp_filesystem->mkdir( $dir );
 			}
-			if (! $wp_filesystem->put_contents( $dir . $filename, $css ) ) {
+			if ( ! $wp_filesystem->put_contents( $dir . $filename, $css ) ) {
 				throw new Exception(__('CSS can not be saved due to permission!!!', 'ultimate-post' ));  //phpcs:ignore
 			}
 			wp_send_json_success(array('success' => true, 'message' => __('Data retrive done', 'ultimate-post')));
@@ -213,8 +219,9 @@ class Styles {
 	 */
 	public function get_reusable_posts_call($server) {
 		$post = $server->get_params();
-		if (isset($post['postId'])) {
-			return array('success' => true, 'data'=> get_post($post['postId'])->post_content, 'message' => __('Data retrive done', 'ultimate-post'));
+		$post_id = isset($post['postId'])? ultimate_post()->ultp_rest_sanitize_params($post['postId']):'';
+		if ( $post_id && ( ultimate_post()->permission_check_for_restapi($post_id) || 'wp_block'===get_post_type($post_id) )) {
+			return array('success' => true, 'data'=> get_post($post_id)->post_content, 'message' => __('Data retrive done', 'ultimate-post'));
 		} else {
 			return array('success' => false, 'message' => __('Data not found!!', 'ultimate-post'));
 		}
@@ -229,16 +236,24 @@ class Styles {
 	 * @return ARRAY/Exception | Array of the Custom Message
 	 */
 	public function save_block_content_css($request) {
+
+		$params = $request->get_params();
+		$post_id = isset($params['post_id'])? ultimate_post()->ultp_rest_sanitize_params($params['post_id']):'';
+
+		if(!ultimate_post()->permission_check_for_restapi(is_numeric($post_id)?$post_id:false)) {
+			return;
+		}
 		
 		try{
 			global $wp_filesystem;
-			if (! $wp_filesystem ) {
+			if ( ! $wp_filesystem ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
-			$params = $request->get_params();
+
+			$params['has_block'] = isset($params['has_block'])?rest_sanitize_boolean($params['has_block']):'';
+			$params['preview'] = isset($params['preview'])?rest_sanitize_boolean($params['preview']):'';
 			
-			$post_id = sanitize_text_field($params['post_id']);
-			if ($post_id == 'ultp-widget' && $params['has_block']) {
+			if ( $post_id == 'ultp-widget' && $params['has_block'] ) { // Only Editor and upwards role user can save widget css
 				update_option($post_id, $params['block_css']);
 				return ['success' => true, 'message' => __('Widget CSS Saved', 'ultimate-post')];
 			}
@@ -246,35 +261,35 @@ class Styles {
 			$upload_dir_url = wp_upload_dir();
 			$dir = trailingslashit($upload_dir_url['basedir']) . 'ultimate-post/';
 
-			if ( strpos($post_id, '//') !== false) {
+			if ( strpos($post_id, '//') !== false ) {
 				$data = explode('//', $post_id);
 				
 
-				if ($data[2] == 'wp_template_part') {					
+				if ( $data[2] == 'wp_template_part' ) {					
 					$filename = "ultp-css-{$data[0]}__{$data[3]}.css";
 					$template_css = get_option($data[0].'__'.$data[3], '');
 					$reg = '/(\/\*TEMPLATE_START_'.$data[1].')[^"]+?(TEMPLATE_CLOSE_'.$data[1].'\*\/)/m';
 					
 					$ultp_block_css = '';
-					if (strpos($template_css, 'TEMPLATE_START_'.$data[1]) !== false) {
+					if ( strpos($template_css, 'TEMPLATE_START_'.$data[1]) !== false ) {
 						$ultp_block_css = preg_replace($reg, '/*TEMPLATE_START_'.$data[1].'*/' . $params['block_css'] . '/*TEMPLATE_CLOSE_'.$data[1].'*/', $template_css);	
 					} else {
 						$ultp_block_css = $template_css . '/*TEMPLATE_START_'.$data[1].'*/' . $params['block_css'] . '/*TEMPLATE_CLOSE_'.$data[1].'*/';
 					}
 					$ultp_block_css = $this->set_top_css($ultp_block_css);
 					WP_Filesystem( false, $upload_dir_url['basedir'], true );
-					if (! $wp_filesystem->is_dir( $dir ) ) {
+					if ( ! $wp_filesystem->is_dir( $dir ) ) {
 						$wp_filesystem->mkdir( $dir );
 					}
 					
 					$wp_filesystem->put_contents( $dir . $filename, $ultp_block_css );
 					
 					update_option($data[0].'__'.$data[3], $ultp_block_css);
-				} else if ($data[2] == 'wp_template') {
+				} else if ( $data[2] == 'wp_template' ) {
 					$filename = "ultp-css-{$data[0]}__{$data[1]}.css";
 					$ultp_block_css = $this->set_top_css($params['block_css']);
 					WP_Filesystem( false, $upload_dir_url['basedir'], true );
-					if (! $wp_filesystem->is_dir( $dir ) ) {
+					if ( ! $wp_filesystem->is_dir( $dir ) ) {
 						$wp_filesystem->mkdir( $dir );
 					}
 					$wp_filesystem->put_contents( $dir . $filename, $ultp_block_css );
@@ -288,32 +303,32 @@ class Styles {
 			$post_id = (int) $post_id;
 			$filename = "ultp-css-{$post_id}.css";
 
-			if ($params['has_block']) {
+			if ( $params['has_block'] ) {
 				// Set Saving ID for Clean Cache
-				ultimate_post()->set_setting('save_version', rand(1, 1000));
+				ultimate_post()->set_setting('save_version', wp_rand(1, 1000));
 
 				update_post_meta($post_id, '_ultp_active', 'yes');
 				$ultp_block_css = $this->set_top_css($params['block_css']);
 
 				// Preview Check
-				if ($params['preview']) {
+				if ( $params['preview'] ) {
 					set_transient('_ultp_preview_'.$post_id, $ultp_block_css , 60*60);
 					return ['success' => true];
 				}
 
 				WP_Filesystem( false, $upload_dir_url['basedir'], true );
-				if (! $wp_filesystem->is_dir( $dir ) ) {
+				if ( ! $wp_filesystem->is_dir( $dir ) ) {
 					$wp_filesystem->mkdir( $dir );
 				}
-				if (! $wp_filesystem->put_contents( $dir . $filename, $ultp_block_css ) ) {
+				if ( ! $wp_filesystem->put_contents( $dir . $filename, $ultp_block_css ) ) {
 					throw new Exception(__('CSS can not be saved due to permission!!!', 'ultimate-post')); //phpcs:ignore
 				}
 				update_post_meta($post_id, '_ultp_css', $ultp_block_css);
 				return ['success'=>true, 'message'=>__('PostX css file has been updated.', 'ultimate-post')];
 			} else {
 				delete_post_meta($post_id, '_ultp_active');
-				if (file_exists($dir.$filename)) {
-					unlink($dir.$filename);
+				if ( file_exists($dir.$filename) ) {
+					wp_delete_file($dir.$filename);
 				}
 				delete_post_meta($post_id, '_ultp_css');
 				return ['success' => true, 'message' => __('Data Delete Done', 'ultimate-post')];
@@ -333,15 +348,15 @@ class Styles {
 	 */
 	public function set_top_css($get_css = '') {
 		$disable_google_font = ultimate_post()->get_setting('disable_google_font');
-		if ($disable_google_font != 'yes') {
+		if ( $disable_google_font != 'yes' ) {
 		$css_url = "@import url('https://fonts.googleapis.com/css?family=";
 		$font_exists = substr_count($get_css, $css_url);
-		if ($font_exists) {
+		if ( $font_exists ) {
 			$pattern = sprintf('/%s(.+?)%s/ims', preg_quote($css_url, '/'), preg_quote("');", '/'));
-			if (preg_match_all($pattern, $get_css, $matches)) {
+			if ( preg_match_all($pattern, $get_css, $matches) ) {
 				$fonts = $matches[0];
 				$get_css = str_replace($fonts, '', $get_css);
-				if (preg_match_all( '/font-weight[ ]?:[ ]?[\d]{3}[ ]?;/' , $get_css, $matche_weight )) {
+				if ( preg_match_all( '/font-weight[ ]?:[ ]?[\d]{3}[ ]?;/' , $get_css, $matche_weight ) ) {
 					$weight = array_map( function($val) {
 						$process = trim( str_replace( array( 'font-weight',':',';' ) , '', $val ) );
 						if (is_numeric( $process )) {
@@ -369,16 +384,16 @@ class Styles {
 	 */ 
 	public function require_block_css() {
 		$css_type = ultimate_post()->get_setting('css_save_as');
-		if (isset($_GET['preview_id']) && isset($_GET['preview_nonce'])) {
-			add_action('wp_head', array( $this, 'add_block_inline_css' ), 100);	
-		} else if ($css_type === 'filesystem') {
-			add_action('wp_enqueue_scripts', array($this, 'add_block_css_file'));
+		if ( isset($_GET['preview_id']) && isset($_GET['preview_nonce']) ) {	// @codingStandardsIgnoreLine
+			add_action( 'wp_head', array( $this, 'add_block_inline_css' ), 100 );	
+		} else if ( $css_type === 'filesystem' ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'add_block_css_file' ) );
 		} else {
-			add_action('wp_head', array( $this, 'add_block_inline_css' ), 100);	
+			add_action( 'wp_head', array( $this, 'add_block_inline_css' ), 100 );	
 		}
 
-		add_action('wp_enqueue_scripts', array($this, 'postx_global_css'));
-		add_action('admin_enqueue_scripts', array($this, 'postx_global_css'));
+		add_action( 'wp_enqueue_scripts', array( $this, 'postx_global_css' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'postx_global_css' ) );
 	}
 
 	/**
@@ -401,7 +416,7 @@ class Styles {
 			--preset-color8: '.(isset($global['presetColor8'])?$global['presetColor8']:'#f8f9fa').';
 			--preset-color9: '.(isset($global['presetColor9'])?$global['presetColor9']:'#ffffff').';
 			}';
-		wp_register_style( 'wpxpo-global-style', false );
+		wp_register_style( 'wpxpo-global-style', false, array(), ULTP_VER );
     	wp_enqueue_style( 'wpxpo-global-style' );
 		wp_add_inline_style( 'wpxpo-global-style', $custom_css );
 	}
@@ -414,24 +429,24 @@ class Styles {
 	 */
 	public function add_block_css_file() {
 		$header_id = ultimate_post()->conditions('header');
-		if ($header_id) {
+		if ( $header_id ) {
 			ultimate_post()->set_css_style( $header_id );
 		}
 		$footer_id = ultimate_post()->conditions('footer');
-		if ($footer_id) {
+		if ( $footer_id ) {
 			ultimate_post()->set_css_style( $footer_id );
 		}
 		ultimate_post()->set_css_style( ultimate_post()->get_ID() );
 		$this->add_fse_theme_css('filesystem'); // FSE theme support
 	}
 
-	public function add_fse_theme_css($type = 'filesystem') {		
+	public function add_fse_theme_css( $type = 'filesystem' ) {		
 		if ( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
 			global $_wp_current_template_id;
-			if (isset($_wp_current_template_id)) {
+			if ( isset($_wp_current_template_id) ) {
 				ultimate_post()->register_scripts_common();
 				$template_id = str_replace('//', '__',$_wp_current_template_id);
-				if ($type == 'inline') {
+				if ( $type == 'inline' ) {
 					$this->set_inline_css_style( $template_id );
 				} else {
 					ultimate_post()->set_css_style( $template_id );
@@ -448,18 +463,18 @@ class Styles {
 	 */
 	public function add_block_inline_css() {
 		$header_id = ultimate_post()->conditions('header');
-		if ($header_id) {
+		if ( $header_id ) {
 			$this->set_inline_css_style( $header_id );
 		}
 		$footer_id = ultimate_post()->conditions('footer');
-		if ($footer_id) {
+		if ( $footer_id ) {
 			$this->set_inline_css_style( $footer_id );
 		}
         $this->set_inline_css_style(ultimate_post()->get_ID());
 		$this->add_fse_theme_css('inline'); // FSE theme support
 	}
-	public function set_inline_css_style($post_id) {
-		if ($post_id) { 
+	public function set_inline_css_style( $post_id ) {
+		if ( $post_id ) { 
             $upload_dir_url = wp_get_upload_dir();
             $upload_css_dir_url = trailingslashit( $upload_dir_url['basedir'] );
 			$css_dir_path = $upload_css_dir_url."ultimate-post/ultp-css-{$post_id}.css";
@@ -467,50 +482,60 @@ class Styles {
 			// Reusable CSS
 			$reusable_id = [];
 			$reusable_css = '';
-			if ( strpos($post_id, '__') !== false) {
+			if ( strpos($post_id, '__') !== false ) {
 				$template = get_block_template( str_replace('__', '//', $post_id) );
-				if ($template->wp_id) {
+				if ( $template->wp_id ) {
 					$reusable_id = ultimate_post()->reusable_id($template->wp_id);
 				}
 			} else {
 				$reusable_id = ultimate_post()->reusable_id($post_id);
 			}
-			if (!empty($reusable_id)) {
+			if ( !empty($reusable_id) ) {
 				foreach ( $reusable_id as $id ) {
 					$reusable_dir_path = $upload_css_dir_url."ultimate-post/ultp-css-{$id}.css";
-					if (file_exists( $reusable_dir_path )) {
-						$reusable_css .= file_get_contents($reusable_dir_path);
+					if ( file_exists( $reusable_dir_path ) ) {
+						global $wp_filesystem;
+						if (! $wp_filesystem ) {
+							require_once( ABSPATH . 'wp-admin/includes/file.php' );
+						}
+						WP_Filesystem();
+						$reusable_css .= $wp_filesystem->get_contents($reusable_dir_path);
 					} else {
 						$reusable_css .= get_post_meta($id, '_ultp_css', true);
 					}
 				}
 			}
-			if (isset($_GET['preview_id']) && isset($_GET['preview_nonce'])) {
+			if ( isset($_GET['preview_id']) && isset($_GET['preview_nonce']) ) {	// @codingStandardsIgnoreLine
 				$css = get_transient('_ultp_preview_'.$post_id, true);
-				if (!$css) {
+				if ( !$css ) {
 					$css = get_post_meta($post_id, '_ultp_css', true);
 				}
-				if ($css) {
-					if ($reusable_css) {
+				if ( $css ) {
+					if ( $reusable_css ) {
 						$css = $this->set_top_css($css.$reusable_css);
 					}
-					echo ultimate_post()->set_inline($css); //phpcs:ignore
+					echo ultimate_post()->set_inline($css, $post_id); //phpcs:ignore
 				}
-			} else if (file_exists( $css_dir_path )) {
-				$css = file_get_contents($css_dir_path);
-				if ($reusable_css) {
+			} else if ( file_exists( $css_dir_path ) ) {
+				global $wp_filesystem;
+				if (! $wp_filesystem ) {
+					require_once( ABSPATH . 'wp-admin/includes/file.php' );
+				}
+				WP_Filesystem();
+				$css = $wp_filesystem->get_contents($css_dir_path);
+				if ( $reusable_css ) {
 					$css = $this->set_top_css($css.$reusable_css);
 				}
-				if ($css) {
-					echo ultimate_post()->set_inline($css); //phpcs:ignore
+				if ( $css ) {
+					echo ultimate_post()->set_inline($css, $post_id); //phpcs:ignore
 				}
 			} else {
 				$css = get_post_meta($post_id, '_ultp_css', true);
-				if ($reusable_css) {
+				if ( $reusable_css ) {
 					$css = $this->set_top_css($css.$reusable_css);
 				}
-				if ($css) {
-					echo ultimate_post()->set_inline($css); //phpcs:ignore
+				if ( $css ) {
+					echo ultimate_post()->set_inline($css, $post_id); //phpcs:ignore
 				}
 			}
 		}

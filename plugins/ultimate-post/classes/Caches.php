@@ -125,13 +125,14 @@ class Caches{
 			if (! $wp_filesystem ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
+            WP_Filesystem();
             
 			$upload_dir_url = wp_upload_dir();
 			$dir 			= trailingslashit($upload_dir_url['basedir']) . 'ultp/';
             $file_path      = $dir . "premade.json";
             
             if (file_exists( $file_path )) {
-                return array( 'success' => true, 'data' => file_get_contents($file_path) );
+                return array( 'success' => true, 'data' => $wp_filesystem->get_contents($file_path) );
             } else {
                 $this->get_source_data('premade');
             }
@@ -180,13 +181,14 @@ class Caches{
 			if (! $wp_filesystem ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
+            WP_Filesystem();
             
 			$upload_dir_url = wp_upload_dir();
 			$dir 			= trailingslashit($upload_dir_url['basedir']) . 'ultp/';
             $file_path      = $dir . "design.json";
             
             if (file_exists( $file_path )) {
-                return array( 'success' => true, 'data' => file_get_contents($file_path) );
+                return array( 'success' => true, 'data' =>$wp_filesystem->get_contents($file_path) );
             } else {
                 return array( 'success' => true, 'data' => $this->get_source_data('design') );
             }
@@ -210,13 +212,14 @@ class Caches{
 			if (! $wp_filesystem ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 			}
+            WP_Filesystem();
 
 			$upload_dir_url = wp_upload_dir();
 			$dir 			= trailingslashit($upload_dir_url['basedir']) . 'ultp/';
             $file_path      = $dir . "template_nd_design.json";
             
             if (file_exists( $file_path )) {
-                return array( 'success' => true, 'data' => file_get_contents($file_path) );
+                return array( 'success' => true, 'data' => $wp_filesystem->get_contents($file_path) );
             } else {
                 return array( 'success' => true, 'data' => $this->get_source_data('templates') );
             }
@@ -247,17 +250,17 @@ class Caches{
             }
             if($type == 'templates' || $type == 'all'){
                 if (!file_exists($dir . 'template_nd_design.json')) {
-                    fopen( $dir . 'template_nd_design.json', "w" );
+                    $wp_filesystem->put_contents($dir . 'template_nd_design.json', '', FS_CHMOD_FILE);
                 }
             }
             if($type == 'all' || $type == 'design'){
                 if (!file_exists($dir . 'design.json')) {
-                    fopen( $dir . 'design.json', "w" );
+                    $wp_filesystem->put_contents($dir . 'design.json', '', FS_CHMOD_FILE);
                 }
             }
             if($type == 'all' || $type == 'premade'){
                 if (!file_exists($dir . 'premade.json')) {
-                    fopen( $dir . 'premade.json', "w" );
+                    $wp_filesystem->put_contents($dir . 'premade.json', '', FS_CHMOD_FILE);
                 }
             }
             return $dir;
@@ -323,7 +326,12 @@ class Caches{
             if ( !is_wp_error( $response ) ) {
                 $path_url = $this->create_directory($type);
                 $data = $response['body'];
-                file_put_contents($path_url.'template_nd_design.json', $data);   
+                global $wp_filesystem;
+                if (! $wp_filesystem ) {
+                    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                }
+                WP_Filesystem();
+                $wp_filesystem->put_contents($path_url.'template_nd_design.json', $data);   
             }
         }
         if($type == 'all' || $type == 'design'){
@@ -337,7 +345,12 @@ class Caches{
             if ( !is_wp_error( $response ) ) {
                 $path_url = $this->create_directory($type);
                 $data = $response['body'];
-                file_put_contents($path_url.'design.json', $data);
+                global $wp_filesystem;
+                if (! $wp_filesystem ) {
+                    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                }
+                WP_Filesystem();
+                $wp_filesystem->put_contents($path_url.'design.json', $data);
             }
         }
         if ($type == 'all' || $type == 'premade') {
@@ -351,7 +364,12 @@ class Caches{
             if ( !is_wp_error( $response ) ) {
                 $path_url = $this->create_directory($type);
                 $data = $response['body'];
-                file_put_contents($path_url.'premade.json', $data);
+                global $wp_filesystem;
+                if (! $wp_filesystem ) {
+                    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                }
+                WP_Filesystem();
+                $wp_filesystem->put_contents($path_url.'premade.json', $data);
             }
         }
         return $data;

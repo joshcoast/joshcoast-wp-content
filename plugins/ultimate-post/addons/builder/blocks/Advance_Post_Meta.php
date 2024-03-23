@@ -344,7 +344,7 @@ class Advance_Post_Meta {
             if ($title == "readTime" ) {
                 if ($iconEnable ) { $content .= $icon; }
 
-                $content .= '<div>'.ceil(mb_strlen(strip_tags(get_the_content( null,  false, $post_id )))/1200).'</div>';
+                $content .= '<div>'.ceil(mb_strlen(wp_strip_all_tags(get_the_content( null,  false, $post_id )))/1200).'</div>';
                 $content .=  $labelEnable ? '<span class="ultp-read-label">'.$labelText.'</span>' : '' ;
                 $content .= '</span>';
             }

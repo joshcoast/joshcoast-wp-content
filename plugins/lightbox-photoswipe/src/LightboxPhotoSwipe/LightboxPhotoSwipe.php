@@ -1,5 +1,4 @@
 <?php
-
 namespace LightboxPhotoSwipe;
 
 defined('ABSPATH') or die();
@@ -11,9 +10,9 @@ include_once ABSPATH . 'wp-admin/includes/plugin.php';
  */
 class LightboxPhotoSwipe
 {
-    const VERSION = '5.1.0';
+    const VERSION = '5.2.5';
     const SLUG = 'lightbox-photoswipe';
-    const META_VERSION = '12';
+    const META_VERSION = '18';
     const CACHE_EXPIRE_IMG_DETAILS = 86400;
     const DB_VERSION = 36;
     const BASEPATH = WP_PLUGIN_DIR.'/'.self::SLUG.'/';
@@ -60,6 +59,7 @@ class LightboxPhotoSwipe
             add_action('wp_enqueue_scripts', [$this, 'enqueueScripts']);
             add_action('wp_footer', [$this, 'outputFooter']);
             add_action('wp_head', [$this, 'bufferStart'], 2050);
+            add_filter('the_content', [$this, 'filterOutput']);
             if ($this->optionsManager->getOption('separate_galleries')) {
                 remove_shortcode('gallery');
                 add_shortcode('gallery', [$this, 'shortcodeGallery'], 10, 1);
@@ -285,6 +285,11 @@ class LightboxPhotoSwipe
     {
         global $wpdb;
 
+        // Avoid double replacement
+        if (strpos($matches[4], 'data-lbwps-width="') !== false) {
+            return $matches[1].$matches[2].$matches[3].$matches[4].$matches[5];
+        }
+
         $use = true;
         $attr = '';
         $url = $matches[2];
@@ -310,7 +315,11 @@ class LightboxPhotoSwipe
             $file = $this->getHomeUrl() . $file;
         }
 
-        $type = wp_check_filetype($file);
+        $mimeTypes = get_allowed_mime_types();
+        if (!in_array('svg', $mimeTypes)) {
+            $mimeTypes['svg'] = 'image/svg+xml';
+        }
+        $type = wp_check_filetype($file, $mimeTypes);
         $extension = strtolower($type['ext']);
         $captionCaption = '';
         $captionDescription = '';
@@ -463,7 +472,12 @@ class LightboxPhotoSwipe
             }
 
             $cacheKey = sprintf('%s-%s-image-%s',self::META_VERSION, self::SLUG, hash('md5', $file.$imgMtime));
-            if (!$imgDetails = get_transient($cacheKey)) {
+            if ($this->optionsManager->getOption('use_transients')) {
+                $imgDetails = get_transient($cacheKey);
+            } else {
+                $imgDetails = false;
+            }
+            if (!$imgDetails) {
                 $imageSize = $this->getImageSize($file . $params, $extension);
                 if (false !== $imageSize && is_numeric($imageSize[0]) && is_numeric($imageSize[1]) && $imageSize[0] > 0 && $imageSize[1] > 0) {
                     $pathInfo = pathinfo($file);
@@ -513,19 +527,15 @@ class LightboxPhotoSwipe
                         'exifDateTime'    => '',
                         'exifOrientation' => '',
                     ];
-                    if (in_array($extension, ['jpg', 'jpeg', 'jpe', 'tif', 'tiff']) && function_exists('exif_read_data')) {
-                        $exif = @exif_read_data( $file . $params, 'EXIF', true );
-                        if (false !== $exif) {
-                            $this->exifHelper->setExifData($exif);
+                    if (in_array($extension, ['jpg', 'jpeg', 'jpe', 'tif', 'tiff', 'webp'])) {
+                        if ($this->exifHelper->readExifDataFromFile($file.$params, $extension)) {
                             $imgDetails['exifCamera']   = $this->exifHelper->getCamera();
                             $imgDetails['exifFocal']    = $this->exifHelper->getFocalLength();
                             $imgDetails['exifFstop']    = $this->exifHelper->getFstop();
                             $imgDetails['exifShutter']  = $this->exifHelper->getShutter();
                             $imgDetails['exifIso']      = $this->exifHelper->getIso();
                             $imgDetails['exifDateTime'] = $this->exifHelper->getDateTime();
-                            if (isset($exif['IFD0']['Orientation'])) {
-                                $imgDetails['exifOrientation'] = $exif['IFD0']['Orientation'];
-                            }
+                            $imgDetails['exifOrientation'] = $this->exifHelper->getOrientation();
                             // If the image is rotated, width and height may need to be swapped
                             if (in_array($imgDetails['exifOrientation'], [5, 6, 7, 8])) {
                                 $swap = $imgDetails['imageSize'][0];
@@ -534,7 +544,9 @@ class LightboxPhotoSwipe
                             }
                         }
                     }
-                    set_transient($cacheKey, $imgDetails, self::CACHE_EXPIRE_IMG_DETAILS);
+                    if ($this->optionsManager->getOption('use_transients')) {
+                        set_transient($cacheKey, $imgDetails, self::CACHE_EXPIRE_IMG_DETAILS);
+                    }
                 }
             }
 

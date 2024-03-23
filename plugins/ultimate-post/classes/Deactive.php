@@ -32,9 +32,6 @@ class Deactive{
         add_action( 'admin_footer', array( $this, 'get_source_data_callback' ) );
 
 		$is_collect = ultimate_post()->get_tran('wpxpo_data_collect');
-		if ($is_collect != 'yes' && $is_collect != 'no' ) {
-            // add_action( 'admin_notices', array( $this, 'data_collect_notice' ) );
-		}
 
 		$is_frequency = get_transient( 'wpxpo_data_collect_every' );
 		if ($is_frequency == false && $is_collect == 'yes') {
@@ -42,45 +39,11 @@ class Deactive{
 			set_transient( 'wpxpo_data_collect_every', 'yes', MONTH_IN_SECONDS ); // every 30 days
 		}
 		
-		add_action( 'admin_init', array( $this, 'ultp_tracking_callback' ) );
 		add_action( 'wp_ajax_ultp_deactive_plugin', array( $this, 'send_plugin_data' ) );
 	}
 
 	public function send_frequency_plugin_data() {
 		$this->send_plugin_data( 'allow' );
-	}
-
-	public function ultp_tracking_callback() {
-		if (!isset($_GET['postx_tracking'])) {
-			return;
-		}
-		if( sanitize_key($_GET['postx_tracking']) == 'yes' ) {
-			set_transient( 'wpxpo_data_collect', 'yes', 5 * YEAR_IN_SECONDS ); // 5 years notice
-			$this->send_plugin_data('allow');
-		} else {
-			set_transient( 'wpxpo_data_collect', 'no', 3 * MONTH_IN_SECONDS ); // 90 days notice
-		}
-	}
-
-
-	/**
-	 * Data Collect Notice
-	 *
-	 * @since v.1.0.0
-	 * @param NULL
-	 * @return STRING | Message Shown in Admin Area
-	 */
-	public function data_collect_notice() {
-		if (!isset($_GET['postx_tracking'])) {
-			echo '<div class="notice notice-success">';
-				echo '<div class="wpxpo-btn-tracking-notice">';
-					printf( __( 'Want to help make <strong style="padding:0 5px;"> %1$s </strong> even more awesome? Allow %1$s to collect <a style="padding:0 5px;" href="https://www.wpxpo.com/data-collection-policy/" target="_blank">non-sensitive</a> diagnostic data and usage information.', 'ultimate-post' ), $this->PLUGIN_NAME );//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo '<a href="'.esc_url( add_query_arg( 'postx_tracking', 'yes' ) ).'" class="button button-primary wpxpo-btn-tracking">' . esc_html__( "Allow", "ultimate-post" ) . '</a> ';
-					echo '<a href="'.esc_url( add_query_arg( 'postx_tracking', 'no' ) ).'" class="button-secondary button-large wpxpo-btn-tracking">' . esc_html__( "No Thanks", "ultimate-post" ) . '</a>';
-				echo '</div>';
-			echo '</div>';
-		}
-		
 	}
 
 

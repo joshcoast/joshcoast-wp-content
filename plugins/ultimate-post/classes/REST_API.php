@@ -73,7 +73,7 @@ class REST_API{
 					'methods'  => 'POST',
 					'callback' => array($this, 'template_page_insert'),
 					'permission_callback' => function () {
-						return current_user_can('publish_posts');
+						return current_user_can('manage_options');
 					},
 					'args' => array()
 				)
@@ -140,7 +140,7 @@ class REST_API{
 					'methods'  => 'POST',
 					'callback' => array($this, 'get_all_settings'),
 					'permission_callback' => function () {
-						return current_user_can('edit_posts');
+						return current_user_can('manage_options');
 					},
 					'args' => array()
 				)
@@ -182,7 +182,7 @@ class REST_API{
 					'methods'  => 'POST', 
 					'callback' => array( $this, 'send_initial_plugin_data_callback'),
 					'permission_callback' => function () {
-						return current_user_can( 'edit_posts' );
+						return current_user_can( 'manage_options' );
 					},
 					'args' => array()
 				)
@@ -196,7 +196,7 @@ class REST_API{
 					'methods'  => 'POST', 
 					'callback' => array( $this, 'initial_setup_complete_callback'),
 					'permission_callback' => function () {
-						return current_user_can( 'edit_posts' );
+						return current_user_can( 'manage_options' );
 					},
 					'args' => array()
 				)
@@ -235,7 +235,7 @@ class REST_API{
 		}
         
 
-        $site = isset($post['site']) ? sanitize_text_field( $post['site'] ) : '';
+        $site = isset($post['site']) ? ultimate_post()->ultp_rest_sanitize_params( $post['site'] ) : '';
 
         require_once ULTP_PATH.'classes/Deactive.php';
         $obj = new \ULTP\Deactive();
@@ -266,11 +266,11 @@ class REST_API{
 			}
 		}
 		if ( isset( $_POST['siteName'] ) ) {
-            $site_name = sanitize_text_field( $_POST['siteName'] );
+            $site_name = ultimate_post()->ultp_rest_sanitize_params( $_POST['siteName'] );
 			update_option( 'blogname', $site_name );
 		}
 		if ( isset( $_POST['siteType'] ) ) {
-            $site_type = sanitize_text_field( $_POST['siteType'] );
+            $site_type = ultimate_post()->ultp_rest_sanitize_params( $_POST['siteType'] );
 			update_option( '__ultp_site_type', $site_type );
 		}
         return rest_ensure_response( ['success' => true ]);
@@ -293,7 +293,7 @@ class REST_API{
 	 */
     public function save_plugin_settings($server) {
         $post = $server->get_params();
-        $data = ultimate_post()->recursive_sanitize_text_field($post['settings']);
+        $data = ultimate_post()->ultp_rest_sanitize_params($post['settings']);
         if (count($data) > 0) {
             foreach ($data as $key => $val) {
                 ultimate_post()->set_setting($key, $val);
@@ -303,7 +303,7 @@ class REST_API{
         return rest_ensure_response([
             'success' => true, 
             'message' => __('You have successfully saved the settings data.', 'ultimate-post') , 
-            'wishListArr' => json_encode($data)]);
+            'wishListArr' => wp_json_encode($data)]);
     }
 
     /**
@@ -315,11 +315,12 @@ class REST_API{
 	 */
     public function premade_wishlist_save($server) {
         $post = $server->get_params();
-        $id = sanitize_text_field($post['id']);
-        $action = sanitize_text_field($post['action']);
+        $id = isset($post['id'])? ultimate_post()->ultp_rest_sanitize_params($post['id']):'';
+        $action = isset($post['action'])? ultimate_post()->ultp_rest_sanitize_params($post['action']):'';
         $wishListArr = get_option('ultp_premade_wishlist', []);
+        $request_type = isset($post['type'])?ultimate_post()->ultp_rest_sanitize_params($post['type']):'';
 
-        if ($id && sanitize_text_field($post['type']) != 'fetchData') {
+        if ($id && $request_type != 'fetchData') {
             if($action == 'remove') {
                 $index = array_search($id, $wishListArr);
                 if ($index !== false) {
@@ -335,7 +336,7 @@ class REST_API{
         return rest_ensure_response([
             'success' => true, 
             'message' => $action == 'remove' ? __('Item has been removed from wishlist.', 'ultimate-post') : __('Item added to wishlist.', 'ultimate-post'),
-            'wishListArr' => json_encode($wishListArr)]
+            'wishListArr' => wp_json_encode($wishListArr)]
         );
     }
     /**
@@ -347,8 +348,8 @@ class REST_API{
 	 */
     public function addon_block_action($server) {
         $post = $server->get_params();
-        $addon_name = sanitize_text_field($post['key']);
-        $addon_value = sanitize_text_field($post['value']);
+        $addon_name = isset($post['key'])? ultimate_post()->ultp_rest_sanitize_params($post['key']):'';
+        $addon_value = isset($post['value'])? ultimate_post()->ultp_rest_sanitize_params($post['value']):'';
         if ($addon_name) {
             $addon_data = ultimate_post()->get_setting();
             $addon_data[$addon_name] = $addon_value;
@@ -369,290 +370,218 @@ class REST_API{
 	 */
     public function get_dashboard_callback($server) {
         $post = $server->get_params();
-        if (isset($post['type'])) {
+        $request_type = isset($post['type'])?ultimate_post()->ultp_rest_sanitize_params($post['type']):'';
+        $pType = isset($post['pType'])?ultimate_post()->ultp_rest_sanitize_params($post['pType']):'';
+        switch ($request_type) {
 
-            switch ($post['type']) {
+            case 'saved_templates':
+                $post_per_page = 10;
+                $data = [];
+                $args = array(
+                    'post_type' => $pType,
+                    'post_status' => array('publish', 'draft'),
+                    'posts_per_page' => $post_per_page,
+                    'paged' => isset($post['pages'])?ultimate_post()->ultp_rest_sanitize_params($post['pages']):1
+                );
 
-                case 'saved_templates':
-                    $post_per_page = 10;
-                    $data = [];
-                    $args = array(
-                        'post_type' => $post['pType'],
-                        'post_status' => array('publish', 'draft'),
-                        'posts_per_page' => $post_per_page,
-                        'paged' => $post['pages']
-                    );
+                if (isset($post['search'])) {
+                    $args['paged'] = 1;
+                    $args['s'] = ultimate_post()->ultp_rest_sanitize_params($post['search']);
+                }
 
-                    if (isset($post['search'])) {
-                        $args['paged'] = 1;
-                        $args['s'] = $post['search'];
-                    }
-
-                    $the_query = new \WP_Query( $args );
-                    if ( $the_query->have_posts() ) {
-                        while ( $the_query->have_posts() ) {
-                            $the_query->the_post();
-                            $final = [
-                                'id' => get_the_ID(),
-                                'title' => get_the_title(),
-                                'date' => get_the_modified_date('Y/m/d h:i a'),
-                                'status' => get_post_status(),
-                                'edit' => get_edit_post_link()
-                            ];
-        
-                            if ($post['pType'] == 'ultp_custom_font') {
-                                $final = array_merge($final ,['woff' => false,'woff2' => false,'ttf' => false,'svg' => false,'eot' => false]);
-                                $settings = get_post_meta( get_the_ID(), '__font_settings', true );
-                                foreach ($settings as $key => $value) {
-                                    if ($value['ttf']) { $final['ttf'] = true; }
-                                    if ($value['svg']) { $final['svg'] = true; }
-                                    if ($value['eot']) { $final['eot'] = true; }
-                                    if ($value['woff']) { $final['woff'] = true; }
-                                    if ($value['woff2']) { $final['woff2'] = true; }
-                                }
-                                $final['font_settings'] = $settings;
+                $the_query = new \WP_Query( $args );
+                if ( $the_query->have_posts() ) {
+                    while ( $the_query->have_posts() ) {
+                        $the_query->the_post();
+                        $final = [
+                            'id' => get_the_ID(),
+                            'title' => get_the_title(),
+                            'date' => get_the_modified_date('Y/m/d h:i a'),
+                            'status' => get_post_status(),
+                            'edit' => get_edit_post_link()
+                        ];
+    
+                        if ($pType == 'ultp_custom_font') {
+                            $final = array_merge($final ,['woff' => false,'woff2' => false,'ttf' => false,'svg' => false,'eot' => false]);
+                            $settings = get_post_meta( get_the_ID(), '__font_settings', true );
+                            foreach ($settings as $key => $value) {
+                                if ($value['ttf']) { $final['ttf'] = true; }
+                                if ($value['svg']) { $final['svg'] = true; }
+                                if ($value['eot']) { $final['eot'] = true; }
+                                if ($value['woff']) { $final['woff'] = true; }
+                                if ($value['woff2']) { $final['woff2'] = true; }
                             }
-                            $data[] = $final;
+                            $final['font_settings'] = $settings;
                         }
+                        $data[] = $final;
                     }
-                    wp_reset_postdata();
+                }
+                wp_reset_postdata();
+                return array(
+                    'success' => true, 
+                    'data' => $data,
+                    'new' => ($pType == 'ultp_custom_font' ? admin_url('post-new.php?post_type=ultp_custom_font') : admin_url('post-new.php?post_type=ultp_templates')),
+                    'found' => $the_query->found_posts,
+                    'pages' => $the_query->max_num_pages
+                );
+            break;
+            
+            case 'action_draft':
+            case 'action_publish':
+                if (isset($post['ids']) && is_array($post['ids'])) {
+                    $post['ids'] = ultimate_post()->ultp_rest_sanitize_params($post['ids']);
+                    foreach ($post['ids'] as $id) {
+                        wp_update_post(array(
+                            'ID' => $id,
+                            'post_status' => str_replace('action_', '',$request_type)
+                        ));
+                    }
                     return array(
                         'success' => true, 
-                        'data' => $data,
-                        'new' => ($post['pType'] == 'ultp_custom_font' ? admin_url('post-new.php?post_type=ultp_custom_font') : admin_url('post-new.php?post_type=ultp_templates')),
-                        'found' => $the_query->found_posts,
-                        'pages' => $the_query->max_num_pages
+                        'message' => __('Status changed for selected items.', 'ultimate-post')
                     );
-                break;
+                }
+            break;
 
+            case 'license_action':
+                $message = '';
                 
-                case 'action_draft':
-                case 'action_publish':
-                    if (isset($post['ids']) && is_array($post['ids'])) {
-                        foreach ($post['ids'] as $id) {
-                            wp_update_post(array(
-                                'ID' => $id,
-                                'post_status' => str_replace('action_', '',$post['type'])
-                            ));
-                        }
-                        return array(
-                            'success' => true, 
-                            'message' => __('Status changed for selected items.', 'ultimate-post')
+                if ( isset($post['edd_ultp_license_key']) && function_exists('ultimate_post_pro') ) {
+                    $is_success = false;
+                    $license = trim( ultimate_post()->ultp_rest_sanitize_params( $post['edd_ultp_license_key'] ) );
+
+                    if ($license && $license != '******************') {
+                        update_option( 'edd_ultp_license_key', $license);
+                        $api_params = array(
+                            'edd_action' => 'activate_license',
+                            'license'    => $license,
+                            'item_id'    => 181,
+                            'url'        => home_url()
                         );
-                    }
-                break;
-
-                case 'license_action':
-                    $message = '';
-                    
-                    if ( isset($post['edd_ultp_license_key']) && function_exists('ultimate_post_pro') ) {
-                        $is_success = false;
-                        $license = trim( sanitize_text_field( $post['edd_ultp_license_key'] ) );
-
-                        if ($license && $license != '******************') {
-                            update_option( 'edd_ultp_license_key', $license);
-                            $api_params = array(
-                                'edd_action' => 'activate_license',
-                                'license'    => $license,
-                                'item_id'    => 181,
-                                'url'        => home_url()
-                            );
-                            
-                            $response = wp_remote_post( 
-                                'https://www.wpxpo.com', 
-                                array( 
-                                    'timeout' => 15, 
-                                    'sslverify' => false, 
-                                    'body' => $api_params 
-                                )
-                            );
-            
-                            if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-                                $message =  ( is_wp_error( $response ) && ! empty( $response->get_error_message() ) ) ? $response->get_error_message() : __('An error occurred, please try again.', 'ultimate-post-pro');
-                            } else {
-                                $license_data = json_decode( wp_remote_retrieve_body( $response ) );
-                                if ( false === $license_data->success ) {
-                                    update_option( 'edd_ultp_license_key', '');
-                                    switch( $license_data->error ) {
-                                        case 'expired' :
-                                            $message = sprintf(
-                                                __('Your license key expired on %s.', 'ultimate-post'),
-                                                date_i18n( get_option( 'date_format' ), strtotime( $license_data->expires, current_time( 'timestamp' ) ) )
-                                            );
-                                            break;
-                                        case 'revoked' :
-                                            $message = __('Your license key has been disabled.', 'ultimate-post');
-                                            break;
-                                        case 'missing' :
-                                            $message = __('Invalid license.', 'ultimate-post');
-                                            break;
-                                        case 'invalid' :
-                                        case 'site_inactive':
-                                            $message = __( 'Your license is not active for this URL.', 'ultimate-post' );
-                                            break;
-                                        case 'item_name_mismatch':
-                                            $message = __( 'This appears to be an invalid license key.', 'ultimate-post' );
-                                            break;
-                                        case 'no_activations_left':
-                                            $message = __( 'Your license key has reached its activation limit.', 'ultimate-post' );
-                                            break;
-                                        default :
-                                            $message = __( 'An error occurred, please try again.', 'ultimate-post' );
-                                            break;
-                                    }
-                                } else {
-                                    $message = __('Your license key has been updated.', 'ultimate-post');
-                                    $is_success = true;
-                                }
-                                update_option( 'edd_ultp_license_status', $license_data->license );
-                                update_option( 'edd_ultp_license_expire', $license_data->expires );
-                                update_option( 'edd_ultp_activations_left', $license_data->activations_left );
-
-                            }
+                        
+                        $response = wp_remote_post( 
+                            'https://www.wpxpo.com', 
+                            array( 
+                                'timeout' => 15, 
+                                'sslverify' => false, 
+                                'body' => $api_params 
+                            )
+                        );
+        
+                        if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+                            $message =  ( is_wp_error( $response ) && ! empty( $response->get_error_message() ) ) ? $response->get_error_message() : __('An error occurred, please try again.', 'ultimate-post-pro');
                         } else {
-                            $message = __( 'Invalid license.', 'ultimate-post' );
+                            $license_data = json_decode( wp_remote_retrieve_body( $response ) );
+                            if ( false === $license_data->success ) {
+                                update_option( 'edd_ultp_license_key', '');
+                                switch( $license_data->error ) {
+                                    case 'expired' :
+                                        $message = sprintf(
+                                            __('Your license key expired on %s.', 'ultimate-post'),
+                                            date_i18n( get_option( 'date_format' ), strtotime( $license_data->expires, current_time( 'timestamp' ) ) )
+                                        );
+                                        break;
+                                    case 'revoked' :
+                                        $message = __('Your license key has been disabled.', 'ultimate-post');
+                                        break;
+                                    case 'missing' :
+                                        $message = __('Invalid license.', 'ultimate-post');
+                                        break;
+                                    case 'invalid' :
+                                    case 'site_inactive':
+                                        $message = __( 'Your license is not active for this URL.', 'ultimate-post' );
+                                        break;
+                                    case 'item_name_mismatch':
+                                        $message = __( 'This appears to be an invalid license key.', 'ultimate-post' );
+                                        break;
+                                    case 'no_activations_left':
+                                        $message = __( 'Your license key has reached its activation limit.', 'ultimate-post' );
+                                        break;
+                                    default :
+                                        $message = __( 'An error occurred, please try again.', 'ultimate-post' );
+                                        break;
+                                }
+                            } else {
+                                $message = __('Your license key has been updated.', 'ultimate-post');
+                                $is_success = true;
+                            }
+                            update_option( 'edd_ultp_license_status', $license_data->license );
+                            update_option( 'edd_ultp_license_expire', $license_data->expires );
+                            update_option( 'edd_ultp_activations_left', $license_data->activations_left );
+
                         }
                     } else {
                         $message = __( 'Invalid license.', 'ultimate-post' );
-                        if (!function_exists('ultimate_post_pro')) {
-                            $message = __( 'Install & Acivate PostX Pro plugin.', 'ultimate-post' );
-                        }
                     }
-                    return array('success' => $is_success, 'message' => $message);
-                break;
-
-                case 'action_delete':
-                    if (isset($post['ids']) && is_array($post['ids'])) {
-                        foreach ($post['ids'] as $id) {
-                            wp_delete_post( $id, true); 
-                        }
+                } else {
+                    $message = __( 'Invalid license.', 'ultimate-post' );
+                    if (!function_exists('ultimate_post_pro')) {
+                        $message = __( 'Install & Acivate PostX Pro plugin.', 'ultimate-post' );
                     }
-                    return array(
-                        'success' => true, 
-                        'message' => __('The selected item is deleted.', 'ultimate-post')
-                    );
+                }
+                return array('success' => $is_success, 'message' => $message);
+            break;
+
+            case 'action_delete':
+                if (isset($post['ids']) && is_array($post['ids'])) {
+                    $post['ids'] = ultimate_post()->ultp_rest_sanitize_params($post['ids']);
+                    foreach ($post['ids'] as $id) {
+                        wp_delete_post( $id, true); 
+                    }
+                }
+                return array(
+                    'success' => true, 
+                    'message' => __('The selected item is deleted.', 'ultimate-post')
+                );
+
+            case 'support_data':
+                $user_info = get_userdata( get_current_user_id() );
+                $name = $user_info->first_name . ($user_info->last_name ? ' ' . $user_info->last_name : '');
+                return array(
+                    'success' => true, 
+                    'data' => array(
+                        'name' => $name ? $name : $user_info->user_login,
+                        'email' => $user_info->user_email
+                    )
+                );
+                
+            case 'support_action':
+                $api_params = array(
+                    'user_name' => isset($post['name'])? ultimate_post()->ultp_rest_sanitize_params($post['name']):'',
+                    'user_email' =>isset($post['email'])? sanitize_email($post['email']):'',
+                    'subject' => isset($post['subject'])? ultimate_post()->ultp_rest_sanitize_params($post['subject']):'',
+                    'desc' => isset($post['desc'])? sanitize_textarea_field($post['desc']):'',
+                );
+                $response = wp_remote_get(
+                    'https://wpxpo.com/wp-json/v2/support_mail', 
+                    array(
+                        'method' => 'POST',
+                        'timeout' => 120,
+                        'body' =>  $api_params
+                    )
+                );
+                $response_data = json_decode($response['body']);
+                $success = ( isset($response_data->success) && $response_data->success ) ? true : false;
+
+                return array(
+                    'success' => $success,
+                    'message' => $success ? __('New Support Ticket has been Created.', 'ultimate-post') : __('New Support Ticket is not Created Due to Some Issues.', 'ultimate-post')
+                );
+            break;
+
+            case 'helloBarAction':
+                set_transient( 'ultp_helloBar'.ULTP_HELLOBAR, 'hide', 1296000);
+                return array(
+                    'success' => true, 
+                    'message' => __('Notice is removed.', 'ultimate-post')
+                );
+            break;
+
+            default:
+                # code...
                 break;
-
-                // case 'header':
-                //     $menu_list = array(
-                //         'menu' => array(
-                //             array(
-                //                 'link' => '#home',
-                //                 'label' => __('Getting Started', 'ultimate-post'),
-                //                 'showin' => 'both',
-                //             ),
-                //             array(
-                //                 'link' => '#builder',
-                //                 'label' => __('Site Builder', 'ultimate-post'),
-                //                 'showin' => ultimate_post()->get_setting('ultp_builder') != 'false' ? 'both' : 'none',
-                //                 'showhide' => true
-                //             ),
-                //             array(
-                //                 'link' => '#templatekit',
-                //                 'label' => __('Template kits', 'ultimate-post'),
-                //                 'showin' => 'both',
-                //             ),
-                //             array(
-                //                 'link' => '#saved-templates',
-                //                 'label' => __('Saved Templates', 'ultimate-post'),
-                //                 'showin' => ultimate_post()->get_setting('ultp_templates') != 'false' ? 'both' : 'none',
-                //                 'showhide' => true
-                //             ),
-                //             array(
-                //                 'link' => '#custom-font',
-                //                 'label' => __('Custom Font', 'ultimate-post'),
-                //                 'showin' => ultimate_post()->get_setting('ultp_custom_font') != 'false' ? 'both' : 'none',
-                //                 'showhide' => true
-                //             ),
-                //             array(
-                //                 'link' => '#addons',
-                //                 'label' => __('Addons', 'ultimate-post'),
-                //                 'showin' => 'both',
-                //             ),
-                //             array(
-                //                 'link' => '#blocks',
-                //                 'label' => __('Blocks', 'ultimate-post'),
-                //                 'showin' => 'both',
-                //             ),
-                //             array(
-                //                 'link' => '#settings',
-                //                 'label' => __('Settings', 'ultimate-post'),
-                //                 'showin' => 'both',
-                //             ),
-                //             array(
-                //                 'link' => '#tutorials',
-                //                 'label' => __('Tutorials', 'ultimate-post'),
-                //                 'showin' => 'sidebar',
-                //             ),
-                //             array(
-                //                 'link' => '#license',
-                //                 'label' => __('License', 'ultimate-post'),
-                //                 'showin' => 'sidebar',
-                //             )
-                //         ),
-                //         'common' => array(
-                //             'version' => ULTP_VER
-                //         ),
-                //         'help_menu' => array(
-                //             array(
-                //                 'label' => __('Get Support', 'ultimate-post'),
-                //                 'icon' => 'dashicons-phone',
-                //                 'link' => ultimate_post()->get_premium_link('https://www.wpxpo.com/contact/', 'plugin_dir_pro')
-                //             ),
-                //             array(
-                //                 'label' => __('Welcome Guide', 'ultimate-post'),
-                //                 'icon' => 'dashicons-megaphone',
-                //                 'link' => admin_url('admin.php?page=ultp-initial-setup-wizard')
-                //             ),
-                //             array(
-                //                 'label' => __('Join Community', 'ultimate-post'),
-                //                 'icon' => 'dashicons-facebook-alt',
-                //                 'link' => 'https://www.facebook.com/groups/gutenbergpostx'
-                //             ),
-                //             array(
-                //                 'label' => __('Feature Request', 'ultimate-post'),
-                //                 'icon' => 'dashicons-email-alt',
-                //                 'link' => ultimate_post()->get_premium_link('https://www.wpxpo.com/postx/roadmap/', 'plugin_dir_pro')
-                //             ),
-                //             array(
-                //                 'label' => __('Youtube Tutorials', 'ultimate-post'),
-                //                 'icon' => 'dashicons-youtube',
-                //                 'link' => 'https://www.youtube.com/@wpxpo'
-                //             ),
-                //             array(
-                //                 'label' => __('Documentation', 'ultimate-post'),
-                //                 'icon' => 'dashicons-book',
-                //                 'link' => 'https://docs.wpxpo.com/docs/postx/'
-                //             ),
-                //             array(
-                //                 'label' => __('What’s New', 'ultimate-post'),
-                //                 'icon' => 'dashicons-edit',
-                //                 'link' => ultimate_post()->get_premium_link('https://www.wpxpo.com/category/postx/', 'plugin_dir_pro')
-                //             ),
-                //         )
-                //     );
-
-                //     return array(
-                //         'success' => true, 
-                //         'data' => apply_filters( 'postx_menu_system', $menu_list ),
-                //         'helloBar' => get_transient('ultp_helloBar'),
-                //         'status' => get_option( 'edd_ultp_license_status' ),
-                //         'expire' => get_option( 'edd_ultp_license_expire' )
-                //     );
-                // break;
-                case 'helloBarAction':
-                    set_transient( 'ultp_helloBar', 'hide', 1296000);
-                    return array(
-                        'success' => true, 
-                        'message' => __('Notice is removed.', 'ultimate-post')
-                    );
-                break;
-
-                default:
-                    # code...
-                    break;
-            }
         }
+        
     }
 
     /**
@@ -665,7 +594,7 @@ class REST_API{
     public function template_page_insert($server) {
         $post = $server->get_params();
         $new_page = array(
-            'post_title' => $post['title'],
+            'post_title' => isset($post['title'])?ultimate_post()->ultp_rest_sanitize_params($post['title']):'',
             'post_type' => 'page',
             'post_content' => $post['blockCode'],	
             'post_status' => 'draft',
@@ -678,26 +607,28 @@ class REST_API{
     public function search_settings_action($server) {
 		global $wpdb;
         $post = $server->get_params();
-
-        switch ($post['type']) {
+        $request_type = isset($post['type'])?ultimate_post()->ultp_rest_sanitize_params($post['type']):'';
+        $condition_type = isset($post['condition'])?ultimate_post()->ultp_rest_sanitize_params($post['condition']):'';
+        $term_type = isset($post['term'])?ultimate_post()->ultp_rest_sanitize_params( $post['term'] ):'';
+        switch ($request_type) {
             case 'posts':
             case 'allpost':
             case 'postExclude':
                 $post_type = array('post');
-                if ($post['type'] == 'allpost') {
+                if ($request_type == 'allpost') {
                     $post_type = array_keys(ultimate_post()->get_post_type());
-                } else if ($post['type'] == 'postExclude') {
-                    $post_type = array($post['condition']);
+                } else if ($request_type == 'postExclude') {
+                    $post_type = array($condition_type);
                 }
                 $args = array(
                     'post_type'         => $post_type,
                     'post_status'       => 'publish',
                     'posts_per_page'    => 10,
                 );
-                if (is_numeric($post['term'])) {
-                    $args['p'] = $post['term'];
+                if (is_numeric($term_type)) {
+                    $args['p'] = $term_type;
                 } else {
-                    $args['s'] = $post['term'];
+                    $args['s'] = $term_type;
                 }
 
                 $post_results = new \WP_Query($args);
@@ -715,12 +646,12 @@ class REST_API{
                 break;
 
             case 'author':
-                $term = '%'. $wpdb->esc_like( $post['term'] ) .'%';
-                $post_results = $wpdb->get_results(
+                $term = '%'. $wpdb->esc_like( $term_type ) .'%';
+                $post_results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->prepare(
                         "SELECT ID, display_name 
                         FROM $wpdb->users 
-                        WHERE user_login LIKE '%s' OR ID LIKE '%s' OR user_nicename LIKE '%s' OR user_email LIKE '%s' OR display_name LIKE '%s' LIMIT 10", $term, $term, $term, $term, $term 
+                        WHERE user_login LIKE %s OR ID LIKE %s OR user_nicename LIKE %s OR user_email LIKE %s OR display_name LIKE %s LIMIT 10", $term, $term, $term, $term, $term 
                     )
                 );
                 $data = [];
@@ -733,18 +664,18 @@ class REST_API{
                 break;
 
             case 'taxvalue':
-                $split = explode('###', $post['condition']);
+                $split = explode('###', $condition_type);
                 $condition = $split[1] != 'multiTaxonomy' ? array($split[1]) : get_object_taxonomies($split[0]);
                 $args = array(
                     'taxonomy'  => $condition,
                     'fields'    => 'all',
                     'orderby'   => 'id', 
                     'order'     => 'ASC',
-                    'name__like'=> $post['term']
+                    'name__like'=> $term_type
                 );
-                if (is_numeric($post['term'])) {
+                if (is_numeric($term_type)) {
                     unset($args['name__like']);
-                    $args['include'] = array($post['term']);
+                    $args['include'] = array($term_type);
                 }
 
                 $post_results = get_terms( $args );
@@ -762,17 +693,17 @@ class REST_API{
                 break;
 
             case 'taxExclude':
-                $condition = get_object_taxonomies($post['condition']);
+                $condition = get_object_taxonomies($condition_type);
                 $args = array(
                     'taxonomy'  => $condition,
                     'fields'    => 'all',
                     'orderby'   => 'id', 
                     'order'     => 'ASC',
-                    'name__like'=> $post['term']
+                    'name__like'=> $term_type
                 ); 
-                if (is_numeric($post['term'])) {
+                if (is_numeric($term_type)) {
                     unset($args['name__like']);
-                    $args['include'] = array($post['term']);
+                    $args['include'] = array($term_type);
                 }
                 $post_results = get_terms( $args );
                 $data = [];
@@ -814,8 +745,8 @@ class REST_API{
 		}
         $prams = $prams->get_params();
         $data = [];
-        $loop = new \WP_Query( ultimate_post()->get_query($prams) );
-        $max_tax = isset($prams['maxTaxonomy']) && $prams['maxTaxonomy'] ? ( $prams['maxTaxonomy'] == '0' ? 0 : $prams['maxTaxonomy'] ) : 30 ;
+        $loop = new \WP_Query( ultimate_post()->get_query(ultimate_post()->ultp_rest_sanitize_params($prams)) );
+        $max_tax = isset($prams['maxTaxonomy']) && $prams['maxTaxonomy'] ? ( ultimate_post()->ultp_rest_sanitize_params($prams['maxTaxonomy']) == '0' ? 0 : ultimate_post()->ultp_rest_sanitize_params($prams['maxTaxonomy']) ) : 30 ;
         
 
         if ($loop->have_posts()) {
@@ -829,8 +760,8 @@ class REST_API{
                 $var['title']       = get_the_title();
                 $var['permalink']   = get_permalink();
                 $var['seo_meta']    = ultimate_post()->get_excerpt($post_id, 1);
-                $var['excerpt']     = strip_tags($content_data);
-                $var['excerpt_full']= strip_tags(get_the_excerpt());
+                $var['excerpt']     = wp_strip_all_tags($content_data);
+                $var['excerpt_full']= wp_strip_all_tags(get_the_excerpt());
                 $var['time']        = (int)get_the_date('U')*1000;
                 $var['timeModified']= (int)get_the_modified_date('U')*1000;
                 $var['post_time']   = human_time_diff(get_the_time('U'),current_time('U'));
@@ -856,7 +787,7 @@ class REST_API{
                     $var['image'] = $image_src;
                 } elseif(isset($prams['fallbackImg']['id'])) {
                     foreach ($image_sizes as $key => $value) {
-                        $image_src[$key] = wp_get_attachment_image_src($prams['fallbackImg']['id'], $key, false)[0];
+                        $image_src[$key] = wp_get_attachment_image_src(esc_attr($prams['fallbackImg']['id']), $key, false)[0];
                     }
                     $var['image'] = $image_src;
                     $var['is_fallback'] = true;
@@ -931,7 +862,7 @@ class REST_API{
         // Image Size
         $image_sizes = ultimate_post()->get_image_size();
 
-        return rest_ensure_response(['taxonomy' => $data, 'global' => $global, 'image' => json_encode($image_sizes), 'posttype' => json_encode($all_post_type)]);
+        return rest_ensure_response(['taxonomy' => $data, 'global' => $global, 'image' => wp_json_encode($image_sizes), 'posttype' => wp_json_encode($all_post_type)]);
     }
 
     /**
@@ -945,8 +876,13 @@ class REST_API{
         if ( ! (isset($_REQUEST['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($_REQUEST['wpnonce'])), 'ultp-nonce' )) ) {
             return rest_ensure_response([]);
 		}
+        $taxValue = isset($prams['taxValue'])?ultimate_post()->ultp_rest_sanitize_params($prams['taxValue']):'';
+        $queryNumber = isset($prams['queryNumber'])?ultimate_post()->ultp_rest_sanitize_params($prams['queryNumber']):'';
+        $taxType = isset($prams['taxType'])?ultimate_post()->ultp_rest_sanitize_params($prams['taxType']):'';
+        $taxSlug = isset($prams['taxSlug'])?ultimate_post()->ultp_rest_sanitize_params($prams['taxSlug']):'';
+        $archiveBuilder = isset($prams['archiveBuilder'])?ultimate_post()->ultp_rest_sanitize_params($prams['archiveBuilder']):'';
 
-        return rest_ensure_response( ultimate_post()->get_category_data(json_decode($prams['taxValue']), $prams['queryNumber'], $prams['taxType'], $prams['taxSlug'], $prams['archiveBuilder']) );
+        return rest_ensure_response( ultimate_post()->get_category_data(json_decode($taxValue), $queryNumber, $taxType, $taxSlug,  $archiveBuilder) );
     }
 
     /**
@@ -958,15 +894,18 @@ class REST_API{
 	 */
     public function ultp_search_result($server) {
         $post = $server->get_params();
-        
+        $searchText = isset($post['searchText'])?ultimate_post()->ultp_rest_sanitize_params($post['searchText']):'';
+        $paged = isset($post['paged'])?ultimate_post()->ultp_rest_sanitize_params($post['paged']):'';
+        $postPerPage = isset($post['postPerPage'])?ultimate_post()->ultp_rest_sanitize_params($post['postPerPage']):'';
         $query_args = array(
-            's' => sanitize_text_field($post['searchText']),
-            'paged' =>  sanitize_text_field($post['paged']), 
+            's' => $searchText,
+            'paged' =>  $paged, 
             'compare' => 'LIKE',
             'orderby' => 'relevance',
-            'posts_per_page' => sanitize_text_field($post['postPerPage']),
+            'posts_per_page' => $postPerPage,
         );
         if(isset($post['exclude']) && is_array($post['exclude']) && count($post['exclude']) > 0) {
+            $post['exclude'] = ultimate_post()->ultp_rest_sanitize_params($post['exclude']);
             $post_exclude = array();
             foreach( $post['exclude'] as $data ){
                 $post_exclude[$data['title']] = $data['title'];
@@ -1012,7 +951,7 @@ class REST_API{
                         $output .= '</div>';
                         $output .= '<a href="'.get_permalink().'" class="ultp-searchresult-title">'.$title.'</a>';
                         if ($post['excerpt'] == 1) {
-                            $output .= '<div class="ultp-searchresult-excerpt">'.wp_trim_words(get_the_excerpt(), $post['excerptLimit']).'</div>';
+                            $output .= '<div class="ultp-searchresult-excerpt">'.wp_trim_words(get_the_excerpt(), isset($post['excerptLimit'])?ultimate_post()->ultp_rest_sanitize_params($post['excerptLimit']):55).'</div>';
                         }
                     $output .= '</div>';
                 $output .= '</div>';

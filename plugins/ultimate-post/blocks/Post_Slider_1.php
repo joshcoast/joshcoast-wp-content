@@ -305,7 +305,7 @@ class Post_Slider_1{
         // Dummy Img Url
         $dummy_url = ULTP_URL.'assets/img/ultp-fallback-img.png';
 
-        $slides = is_object($attr['slidesToShow']) ? json_decode(json_encode($attr['slidesToShow']),true) : $attr['slidesToShow'];
+        $slides = is_object($attr['slidesToShow']) ? json_decode(wp_json_encode($attr['slidesToShow']),true) : $attr['slidesToShow'];
     
         if ($recent_posts->have_posts() ) {
             $wraper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
@@ -409,11 +409,10 @@ class Post_Slider_1{
             $wraper_after .= '</div>'; //.wp-block-ultimate-post-post-slider-1
 
             wp_reset_query();
-        }else {
+        } else {
             $wraper_before .= ultimate_post()->get_no_result_found_html( $attr['notFoundMessage'] );
         }
         
         return $noAjax ? $post_loop : $wraper_before.$post_loop.$wraper_after;
     }
-
 }

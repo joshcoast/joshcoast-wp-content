@@ -469,7 +469,7 @@ class Post_Grid_3{
                             $idx ++;
                         endwhile;
                         if($attr['queryUnique']) {
-                            $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".json_encode($unique_ID)." data-current-unique-posts= ".json_encode($current_unique_posts)."> </span>";
+                            $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".wp_json_encode($unique_ID)." data-current-unique-posts= ".wp_json_encode($current_unique_posts)."> </span>";
                         }
                         if ($attr['paginationShow'] && ($attr['paginationType'] == 'loadMore')) {
                             $wraper_after .= '<span class="ultp-loadmore-insert-before"></span>';

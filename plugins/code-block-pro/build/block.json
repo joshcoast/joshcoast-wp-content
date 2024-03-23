@@ -126,6 +126,15 @@
     "copyButton": {
       "type": "boolean"
     },
+    "copyButtonType": {
+      "type": "string"
+    },
+    "copyButtonString": {
+      "type": "string"
+    },
+    "copyButtonStringCopied": {
+      "type": "string"
+    },
     "tabSize": {
       "type": "number"
     },

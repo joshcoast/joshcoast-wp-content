@@ -35,7 +35,7 @@ class RequestAPI{
 					'methods'  => 'POST', 
 					'callback' => array( $this, 'get_single_premade_callback'),
 					'permission_callback' => function () {
-						return current_user_can( 'edit_posts' );
+						return current_user_can( 'manage_options' );
 					},
 					'args' => array()
 				)
@@ -49,7 +49,7 @@ class RequestAPI{
 					'methods'  => 'POST',
 					'callback' => array($this, 'condition_settings_action'),
 					'permission_callback' => function () {
-						return current_user_can('edit_posts');
+						return current_user_can('manage_options');
 					},
 					'args' => array()
 				)
@@ -63,7 +63,7 @@ class RequestAPI{
 					'methods'  => 'POST',
 					'callback' => array($this, 'condition_save_action'),
 					'permission_callback' => function () {
-						return current_user_can('publish_posts'); // user who have publish post capability, can save the conditions.
+						return current_user_can('manage_options');
 					},
 					'args' => array()
 				)
@@ -77,7 +77,7 @@ class RequestAPI{
 					'methods'  => 'POST',
 					'callback' => array($this, 'data_builder_action'),
 					'permission_callback' => function () {
-						return current_user_can('edit_posts');
+						return current_user_can('manage_options');
 					},
 					'args' => array()
 				)
@@ -91,7 +91,7 @@ class RequestAPI{
 					'methods'  => 'POST',
 					'callback' => array($this, 'template_page_action'),
 					'permission_callback' => function () {
-						return current_user_can('publish_posts'); // user who have publish post capability, can perform template action.
+						return current_user_can('manage_options');
 					},
 					'args' => array()
 				)
@@ -109,24 +109,28 @@ class RequestAPI{
     public function template_page_action($server) {
         $post = $server->get_params();
         $message = '';
-        if (isset($post['type']) && isset($post['id']) && $post['id']) {
-            if ($post['type'] == 'delete') {
-                wp_delete_post( $post['id'], true);
+        $s_Type = isset($post['type']) ? ultimate_post()->ultp_rest_sanitize_params($post['type']) : '';
+        $s_id = isset($post['id']) ? ultimate_post()->ultp_rest_sanitize_params($post['id']) : '';
+        $s_status = isset($post['status']) ? ultimate_post()->ultp_rest_sanitize_params($post['status']) : '';
+
+        if ( $s_Type && $s_id ) {
+            if ( $s_Type == 'delete' ) {
+                wp_delete_post( $s_id, true);
                 $message = __('Template has been deleted.', 'ultimate-post');
-            } else if ($post['type'] == 'duplicate') {
-                $post_id = $post['id'];
-                $post = get_post( $post_id );
+            } else if ( $s_Type == 'duplicate') {
+                $post_id = $s_id;
+                $r_post = get_post( $post_id );
                 $current_user = wp_get_current_user();
                 $new_post_author = $current_user->ID;
-                if (isset( $post ) && $post != null) {
+                if (isset( $r_post ) && $r_post != null) {
                     $args = array(
                         'post_author'    => $new_post_author,
-                        'post_content'   => str_replace('u0022', '\u0022', $post->post_content),
-                        'post_excerpt'   => $post->post_excerpt,
-                        'post_name'      => $post->post_name,
+                        'post_content'   => str_replace('u0022', '\u0022', $r_post->post_content),
+                        'post_excerpt'   => $r_post->post_excerpt,
+                        'post_name'      => $r_post->post_name,
                         'post_status'    => 'draft',
-                        'post_title'     => $post->post_title,
-                        'post_type'      => $post->post_type,
+                        'post_title'     => $r_post->post_title,
+                        'post_type'      => $r_post->post_type,
                       );
                 }
                 $new_post_id = wp_insert_post( $args );
@@ -141,7 +145,7 @@ class RequestAPI{
                 update_post_meta( $new_post_id, '__container_width', $width );
                 
                 $sidebar = get_post_meta( $post_id, '__builder_sidebar', true );
-                update_post_meta( $new_post_id, '__builder_sidebar', $width );
+                update_post_meta( $new_post_id, '__builder_sidebar', $sidebar );
 
                 $widget_area = get_post_meta( $post_id, '__builder_widget_area', true );
                 update_post_meta( $new_post_id, '__builder_widget_area', $widget_area );
@@ -156,11 +160,11 @@ class RequestAPI{
                     }
                 }
                 $message = __('Template has been duplicated.', 'ultimate-post');
-            } else if ($post['type'] == 'status') {
-                if ($post['status']) {
+            } else if ( $s_Type == 'status') {
+                if ( $s_status ) {
                     wp_update_post(array(
-                        'ID' => $post['id'],
-                        'post_status' => $post['status']
+                        'ID' => $s_id,
+                        'post_status' => $s_status
                     ));
                 }
                 $message = __('Status has been changed.', 'ultimate-post');
@@ -183,6 +187,8 @@ class RequestAPI{
 	 */
     public function data_builder_action($server) {
         $post = $server->get_params();
+        $s_pid = isset($post['pid']) ? ultimate_post()->ultp_rest_sanitize_params($post['pid']) : '';
+        
         $args = array(
             'post_type'         => 'ultp_builder',
             'post_status'       => array('publish', 'draft'),
@@ -214,14 +220,138 @@ class RequestAPI{
             'success' => true,
             'postlist' => $post_list,
             'settings' => get_option('ultp_builder_conditions', array()),
-            'defaults' => ultimate_post()->builder_data(),
-            // 'new_url' => add_query_arg(array('post_type'=>'ultp_builder'),admin_url('post-new.php'))
+            'defaults' => $this->builder_data()
         ];
-        if (isset($post['pid']) && $post['pid']) {
-            $post_meta = get_post_meta( $post['pid'], '__ultp_builder_type', true );
+        if ( $s_pid ) {
+            $post_meta = get_post_meta( $s_pid, '__ultp_builder_type', true );
             $arg['type'] = $post_meta ? $post_meta : 'archive';
         }
         return $arg;
+    }
+
+
+    /**
+	 * Get Add Default Condition Data
+     * 
+     * @since v.2.7.0
+	 * @return ARRAY | Default Data
+	 */
+    public function builder_data() {
+        $archive_data = array(
+            array(
+                'label' => 'All Archive',
+                'value' => '',
+            ),
+            array(
+                'label' => 'Author Archive',
+                'value' => 'author',
+                'search' => 'author###'
+            ),
+            array(
+                'label' => 'Date Archive',
+                'value' => 'date',
+            ),
+            array(
+                'label' => 'Search Results',
+                'value' => 'search',
+            )
+        );
+        $single_data = array(
+            array(
+                'label' => 'Front Page', 
+                'value' => 'front_page', 
+            )
+        );
+        $header_data = array(
+            array(
+                'label' => 'Entire Site',
+                'value' => 'entire_site', 
+            ),
+            array(
+                'label' => 'Archive',
+                'value' => 'archive',
+            ),
+            array(
+                'label' => 'Singular',
+                'value' => 'singular',
+            )
+        );
+        
+        $post_type = get_post_types( ['public' => true], 'objects' );
+        foreach ($post_type as $key => $type) {
+            // Post Type
+            $single_temp = [ 
+                'label' => $type->label, 
+                'value' => $type->name, 
+                'search' => 'type###'.$type->name 
+            ];
+            $archive_temp = [];
+
+            // Taxonomy
+            $taxonomy = get_object_taxonomies( $type->name, 'objects' );
+            if (!empty($taxonomy)) {
+                $single_tax = $archive_tax = [];
+                $single_tax[] = $single_temp;
+
+                $archive_temp = [ 
+                    'label' => $type->label . ' Archive', 
+                    'value' => $type->name . '_archive',
+                ];
+                // $archive_tax[] = $archive_temp;
+                foreach ($taxonomy as $key => $val) {
+                    if ($val->public) {
+                        $single_tax[] = [
+                            'label' => 'In ' . $val->label, 
+                            'value' => 'in_' . $val->name, 
+                            'search' => 'term###'.$val->name
+                        ];
+                        $archive_tax[] = [
+                            'label' => $val->label, 
+                            'value' => $val->name, 
+                            'search' => 'term###'.$val->name
+                        ];
+
+                        if ($val->hierarchical) {
+                            // Hierarchical
+                            $single_tax[] = [
+                                'label' => 'In Child ' . $val->label,
+                                'value' => 'in_' . $val->name . '_children',
+                                'search' => 'term###'.$val->name
+                            ];
+                            $archive_tax[] = [
+                                'label' => 'Direct Child ' . $val->label . ' Of',
+                                'value' => 'child_of_' . $val->name,
+                                'search' => 'term###'.$val->name
+                            ];
+                            $archive_tax[] = [
+                                'label' => 'Any Child ' . $val->label . ' Of',
+                                'value' => 'any_child_of_' . $val->name,
+                                'search' => 'term###'.$val->name
+                            ];
+                        }
+                    }
+                }
+                // Author
+                $single_tax[] = [
+                    'label' => 'Posts By Author',
+                    'value' => 'post_by_author',
+                    'search' => 'author###'
+                ];
+                $single_temp['attr'] = $single_tax;
+                $archive_temp['attr'] = $archive_tax;
+            }
+            $single_data[] = $single_temp;
+            if (!empty($archive_temp)) {
+                $archive_data[] = $archive_temp;
+            }
+        }
+
+        return [
+            'singular' => $single_data, 
+            'archive' => $archive_data,
+            'header'=> $header_data, 
+            'footer'=> $header_data
+        ];
     }
 
 
@@ -234,11 +364,14 @@ class RequestAPI{
 	 */
     public function condition_save_action($server) {
         $post = $server->get_params();
-        if (isset($post['settings'])) {
-            update_option('ultp_builder_conditions', $post['settings']);
+        $s_settings = isset($post['settings']) ? ultimate_post()->ultp_rest_sanitize_params($post['settings']) : '';
+        
+        if ( $s_settings ) {
+            update_option( 'ultp_builder_conditions', $s_settings );
             return [
                     'success' => true,
-                    'data' => 'Settings Saved!!!'
+                    'data' => 'Settings Saved!!!',
+                    's_settings' => $s_settings,
             ];
         }
     }
@@ -254,26 +387,29 @@ class RequestAPI{
     public function condition_settings_action($server) {
         global $wpdb;
         $post = $server->get_params();
-        $search_type = explode('###', $post['type']);
+        $s_type = isset($post['type']) ? ultimate_post()->ultp_rest_sanitize_params($post['type']) : '';
+        $s_term = isset($post['term']) ? ultimate_post()->ultp_rest_sanitize_params($post['term']) : '';
+        $s_title_return = isset($post['title_return']) ? rest_sanitize_boolean($post['title_return']) : '';
+        $search_type = explode('###', $s_type);
 
-        switch ($search_type[0]) {
+        switch ( $search_type[0] ) {
             case 'type':
                 $args = array(
                     'post_type'         => $search_type[1],
                     'post_status'       => 'publish',
                     'orderby'           => 'title', 
                     'order'             => 'ASC',
-                    's'                 => $post['term'],
+                    's'                 => $s_term,
                     'posts_per_page'    => 10,
                 );
-                if ($post['title_return']){
+                if ( $s_title_return ) {
                     unset($args['s']);
-                    $args['p'] = $post['term'];
+                    $args['p'] = $s_term;
                 }
                 $post_results = new \WP_Query($args);
                 $title = '';
                 $data = [];
-                if (!empty($post_results)) {
+                if ( !empty($post_results) ) {
                     while ( $post_results->have_posts() ) {
                         $post_results->the_post();
                         $id = get_the_ID();
@@ -282,7 +418,7 @@ class RequestAPI{
                     }
                     wp_reset_postdata();
                 }
-                return ['success' => true, 'data' => ($post['title_return'] ? $title : $data )];
+                return ['success' => true, 'data' => ($s_title_return ? $title : $data )];
             break;
 
             case 'term':
@@ -291,10 +427,10 @@ class RequestAPI{
                     'fields'    => 'all',
                     'orderby'   => 'id',
                     'order'     => 'ASC',
-                    'name__like'=> $post['term']
+                    'name__like'=> $s_term
                 );
-                if ($post['title_return']) {
-                    $args['term_taxonomy_id'] = array($post['term']);
+                if ($s_title_return) {
+                    $args['term_taxonomy_id'] = array($s_term);
                     unset($args['name__like']);
                 }
                 $post_results = get_terms( $args );
@@ -306,16 +442,16 @@ class RequestAPI{
                         $data[] = array('value'=>$val->term_id, 'title'=>$title);
                     }
                 }
-                return ['success' => true, 'data' => ($post['title_return'] ? $title : $data )];
+                return ['success' => true, 'data' => ($s_title_return ? $title : $data )];
             break;
 
             case 'author':
-                $term = $post['title_return'] ? $wpdb->esc_like( $post['term'] ) : '%'. $wpdb->esc_like( $post['term'] ) .'%';
-                $post_results = $wpdb->get_results(
+                $term = $s_title_return ? $wpdb->esc_like( $s_term ) : '%'. $wpdb->esc_like( $s_term ) .'%';
+                $post_results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $wpdb->prepare(
                         "SELECT ID, display_name 
                         FROM $wpdb->users 
-                        WHERE user_login LIKE '%s' OR ID LIKE '%s' OR user_nicename LIKE '%s' OR user_email LIKE '%s' OR display_name LIKE '%s' LIMIT 10", $term, $term, $term, $term, $term 
+                        WHERE user_login LIKE %s OR ID LIKE %s OR user_nicename LIKE %s OR user_email LIKE %s OR display_name LIKE %s LIMIT 10", $term, $term, $term, $term, $term 
                     )
                 );
                 $title = '';
@@ -326,7 +462,7 @@ class RequestAPI{
                         $data[] = array('value'=>$val->ID, 'title'=>$val->display_name);
                     }
                 }
-                return ['success' => true, 'data' => ($post['title_return'] ? $title : $data )];
+                return ['success' => true, 'data' => ($s_title_return ? $title : $data )];
             break;
             default:
                 return ['success' => false];
@@ -356,7 +492,8 @@ class RequestAPI{
         }
 
         $post = $server->get_params();
-        $id = isset($post['ID']) ? sanitize_text_field($post['ID']) : '';
+        $id = isset($post['ID']) ? ultimate_post()->ultp_rest_sanitize_params($post['ID']) : '';
+        $s_type = isset($post['type']) ? ultimate_post()->ultp_rest_sanitize_params($post['type']) : '';
         
         if ($id) {
             $response = wp_remote_post( $this->api_endpoint.'single-premade', array(
@@ -367,10 +504,10 @@ class RequestAPI{
             if (is_wp_error( $response ) ) {
                 return array( 'success' => false, 'data' => "Something went wrong:" . $response->get_error_message() );
             } else {
-                if (isset($response['body']) && isset($post['type'])) {
+                if (isset($response['body']) && $s_type) {
                     $body = json_decode($response['body']);
                     if (isset($body->rawData) && isset($body->success) && $body->success) {
-                        $post_id = $this->set_post_content($post['type'], wp_slash($body->rawData));
+                        $post_id = $this->set_post_content($s_type, wp_slash($body->rawData));
                         return array( 'success' => true, 'link' => get_edit_post_link($post_id) );
                     } else {
                         return array( 'success' => false );
@@ -378,7 +515,7 @@ class RequestAPI{
                 }
             }
         } else {
-            $post_id = $this->set_post_content($post['type'], '');
+            $post_id = $this->set_post_content($s_type, '');
             return array( 'success' => true, 'link' => get_edit_post_link($post_id) );
         }
         
