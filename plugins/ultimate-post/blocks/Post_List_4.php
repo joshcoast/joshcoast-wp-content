@@ -18,8 +18,7 @@ class Post_List_4{
             //      Layout
             //--------------------------
             'layout' =>  'layout1',
-            'largeHeight' =>  (object)['lg' =>'100', 'unit' =>'%'],
-            'spaceLargeItem' =>  (object)['lg' =>'60', 'xs' =>'40', 'unit' =>'px'],
+            
             //--------------------------
             //      Query Setting
             //--------------------------
@@ -49,7 +48,6 @@ class Post_List_4{
             //--------------------------
             'titleShow' =>  true,
             'titleStyle' => 'none',
-            'titleAnimColor' =>  'black',
             'headingShow' =>  true,
             'excerptShow' =>  true,
             'catShow' =>  true,
@@ -71,41 +69,16 @@ class Post_List_4{
             'headingStyle' =>  'style9',
             'headingTag' =>  'h2',
             'headingAlign' =>   'left',
-            'headingTypo' =>   (object)['openTypography' => 1,'size' => (object)['lg' => '20', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>'700'],
-            'headingColor' =>   '#0e1523',
-            'headingBorderBottomColor' =>   '#0e1523',
-            'headingBorderBottomColor2' =>   '#e5e5e5',
-            'headingBg' =>   '#037fff',
-            'headingBg2' =>   '#e5e5e5',
-            'headingBtnTypo' =>   (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none','family'=>''],
-            'headingBtnColor' =>   '#037fff',
-            'headingBtnHoverColor' =>   '#0a31da',
-            'headingBorder' =>  '3',
-            'headingSpacing' =>  (object)['lg'=>20, 'unit'=>'px'],
-            'headingRadius' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'headingPadding' =>  (object)['lg' =>(object)['unit' =>'px']],
             'subHeadingShow' =>  false,
             'subHeadingText' =>  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut sem augue. Sed at felis ut enim dignissim sodales.',
-            'subHeadingTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'16', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'0', 'unit'=>'px'], 'height'=>(object)[ 'lg'=>'27', 'unit'=>'px'],'decoration'=>'none','transform' => '','family'=>'','weight'=>'500'],
-            'subHeadingColor' =>   '#989898',
-            'subHeadingSpacing' =>  (object)['lg' =>(object)['top' => '8', 'unit' =>'px']],
-
-
+            
             //--------------------------
             //      Title Setting/Style
             //--------------------------
             'titleTag' =>  'h3',
             'titlePosition' =>  true,
-            'titleColor' =>  '#141414',
-            'titleHoverColor' =>  '#828282',
-            'titleLgTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'28', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'', 'unit'=>'px'], 'height'=>(object)[ 'lg'=>'36', 'unit'=>'px'],'decoration'=>'none','transform' => '','family'=>'','weight'=>'500'],
-            'lgTitleColor' =>  '#fff',
-            'titleTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'20', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'0', 'unit'=>'px'], 'height'=>(object)['lg'=>'28', 'unit'=>'px'],'transform' => '', 'decoration'=>'none','family'=>'','weight'=>'500'],
-            'titlePadding' =>  (object)['lg'=>(object)['top'=>0,'bottom'=> 15, 'unit'=>'px'], 'xs'=>(object)['top'=>0,'bottom'=> 10, 'unit'=>'px']],
             'titleLength' =>  0,
-            'titleBackground' =>   '',
             
-
             //--------------------------
             // Content Setting/Style
             //--------------------------
@@ -117,22 +90,7 @@ class Post_List_4{
             'excerptLimitLg' =>  40,
             'showSmallExcerpt' => true,
             'excerptLimit' =>  30,
-            'excerptColor' =>  '#4a4a4a',
-            'excerptTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' => 21, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'excerptPadding' =>  (object)['lg' =>(object)['top' => 15,'bottom' => 0, 'unit' =>'px'], 'xs' =>(object)['top' => 5]],
-
-            //--------------------------
-            // Count Style Setting/Style
-            //--------------------------
-            'counterTypo' =>  (object)['openTypography' => 1, 'size' => (object)['lg' =>18, 'unit' =>'px'], 'height' => (object)['lg' =>'30', 'unit' =>'px'], 'spacing' => (object)['lg' =>0, 'unit' =>'px'], 'transform' => '', 'weight' => '400', 'decoration' => 'none','family'=>'' ],
-            'counterColor' =>  '#fff',
-            'counterBgColor' =>  (object)['openColor' => 1,'type' => 'color', 'color' => ''],
-            'counterWidth' =>  '',
-            'counterHeight' =>  '',
-            'counterBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'counterRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-
-
+            
             //--------------------------
             // Category Setting/Style
             //--------------------------
@@ -144,21 +102,7 @@ class Post_List_4{
             'customCatColor' =>  false,
             'seperatorLink' =>  admin_url( 'edit-tags.php?taxonomy=category' ),
             'onlyCatColor' =>  false,
-            'catLineWidth' =>  (object)['lg'=>'20'],
-            'catLineSpacing' =>  (object)['lg'=>'30'],
-            'catLineColor' =>  '#828282',
-            'catLineHoverColor' =>  '#037fff',
-            'catTypo' =>  (object)['openTypography' => 1, 'size' => (object)['lg' =>14, 'unit' =>'px'], 'height' => (object)['lg' =>20, 'unit' =>'px'], 'spacing' => (object)['lg' =>0, 'unit' =>'px'], 'transform' => '', 'weight' => '400', 'decoration' => 'none','family'=>'' ],
-            'catColor' =>  '#037fff',
-            'catBgColor' =>  (object)['openColor' => 1,'type' => 'color', 'color' => ''],
-            'catBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'catRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'catHoverColor' =>  '#828282',
-            'catBgHoverColor' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => ''],
-            'catHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'catSacing' =>  (object)['lg' =>(object)['top' => '','bottom' => '10','left' => 0,'right' => 0, 'unit' =>'px']],
-            'catPadding' =>  (object)['lg' =>(object)['top' => "0",'bottom' => "0",'left' => "0",'right' => "0", 'unit' =>'px']],
-
+            
             //--------------------------
             // Meta Setting/Style
             //--------------------------
@@ -172,31 +116,7 @@ class Post_List_4{
             'metaAuthorPrefix' =>  'By',
             'metaDateFormat' =>  'M j, Y',
             'metaListSmall' =>  '["metaAuthor","metaDate","metaRead"]',
-            'metaTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>12, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px'], 'decoration' => 'none', 'transform' => 'capitalize','family'=>''],
-            'metaColor' =>  '#919191',
-            'metaHoverColor' =>  '#000',
-            'metaSpacing' =>  (object)['lg' =>'10', 'unit' =>'px'],
-            'metaMargin' =>  (object)['lg' =>(object)['top' => '','bottom' => '0', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'metaPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'metaBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => '0', 'bottom' => '0', 'left' => '0'],'color' => '#009fd4','type' => 'solid'],
-            'metaBg' =>  '',
-
-
-            //--------------------------
-            // Inner Content Setting/Style
-            //--------------------------
-            'contentAlign' =>  "left",
-            'contentWrapBg' =>  '',
-            'contentWrapHoverBg' => '',
-            'contentWrapBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'contentWrapHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'contentWrapRadius' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'contentWrapHoverRadius' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'contentWrapShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'contentWrapHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'contentWrapInnerPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'contentWrapPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'left'=>'','right'=>'', 'unit' =>'px']],
-
+            
             //--------------------------
             // Image Setting/Style
             //--------------------------
@@ -204,21 +124,9 @@ class Post_List_4{
             'imgFlip' =>  false,
             'imgCrop' =>  'full',
             'imgCropSmall' =>  (ultimate_post()->get_setting('disable_image_size') == 'yes' ? 'full' : 'ultp_layout_square'),
-            'imgWidth' =>  (object)['lg' =>'150', 'ulg' =>'px'],
-            'imgHeight' =>  (object)['lg' =>'', 'ulg' =>'px'],
-            'imageScale' =>  'cover',
             'imgAnimation' =>  'opacity',
-            'imgGrayScale' =>  (object)['lg' =>'0', 'ulg' =>'%', 'unit' =>'%'],
-            'imgHoverGrayScale' =>  (object)['lg' =>'0', 'unit' =>'%'],
-            'imgRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'imgHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'imgShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'imgHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'imgSpacing' =>  (object)['lg'=>'25'],
             'imgOverlay' => false,
             'imgOverlayType' =>  'default',
-            'overlayColor' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
-            'imgOpacity' =>  .7,
             'fallbackEnable' =>  true,
             'fallbackImg' =>  '',
             'imgSrcset' =>  false,
@@ -229,71 +137,30 @@ class Post_List_4{
             //--------------------------
             'vidIconEnable' =>  true,
             'popupAutoPlay' =>  true,
-            'vidIconPosition' =>  'center',
-            'popupIconColor' =>   '#fff',
-            'popupHovColor' =>   '#d2d2d2',
             'iconSize' =>  (object)['lg'=>'40', 'sm'=> '30', 'xs'=> '30', 'unit' => 'px'],
             // by default should be off
             'enablePopup' =>  false,
-            'popupWidth' =>  (object)['lg'=>'70'],
             'enablePopupTitle' =>  true,
-            'popupTitleColor' =>   '#fff',
-            'closeIconSep' =>   '#fff',
-            'closeIconColor' =>   '#fff',
-            'closeHovColor' =>   '#8f8f8f',
-            'closeSize' =>  (object)['lg'=>'70', 'unit' => 'px'],
-
+            
             //--------------------------
             // Separator
             //--------------------------
             'separatorShow' =>  true,
-            'septColor' =>  '#e5e5e5',
-            'septStyle' =>  'dashed',
-            'septSize' =>  (object)['lg'=>'1'],
-            'septSpace' =>  (object)['lg'=>'30'],
-
+            
             //--------------------------
             // Read more Setting/Style
             //--------------------------
             'showSmallBtn' =>  false,
             'readMoreText' =>  '',
             'readMoreIcon' =>  '',
-            'readMoreTypo' =>  (object)['openTypography' => 1, 'size' => (object)['lg' =>12, 'unit' =>'px'], 'height' => (object)['lg' =>'25', 'unit' =>'px'], 'spacing' => (object)['lg' => '', 'unit' =>'px'], 'transform' => 'uppercase', 'weight' => '500', 'decoration' => 'underline','family'=>'' ],
-            'readMoreIconSize' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreColor' =>  '#0d1523',
-            'readMoreBgColor' =>  (object)['openColor' => 0,'type' => 'color', 'color' => ''],
-            'readMoreBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'readMoreRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreHoverColor' =>  '#0c32d8',
-            'readMoreBgHoverColor' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => ''],
-            'readMoreHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'readMoreHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreSacing' =>  (object)['lg' =>(object)['top' => 20,'bottom' => '','left' => '','right' => '', 'unit' =>'px'], 'xs' =>(object)['top' => 15, 'unit' =>'px']],
-            'readMorePadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '','right' => '', 'unit' =>'px']],
-
+            
             //--------------------------
             // Filter Setting/Style
             //--------------------------
             'filterBelowTitle' =>  false,
-            'filterAlign' =>  (object)['lg' =>''],
             'filterType' =>  'category',
             'filterText' =>  'all',
             'filterValue' =>  '[]',
-            'fliterTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>22, 'unit' =>'px'], 'decoration' => 'none','family'=>'','weight'=>500],
-            'filterColor' =>  '#0e1523',
-            'filterHoverColor' =>   '#828282',
-            'filterBgColor' => '',
-            'filterHoverBgColor' => '',
-            'filterBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'filterHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'filterRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'fliterSpacing' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'right' => '', 'left' => '20', 'unit' =>'px']],
-            'fliterPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'filterDropdownColor' =>   '#0e1523',
-            'filterDropdownHoverColor' =>   '#037fff',
-            'filterDropdownBg' =>   '#fff',
-            'filterDropdownRadius' =>  (object)['lg'=>'0'],
-            'filterDropdownPadding' =>  (object)['lg' =>(object)['top' => '15','bottom' => '15','left' => '20','right' => '20', 'unit' =>'px']],
             'filterMobile' =>   true,
             'filterMobileText' =>  'More',
 
@@ -306,38 +173,10 @@ class Post_List_4{
             'paginationNav' =>  'textArrow',
             'paginationAjax' =>  true,
             'navPosition' =>  'topRight',
-            'pagiAlign' =>   (object)['lg' =>'left'],
-            'pagiTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'pagiArrowSize' =>  (object)['lg'=>'14'],
-            'pagiColor' =>  '#fff',
-            'pagiBgColor' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
-            'pagiBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'pagiShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'pagiRadius' =>  (object)['lg' =>(object)['top' => '2','bottom' => '2','left' => '2','right' => '2', 'unit' =>'px']],
-            'pagiHoverColor' =>  '#fff',
-            'pagiHoverbg' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#037fff','replace'=>1],
-            'pagiHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'pagiHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'pagiHoverRadius' =>  (object)['lg' =>(object)['top' => '2','bottom' => '2','left' => '2','right' => '2', 'unit' =>'px']],
-            'pagiPadding' =>  (object)['lg' =>(object)['top' => '8','bottom' => '8','left' => '14','right' => '14', 'unit' =>'px']],
-            'navMargin' =>  (object)['lg' =>(object)['top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' =>'px']],
-            'pagiMargin' =>  (object)['lg' =>(object)['top' => '50', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' =>'px']],
-
+            
             //--------------------------
             //  Wrapper Style
             //--------------------------
-            'loadingColor' =>  '#000',
-            'wrapBg' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' =>  (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapMargin' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapInnerPadding' =>  (object)['lg' =>(object)['unit' =>'px']],
             'advanceId' =>  '',
             'advanceZindex' =>  '',
             'hideExtraLarge' =>  false,

@@ -22,13 +22,15 @@ class Builder {
         
         if ( $header_id ) {
             if ( wp_is_block_theme() ) {
-                add_action('wp_head', function() use ($header_id, $theme_name) {
-                    $this->header_builder_template($header_id, $theme_name);
-                });
+                // add_action('wp_head', function() use ($header_id) {
+                //     $this->header_builder_template($header_id);
+                // });
+                add_action('wp_head', array($this, 'header_builder_template'));
             } else {
-                add_action('get_header', function() use ($header_id, $theme_name) {
-                    $this->header_builder_template($header_id, $theme_name);
-                });
+                // add_action('get_header', function() use ($header_id) {
+                //     $this->header_builder_template($header_id);
+                // });
+                add_action('get_header', array($this, 'header_builder_template'));
             }
 		}
         if ( $footer_id ) {
@@ -60,7 +62,9 @@ class Builder {
 		}
     }
 
-    public function header_builder_template($header_id, $theme_name = '') {
+    public function header_builder_template() {
+        $header_id = ultimate_post()->conditions('header');
+        $theme_name = get_template();
         if ($header_id) {
             if ( !wp_is_block_theme() ) {
                 require_once ULTP_PATH.'addons/builder/templates/header.php';
@@ -79,7 +83,7 @@ class Builder {
             }
             ultimate_post()->register_scripts_common();
             ?> 
-                <header id="ultp-header-template">
+                <header id="ultp-header-template" class="<?php esc_html_e('ultp-builderid-'.$header_id); ?>">
                     <?php echo ultimate_post()->content($header_id);  //phpcs:ignore  ?> 
                 </header> 
             <?php
@@ -102,7 +106,7 @@ class Builder {
                 }
             }
             ?> 
-                <footer id="ultp-footer-template" role="contentinfo">
+                <footer id="ultp-footer-template" class="<?php esc_html_e('ultp-builderid-'.$footer_id); ?>" role="contentinfo">
                     <?php echo ultimate_post()->content($footer_id) //phpcs:ignore ?>
                 </footer> 
             <?php

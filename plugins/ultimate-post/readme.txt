@@ -1,241 +1,73 @@
-=== Post Grid Blocks and WordPress News Plugin - PostX ===
+=== Post Grid Gutenberg Blocks and WordPress News Plugin - PostX ===
 Contributors: wpxpo, anik4e, jakirhasan
 Tags: Post Grid, Gutenberg Blocks, News, Magazine, News Plugin
 Requires at least: 5.0    
 Tested up to: 6.4.1
 Requires PHP: 5.6
-Stable tag: 3.2.4
+Stable tag: 4.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-PostX is the best post grid, blog designer, news, magazine, and WordPress blog plugin that comes with various Gutenberg blocks.
+PostX is the #1 WordPress News Magazine Plugin to create any kind of News, Magazine, and Blogging sites with Gutenberg Post Grid Blocks.
 
 == Description ==
 
-PostX is the best news, magazine, and WordPress blog plugin that comes with blog designer packs, post grid blocks, post list blocks, post slider blocks, and numerous Gutenberg blocks.
+PostX, the best WordPress News plugin is designed to display posts in a post grid, post lists, & post slider layouts and build complete News, Magazine sites, and any kind of Blog.
 
+[youtube https://www.youtube.com/watch?v=FYgSe7kgb6M]
 
-Hear what popular WordPress influencers and Youtube reviewer SaaS Master has to say about PostX.
+== Quick Links ==
 
-[youtube https://www.youtube.com/watch?v=BqBzoDBDKLo]
+👉 PostX Pro: [Explore all Features of PostX](https://www.wpxpo.com/postx/)
+👉 Try Demo: [Try PostX Demo for Free](https://www.wpxpo.com/postx/)
+👉 Premade Sites: [Check out all Starter Sites](https://www.wpxpo.com/postx/starter-sites/)
 
-== Recently Added Features ==
+== Starter Sites - Build Sites In 3 Steps ==
 
-✅ Front End Post Submission
-
-Let your freelance and guest writers have access to submit posts from the front end. Moreover, registered writers will get individual dashboards and SEO support. And, you can improve the submitted content by adding comments and suggesting changes.
-
-👉 [Learn More](https://www.wpxpo.com/postx/front-end-posting/)
-
-✅ ChatGPT Integration
-
-PostX is now integrated with ChatGPT. So you can generate short and long-form content without leaving the WordPress dashboard. Not only that but you can also change your writing tone, translate to different languages, improve written content, and more.
-
-👉 [Learn More](https://www.wpxpo.com/postx-chatgpt-wordpress-ai-content-generator/)
-
-
-👉 Explore PostX Pro: [All Features of PostX](https://www.wpxpo.com/postx/)
-👉 Explore PostX Pro: [All Features of PostX](https://www.wpxpo.com/postx/)
-👉 Try PostX Pro Demo for Free: [Try Demo Now](https://www.wpxpo.com/postx/)
-👉 Explore PostX Starter Pack Templates: [View All Templates](https://www.wpxpo.com/postx/starter-packs/)
-
-
-Check out the reviews and feedback of PostX users:
-
-👏 “Works as designed! Also with Video-Hero implementation on your website. It’s attractive!
-
-Thanks, keep up the good work. (I worked with Elementor pro and Brizy pro. PostX is so far the best!)”
-
-👏 “When creating a magazine style website I needed a reliable plugin I could customise to show off the articles for the different sections. PostX Pro proved its worth in terms of customisation and ease of use. When getting stuck at one point, the support team were very responsive and helpful. Thank you for creating a great plugin.”
-
-
-👏 “I use this plugin since over two years and it is just a great enhancement to official WordPress themes. Also the support here in the forum is awesome! I can just say: keep up the great work!”
-
-
-👏 “This plugin has become essential to me so it’s really awesome to know that the team behind it is dedicated and accessible . Bravo . Upgrading to the pro version was a no-brainer.”
-
-
-👏 “If you need to show your blog post as beautiful blocks on any page or slider then this plugin will be the best suited for you. It offers some awesome elegant looking blocks more than any premium newspaper theme. I highly appreciate their great support.”
-
-
-== The Ultimate News, Magazine, and WordPress Blog Plugin ==
-
-[youtube https://www.youtube.com/watch?v=_GfXTvSdJTk]
-
-
-Do you want to know what makes PostX the #1 News, Magazine, and WordPress Blog Plugin?
-
-The blog designer packs of PostX are the main reasons behind its popularity. You would be amazed to know that PostX has finely crafted prepaid templates for all types of blogging niches, including
+PostX recently introduced its Starter Sites, complete sites ready to import in one click. It allows you to build your site faster and better. With PostX, you are getting a complete site for every News, Magazine, and Blogging niche, including:
 
 - News
 - Magazine
-- Blog
-- Fashion
-- News
-- Tech
-- Travel
-- Gaming 
-- Health
-- Food
-- Movie
-- NFT
-- [And More](https://www.wpxpo.com/postx/starter-packs/)
+- Sports News
+- Tech News
+- Gaming News
+- Crypto News
+- Movie News
+- Travel Blog
+- Personal Blog
+- Food Blog
+- And More!
 
+== Global Styles ==
 
-### Gutenberg Blocks
+It helps to inherit theme styles to add PostX’s color palettes and typography. Choose from various options and set color and typography to your full site highlighting your brand identity.
 
-PostX expands the Gutenberg blocks library with beautifully designed blocks. All of these blocks are highly customizable and smartly coded to maintain faster loading time. Keep reading and learn more about various types of Gutenberg blocks that come with PostX.
+== Dynamic Site Builder ==
 
-## Gutenberg Post Blocks
+Redesign your full site by creating custom templates with the first-ever Dynamic Site Builder for Gutenberg. You can start with a premade template and create from scratch for all of the essential pages, including:
 
-The PostX post blocks let you organize your posts with a click. You can display your posts in grid, list, and slider views. Following the are available post blocks of PostX.
+- Home 
+- Archive
+- Category 
+- Tags
+- Author
+- Search Results
+- Blog Posts
 
-- Post Grid #1
-- Post Grid #2
-- Post Grid #3
-- Post Grid #4
-- Post Grid #5
-- Post Grid #6
-- Post Grid #7
-- Post List #1
-- Post List #2
-- Post List #3
-- Post List #4
-- Post Slider #1
-- Post Slider #2 (Pro)
-- Post Module #1
-- Post Module #2
-- Post Taxonomy
-- Breaking News Ticker
+== Blocks and Patterns ==
 
-## Gutenberg Builder Blocks
+Display your blogs and posts in an organized layout with a single click. Choose from 40+ highly customizable blocks, or do it faster with 250+ premade patterns. With the help of PostX blocks, and patterns you can display your posts in the following layouts:
 
-PostX comes with all the essential blocks for it’s builder. So, you can build custom templates by adding the blocks to your desired position. Currently, PostX offers the following blocks:
+- Post Grid
+- Post List
+- Post Slider
+- Post Carousel
+- Post Module
+- And More
 
-- Post Title
-- Post Content
-- Post Featured Image/Video
-- Post Breadcrumb
-- Post Tag
-- Post Category
-- Post Next Previous
-- Post Excerpt
-- Post Author Box
-- Post Comments
-- Post View Count
-- Post Reading Time
-- Post Comment Count
-- Post Author Meta
-- Post Date Meta
-- Post Social Share
-- Advanced Post Meta
-- Archive Title
+== Features & Addons ==
 
-
-
-## Additional Gutenberg Blocks
-
-Besides post blocks and builder blocks, PostX also has more Gutenberg blocks, including:
-
-- Table of Contents
-- Search
-- Heading
-- Image 
-- Wrapper
-- Row Column
-- Button Group
-- List
-
-👉 [Explore All PostX Gutenberg Blocks](https://www.wpxpo.com/postx/blocks/)
-
-== PostX Addons ==
-
-PostX offers various addons, making it the all-in-one News, Magazine, and #1 WordPress Blog plugin. Currently, PostX has two types of add-ons, general and integration.
-
-## General Addons
-
-PostX’s general add-ons make it more powerful and eliminate the need for multiple plugins to make ideal News Magazine sites or any kind of Blog. Check out the offerings of add-ons at a glance.
-
-
-**Dynamic Site Builder:** It allows you to build custom templates for all essential pages. The newly created templates replace the default design of your themes. So you can display your posts in organized and visually stunning layouts. Currently, PostX allows you to create custom templates for the following pages:
-
-- Home Page
-- Archive Pages
-- Category Pages
-- Tag Pages
-- Author Pages
-- Search Results Pages
-- Single Blog Posts
-
-👉 [Learn More](https://www.wpxpo.com/postx-dynamic-site-builder/)
-
-**Custom Fonts:** Upload your desired custom fonts and add use on PostX’s blocks with full typographical options.
-
-👉 [Learn More](https://www.wpxpo.com/wordpress-custom-fonts/)
-
-**Saved Templates:** Create custom templates with PostX’s starter packs and blocks to use anywhere via shortcode.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/save-template/)
-
-**Category:** Add featured images, and specific colors for the category and tag pages. So, you can showcase category and tag pages in an organized way using PostX’s taxonomy block.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/category/)
-
-**Table of Contents:** Add a table of contents to blog posts, pages, and custom post types to highlight important headings. It allows the readers to easily navigate to different sections of posts and pages.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/table-of-content/)
-
-**Progress Bar:** Provide reading and page scrolling progress with a visual indicator.
-
-👉 [Learn More](https://www.wpxpo.com/postx/progress-bar/)
-
-
-== Integration Addons ==
-
-The integration add-ons make it easier to use PostX with your favorite plugins. Currently, PostX offers integration with the following plugins:
-
-**ChatGPT:** Generate and improve headings, bullet points, meta descriptions, post outlines, or complete blog posts using ChatGPT without leaving your WordPress dashboard.
-
-👉 [Learn More](https://www.wpxpo.com/postx-chatgpt-wordpress-ai-content-generator/)
-
-**Elementor:** Use PostX blocks and starter packs or other Gutenberg blocks with Elementor by using the saved templates addon of PostX.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/elementor/)
-
-**Divi:** Convert PostX blocks, starter packs, or other Gutenberg blocks into shortcodes and use them with Divi Builder.
-
-**Oxygen:** Use PostX, blocks, starter packs, and Gutenberg blocks while building any page with the Oxygen Builder.
-
-**WPBakery:** Create custom designs with PostX blocks, starter packs, or Gutenberg blocks and save them as templates. So you can use the saved templates while building any page with the WPBakery Builder.
-
-**Beaver:** Use PostX blocks, templates, and Gutenberg blocks with Beaber Builder via shortcode while building any page.
-
-**Bricks:** Build any page using Bricks Builder and use PostX blocks and starter packs via shortcodes.
-
-**Yoast SEO:** Replace WordPress excerpts with custom meta descriptions added with the Yoast plugin.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/yoast/)
-
-**RankMath:** Display meta descriptions added with Rank Math instead of the default excerpt of WordPress.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/rankmath/)
-
-**All in-One SEO:** Replace WordPress excerpts with the custom meta description added with the All-in-One SEO plugin.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/all-in-one-seo-meta/)
-
-**SEOPress:** Display custom meta descriptions added with SEOPress instead of the default excerpts.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/seopress/)
-
-**Squirrly:** Replace the default excerpt of PostX post blocks with custom meta descriptions added with the Squirrly plugin.
-
-👉 [Learn More](https://www.wpxpo.com/postx/addons/squirrly/)
-
-
-== PostX Key Features ==
-
-PostX is not only limited to post blocks, builders, and addons. Check out the most advanced and key features to make your site stand out.
+PostX doesn’t limit you to only blocks, patterns, and templates. It also has numerous features to craft perfect News Magazine sites. Check out the most important features below:
 
 ## Query Builder
 
@@ -254,7 +86,6 @@ PostX advanced query builder allows you to effortlessly display and sort your po
 - Most Commented Posts
 - Reorder Posts
 - Exclude Posts
-- Unique Content Group
 
 👉 [Learn More](https://www.wpxpo.com/postx/postx-query-builder/)
 
@@ -268,13 +99,76 @@ Allow your readers to quickly filter posts by category or tags without reloading
 
 PostX offers three types of Ajax paginations: load more, navigation, and numeric paginations.
 
+👉 [Learn More](https://www.wpxpo.com/wordpress-pagination/)
 
-## Premade Patterns/Sections
+## Front End Submission
 
-PostX has premade templates for all of its post blocks. So you can skip the customization hassle while creating post sections or custom templates. However, you can also customize the patterns to make them even better.
+Let your freelance and guest writers have access to submit posts from the front end. Moreover, registered writers will get individual dashboards and SEO support. And, you can improve the submitted content by adding comments and suggesting changes.
 
-👉 [Learn More](https://www.wpxpo.com/postx/patterns/)
+👉 [Learn More](https://www.wpxpo.com/postx/front-end-posting/)
 
+## Custom Font
+
+Upload your desired custom fonts and add use on PostX’s blocks with full typographical options.
+
+👉 [Learn More](https://www.wpxpo.com/wordpress-custom-fonts/)
+
+## Taxonomy Image and Color
+
+Add featured images, and specific colors for the category and tag pages. So, you can showcase category and tag pages in an organized way using PostX’s taxonomy blocks.
+
+## Saved Templates
+
+Create custom templates with PostX’s starter packs and blocks to use anywhere via shortcode.
+
+## Table of Contents
+
+Add a table of contents to blog posts, pages, and custom post types to highlight important headings. It allows the readers to easily navigate to different sections of posts and pages.
+
+👉 [Learn More](https://www.wpxpo.com/wordpress-table-of-contents/)
+
+Progress Bar
+
+Provide reading and page scrolling progress with a visual indicator.
+
+👉 [Learn More](https://www.wpxpo.com/reading-progress-bar-wordpress-plugin/)
+
+
+== Page Builder Integration ==
+
+You can use PostX’s blocks, patterns, and templates with popular page builders including:
+
+- Elementor
+- Divi
+- WPBakery
+- Oxygen
+- Bricks Builder
+- Beaver
+
+== SEO Integration ==
+
+PostX has built-in SEO integration that allows you to replace the default WordPress excerpt with custom meta descriptions added with SEO plugins including:
+
+- Yoast
+- Rank Math
+- All-in-One SEO
+- Squirrly
+- SEOPress
+
+== PostX Compatible Themes ==
+
+PostX works with any WordPress theme including:
+
+- Twenty Twenty-Four
+- Astra
+- Blocks
+- Kadence
+- Generatepress
+- Rishi Theme
+- Neve
+- Ocean WP
+- Blossom Theme
+- Block WP
 
 == 🏆 Featured by top reviewers ==
 
@@ -367,7 +261,21 @@ It is a Gutenberg plugin it works great with WordPress version 5.x.x or more. An
 11. With the help of the Elementor and Saved Template addons, you can use any of the post blocks of PostX to any pages while editing with Elementor builder.
 
 == Changelog ==
-= 3.2.4 – 10 March 2024 =
+= 4.0.1 – 27 March 2024 =
+* Fix: Additional css class field option is not working
+* Fix: PHP warning in Dark Logo
+
+= 4.0.0 – 25 March 2024 =
+* New: Starter Sites
+* New: News Sites Templates 
+* New: Magazine Sites Templates
+* New: Travel Blog Templates
+* New: Fashion Blog Templates
+* New: Global Setting for controlling site color and typography
+* New: Social Icon block
+* New: Dark Light Switcher block
+
+= 3.2.4 – 12 March 2024 =
 * Fix: REST API capability updated
 * Fix: Data sanitize and escaping issue
 

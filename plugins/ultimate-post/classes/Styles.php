@@ -151,8 +151,46 @@ class Styles {
 				)
 			)
 		);
+		register_rest_route(
+			'ultp/v1',
+			'/postx_presets/',
+			array(
+				array(
+					'methods'  => 'POST',
+					'callback' => array($this, 'postx_presets_callback'),
+					'permission_callback' => function () {
+						return current_user_can('edit_posts');
+					},
+					'args' => array()
+				)
+			)
+		);
 	}
 
+	/**
+	 * Get and Set PostX Presets Settings
+     * 
+     * @since v.2.4.24
+	 * @param OBJECT | Request Param of the REST API
+	 * @return ARRAY | Array of the Custom Message
+	 */
+	public function postx_presets_callback($server) {
+		$post = $server->get_params();
+		$type = isset($post['type']) ? $post['type'] : '';
+		$key = isset($post['key']) ? $post['key'] : '';
+		$data = isset($post['data']) ? $post['data'] : '';
+
+		if ($type) {
+			if ($type == 'set') {
+				update_option($key, $data);
+				return ['success' => true];
+			} else {
+				return ['success' => true, 'data' => get_option($key, [])];
+			}
+		} else {
+			return ['success' => false];
+		}
+	}
 	/**
 	 * Get and Set PostX Global Settings
      * 
@@ -190,7 +228,7 @@ class Styles {
 		$post = $server->get_params();
 		$css = $post['inner_css'];
 		$post_id = isset($post['post_id'])? (int) ultimate_post()->ultp_rest_sanitize_params($post['post_id']):0;
-		if ( $post_id && 'wp_block'===get_post_type($post_id) ) {
+		if ( $post_id && 'wp_block' === get_post_type($post_id) ) {
 			
 			$upload_dir_url = wp_upload_dir();
 			$filename = "ultp-css-{$post_id}.css";
@@ -392,8 +430,29 @@ class Styles {
 			add_action( 'wp_head', array( $this, 'add_block_inline_css' ), 100 );	
 		}
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'postx_global_css' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'postx_global_css' ) );
+		add_action('wp_enqueue_scripts', array($this, 'postx_global_css'));
+		add_action( 'admin_init', array( $this, 'postx_global_css' ), 1 );
+		add_action( 'admin_init', array( $this, 'postx_global_css_dependancies' ), 2 );
+	}
+
+	/**
+	 * Check global style loaded or not
+     * 
+     * @since 4.0.0
+	 * @return NULL
+	 */
+	public function postx_global_css_dependancies() {
+		$wp_styles = wp_styles();
+		$style = $wp_styles->query( 'wp-block-library', 'registered' );
+		if( ! $style ) {
+			return;
+		}
+		$array = ['wpxpo-global-style', 'ultp-preset-colors-style', 'ultp-preset-gradient-style', 'ultp-preset-typo-style' ];
+		foreach ($array as $arr) {
+			if( wp_style_is( $arr, 'registered' ) && !in_array( $arr, $style->deps, true ) ) {
+				$style->deps[] = $arr;
+			}
+		}
 	}
 
 	/**
@@ -415,10 +474,69 @@ class Styles {
 			--preset-color7: '.(isset($global['presetColor7'])?$global['presetColor7']:'#f0f2f3').';
 			--preset-color8: '.(isset($global['presetColor8'])?$global['presetColor8']:'#f8f9fa').';
 			--preset-color9: '.(isset($global['presetColor9'])?$global['presetColor9']:'#ffffff').';
-			}';
+		}';
+		$theme_css = isset($global['globalCSS']) && $global['globalCSS'] ? $global['globalCSS'] : $custom_css.'{}';
+
 		wp_register_style( 'wpxpo-global-style', false, array(), ULTP_VER );
     	wp_enqueue_style( 'wpxpo-global-style' );
-		wp_add_inline_style( 'wpxpo-global-style', $custom_css );
+		wp_add_inline_style( 'wpxpo-global-style', $theme_css );
+
+		// preset Colors
+		$ultpPresetColors = get_option('ultpPresetColors', []);
+		$rootCSS = ( isset($ultpPresetColors['rootCSS']) && $ultpPresetColors['rootCSS'] ) ? $ultpPresetColors['rootCSS'] : '{}';
+		$savedDLMode = ( isset($global['enableDark']) && $global['enableDark'] ) ? 'ultpdark' : 'ultplight';
+		$localDLMode = isset($_COOKIE['ultplocalDLMode']) ? $_COOKIE['ultplocalDLMode'] : $savedDLMode;
+		
+		
+		if ( $localDLMode == 'ultplight' && $savedDLMode == 'ultpdark' ) {
+			$rootCSS = $this->handle_dark_light_color_switcher($rootCSS);
+		} else if ( $localDLMode == 'ultpdark' ) {
+			if ( $savedDLMode == 'ultplight' ) {
+				$rootCSS = $this->handle_dark_light_color_switcher($rootCSS);
+			}
+			$rootCSS = $rootCSS.' .ultp-dark-logo.wp-block-site-logo img {content: url("'.get_option('ultp_site_dark_logo', '').'");}';
+		}
+
+		wp_register_style( 'ultp-preset-colors-style', false, array(), ULTP_VER );
+		wp_enqueue_style( 'ultp-preset-colors-style' );
+		wp_add_inline_style( 'ultp-preset-colors-style', $rootCSS );
+		
+		// preset Gradients
+		$ultpPresetGradients = get_option('ultpPresetGradients', []);
+		wp_register_style( 'ultp-preset-gradient-style', false, array(), ULTP_VER );
+		wp_enqueue_style( 'ultp-preset-gradient-style' );
+		wp_add_inline_style( 'ultp-preset-gradient-style', isset($ultpPresetGradients['rootCSS']) && $ultpPresetGradients['rootCSS'] ? $ultpPresetGradients['rootCSS'] : '{}' );
+		
+		// preset Typos
+		$ultpPresetTypos = get_option('ultpPresetTypos', []);
+		wp_register_style( 'ultp-preset-typo-style', false, array(), ULTP_VER );
+		wp_enqueue_style( 'ultp-preset-typo-style' );
+		wp_add_inline_style( 'ultp-preset-typo-style', isset($ultpPresetTypos['presetTypoCSS']) && $ultpPresetTypos['presetTypoCSS'] ? $ultpPresetTypos['presetTypoCSS'] : '{}'  );
+	}
+
+	/**
+	 * swap color for dark light
+     * 
+     * @since 4.0.0
+	 * @return NULL
+	 */
+	public function handle_dark_light_color_switcher( $rootCSS ) {
+		$rootCSS = str_replace(
+			[ '--postx_preset_Base_1_color', '--postx_preset_Base_2_color', '--postx_preset_Base_3_color' ],
+			[ '--postx_preset_Base_1_color_dum', '--postx_preset_Base_2_color_dum', '--postx_preset_Base_3_color_dum' ],
+			$rootCSS
+		);
+		$rootCSS = str_replace(
+			[ '--postx_preset_Contrast_1_color',  '--postx_preset_Contrast_2_color','--postx_preset_Contrast_3_color' ],
+			[ '--postx_preset_Base_1_color', '--postx_preset_Base_2_color','--postx_preset_Base_3_color' ],
+			$rootCSS
+		);
+		$rootCSS = str_replace(
+			[ '--postx_preset_Base_1_color_dum', '--postx_preset_Base_2_color_dum','--postx_preset_Base_3_color_dum' ],
+			[ '--postx_preset_Contrast_1_color', '--postx_preset_Contrast_2_color', '--postx_preset_Contrast_3_color' ],
+			$rootCSS
+		);
+		return $rootCSS;
 	}
 
 	/**

@@ -17,35 +17,18 @@ class Post_Reading_Time {
             ============================*/
             'readLabel' => true,
             'readIconShow' => true,
-            'readColor' => '',
-            'readTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' =>'px']],
-            'readCountAlign' => [],
             'readLabelText' => 'Reading Time',
-            'readLabelAlign' => [],
-            "readLabelAlign" => "after",
+
             /*============================
                 Post Reading Icon Settings
             ============================*/
-            'iconColor' => '#656565',
             'readIconStyle' => 'readingTime1',
-            'readIconSize' => (object)['lg' =>'15', 'unit' =>'px'],
-            'readSpace' => (object)['lg' =>'8', 'unit' =>'px'],
-
+            
             /*============================
                 Advanced Settings
             ============================*/
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

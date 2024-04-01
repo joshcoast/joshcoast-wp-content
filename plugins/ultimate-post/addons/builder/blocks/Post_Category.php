@@ -17,56 +17,24 @@ class Post_Category {
             ============================*/
             'catLabelShow' => true,
             'catIconShow' => true,
-            'catColor' => '#333',
-            'catBgColor' => [],
-            'catItemBorder' => (object)['openBorder'=>1, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#e2e2e2','type' => 'solid'],
-            'catRadius' => (object)['lg' =>'2', 'unit' =>'px'],
-            'catHovColor' => '#fff',
-            'catBgHovColor' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#e2e2e2'],
-            'catItemHoverBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#323232','type' => 'solid'],
-            'catHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'catTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>''],
             'catSeparator' => ',',
-            'catSpace' => (object)['lg' =>'8', 'unit' =>'px'],
-            'catItemPad' => (object)['lg' =>(object)['top' => '3','bottom' => '3','left' => '7','right' => '7', 'unit' =>'px']],
             'catAlign' => (object)[],
 
             /*============================
                 Categories Label Settings
             ============================*/
             'catLabel' => 'Category : ',
-            'catLabelColor' => '',
-            'catLabelTypo' => [],
-            'catLabelSpace' => (object)['lg' =>'8', 'unit' =>'px'],
-            'catLabelBgColor' => [],
-            'catLabelBorder' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' =>'px']],
-            'catLabelRadius' => [],
-            'catLabelPad' => (object)[],
-
+            
             /*============================
                 Categories Icon Style
             ============================*/
             'catIconStyle' => '',
-            'catIconColor' => '#a4a4a4',
-            'catIconHovColor' => '#a4a4a4',
-            'catIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'catIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
 
             /*============================
                 Advance Setting
             ============================*/
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

@@ -5,11 +5,22 @@ $header_id = ultimate_post()->conditions('header');
 $footer_id = ultimate_post()->conditions('footer');
 
 if ( wp_is_block_theme() ) {
-    wp_site_icon();
-    wp_head();
-    if(!$header_id) {
+    ?><!DOCTYPE html>
+	<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="<?php bloginfo( 'charset' ); ?>" />
+		<?php 
+		wp_head();
+		?>
+	</head>
+	<body <?php body_class(); ?>>
+	<?php wp_body_open();
+
+	if( !$header_id ) {
+		ob_start();
         block_template_part('header');
-        wp_head();
+		$header = ob_get_clean();
+		echo '<header class="wp-block-template-part">'.$header.'</header>';
     }
 } else {
     get_header();
@@ -19,12 +30,12 @@ do_action( 'ultp_before_content' );
 
 $page_id = ultimate_post()->conditions('return');
 
-$width = $page_id ? get_post_meta($page_id, '__container_width', true) : '1200';
+$width = $page_id ? ( get_post_meta($page_id, '__container_width', true) ? get_post_meta($page_id, '__container_width', true) : '1140' ) : '1140';
 $sidebar = $page_id ? get_post_meta($page_id, '__builder_sidebar', true) : '';
 $widget_area = $page_id ? get_post_meta($page_id, '__builder_widget_area', true) : '';
 $has_widget = ($sidebar && $widget_area != '') ? true : false;
 
-echo '<div class="ultp-builder-container'.(esc_html($has_widget?' ultp-widget-'.$sidebar:'')).'" style="margin:0 auto; width: -webkit-fill-available; width: -moz-available; max-width: '.esc_html($width).'px;">';
+echo '<div class="ultp-builder-container'.(esc_html($has_widget?' ultp-widget-'.$sidebar:'')).(esc_html(' ultp-builderid-'.$page_id)).'" style="margin:0 auto; width: -webkit-fill-available; width: -moz-available; max-width: '.esc_html($width).'px;">';
     if ($has_widget && $sidebar == 'left') {
         echo '<div class="ultp-sidebar-left">';
             if (is_active_sidebar($widget_area)) {
@@ -63,10 +74,33 @@ do_action( 'ultp_after_content' );
 
 
 if ( wp_is_block_theme() ) {
-    wp_footer();
-    if(!$footer_id) {
+    ?>
+	</body>
+	</html>
+	<?php
+	if ( !$footer_id ) {
+		ob_start();
         block_template_part('footer');
+		$footer = ob_get_clean();
+		echo '<footer class="wp-block-template-part">'.$footer.'</footer>';
     }
+	if ( $header_id ) {
+		$GLOBALS['wp_filter'];
+		if ( isset($GLOBALS['wp_filter']['wp_head']) && $GLOBALS['wp_filter']['wp_head']->callbacks && !empty($GLOBALS['wp_filter']['wp_head']->callbacks) ) {
+			$callbacks = $GLOBALS['wp_filter']['wp_head']->callbacks;
+			foreach($callbacks as $k => $val) {
+				if (isset($val) && !empty($val) ) {
+					foreach($val as $pp => $qq) {
+						if ( $pp && strpos($pp, 'header_builder_template' ) > -1) {
+							remove_action('wp_head', $pp);
+						}
+					}
+				}
+			}
+		}
+	}
+	wp_head();
+	wp_footer();
 } else {
     get_footer();
 }

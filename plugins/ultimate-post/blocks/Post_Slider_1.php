@@ -52,7 +52,6 @@ class Post_Slider_1{
             'fade' => true,
             'titleShow' => true,
             'titleStyle' => 'none',
-            'titleAnimColor' => 'black',
             'headingShow' => false,
             'excerptShow' => true,
             'catShow' => true,
@@ -71,36 +70,16 @@ class Post_Slider_1{
             'headingStyle' => 'style9',
             'headingTag' => 'h2',
             'headingAlign' => 'left',
-            'headingTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '20', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>'700'],
-            'headingColor' => '#0e1523',
-            'headingBorderBottomColor' => '#0e1523',
-            'headingBorderBottomColor2' => '#e5e5e5',
-            'headingBg' => '#037fff',
-            'headingBg2' => '#e5e5e5',
-            'headingBtnTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none','family'=>''],
-            'headingBtnColor' => '#037fff',
-            'headingBtnHoverColor' => '#0a31da',
-            'headingBorder' => '3',
-            'headingSpacing' => (object)['lg'=>20, 'unit'=>'px'],
-            'headingRadius' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'headingPadding' => (object)['lg' =>(object)['unit' =>'px']],
             'subHeadingShow' => false,
             'subHeadingText' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut sem augue. Sed at felis ut enim dignissim sodales.',
-            'subHeadingTypo' => (object)['openTypography'=>1,'size'=>(object)['lg'=>'16', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'0', 'unit'=>'px'], 'height'=>(object)[ 'lg'=>'27', 'unit'=>'px'],'decoration'=>'none','transform' => '','family'=>'','weight'=>'500'],
-            'subHeadingColor' => '#989898',
-            'subHeadingSpacing' => (object)['lg' =>(object)['top' => '8', 'unit' =>'px']],
-
+            
             //--------------------------
             //      Title Setting/Style
             //--------------------------
             'titleTag' => 'h3',
             'titlePosition' => true,
-            'titleColor' => '#0e1523',
-            'titleHoverColor' => '#037fff',
-            'titleTypo' => (object)['openTypography'=>1,'size'=>(object)['lg'=>'28', 'unit'=>'px'], 'height'=>(object)['lg'=>'36', 'unit'=>'px'], 'decoration'=>'none','family'=>'','weight'=>'500'],
-            'titlePadding' => (object)['lg'=>(object)['top'=>25,'bottom'=>12, 'unit'=>'px']],
             'titleLength' => 0,
-            'titleBackground' => '',
+            // 'titleBackground' => '',
 
             //--------------------------
             // Content Setting/Style
@@ -108,66 +87,18 @@ class Post_Slider_1{
             'showSeoMeta' => false,
             'showFullExcerpt' => false,
             'excerptLimit' => 40,
-            'excerptColor' => '#777',
-            'excerptTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>26, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'excerptPadding' => (object)['lg' =>(object)['top' => 10,'bottom' => '', 'unit' =>'px']],
-
+            
             //--------------------------
             // Content Wrap Setting/Style
             //--------------------------
             'contentVerticalPosition' => 'middlePosition',
             'contentHorizontalPosition' => 'centerPosition',
-            'contentAlign' => "center",
-            'contenWraptWidth' => (object)['lg'=>'60', 'xs'=>'90', 'unit' =>'%'],
-            'contenWraptHeight' => (object)['lg'=>''],
-            'contentWrapBg' => '#fff',
-            'contentWrapHoverBg' => '',
-            'contentWrapBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'contentWrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'contentWrapRadius' => (object)['lg' =>(object)['top' => '6','bottom' => '6', 'left' => '6', 'right' => '6', 'unit' =>'px']],
-            'contentWrapHoverRadius' => (object)['lg' =>(object)['top' => '10','bottom' => '10', 'left' => '10', 'right' => '10', 'unit' =>'px']],
-            'contentWrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 0, 'right' => 5, 'bottom' => 15, 'left' => 0],'color' => 'rgba(0,0,0,0.15)'],
-            'contentWrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 0, 'right' => 10, 'bottom' => 25, 'left' => 0],'color' => 'rgba(0,0,0,0.25)'],
-            'contentWrapPadding' => (object)['lg' =>(object)['top' => '50','bottom' => '50', 'left'=>'50','right'=>'50', 'unit' =>'px'], 'xs' =>(object)['top' => '20','bottom' => '20', 'left'=>'20','right'=>'20', 'unit' =>'px']],
-
+            
             //--------------------------
             // Arrow Setting/Style
             //--------------------------
             'arrowStyle' => 'leftAngle2#rightAngle2',
-            'arrowSize' => (object)['lg' =>'', 'unit' =>'px'],
-            'arrowWidth' => (object)['lg' =>'60', 'unit' =>'px'],
-            'arrowHeight' => (object)['lg' =>'60', 'unit' =>'px'],
-            'arrowVartical' => (object)['lg' =>'', 'unit' =>'px'],
-            'arrowColor' => '#037fff',
-            'arrowHoverColor' => '#fff',
-            'arrowBg' => '#fff',
-            'arrowHoverBg' => '#037fff',
-            'arrowBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'arrowHoverBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'arrowRadius' => (object)['lg' =>(object)['top' => '50','bottom' => '50', 'left' => '50','right' => '50', 'unit' =>'px']],
-            'arrowHoverRadius' => (object)['lg' =>(object)['top' => '50','bottom' => '50', 'left' => '50','right' => '50', 'unit' =>'px']],
-            'arrowShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'arrowHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-
-            //--------------------------
-            // Dot Setting/Style
-            //--------------------------
-            'dotWidth' => (object)['lg' =>'10', 'unit' =>'px'],
-            'dotHeight' => (object)['lg' =>'10', 'unit' =>'px'],
-            'dotHoverWidth' => (object)['lg' =>'16', 'unit' =>'px'],
-            'dotHoverHeight' => (object)['lg' =>'16', 'unit' =>'px'],
-            'dotSpace' => (object)['lg' =>'4', 'unit' =>'px'],
-            'dotVartical' => (object)['lg' =>'40', 'unit' =>'px'],
-            'dotHorizontal' => (object)['lg'=>''],
-            'dotBg' => '#f5f5f5',
-            'dotHoverBg' => '#000',
-            'dotBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'dotHoverBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'dotRadius' => (object)['lg' =>(object)['top' => '50','bottom' => '50','left' => '50','right' => '50', 'unit' =>'px']],
-            'dotHoverRadius' => (object)['lg' =>(object)['top' => '50','bottom' => '50','left' => '50','right' => '50', 'unit' =>'px']],
-            'dotShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'dotHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-
+            
             //--------------------------
             // Category Setting/Style
             //--------------------------
@@ -178,21 +109,7 @@ class Post_Slider_1{
             'customCatColor' => false,
             'seperatorLink' => admin_url( 'edit-tags.php?taxonomy=category' ),
             'onlyCatColor' => false,
-            'catLineWidth' => (object)['lg'=>'20'],
-            'catLineSpacing' => (object)['lg'=>'30'],
-            'catLineColor' => '#000',
-            'catLineHoverColor' => '#037fff',
-            'catTypo' => (object)['openTypography' => 1, 'size' => (object)['lg' =>12, 'unit' =>'px'], 'height' => (object)['lg' =>15, 'unit' =>'px'], 'spacing' => (object)['lg' =>1, 'unit' =>'px'], 'transform' => '', 'weight' => '500', 'decoration' => 'none','family'=>'' ],
-            'catColor' => '#fff',
-            'catBgColor' => (object)['openColor' => 1,'type' => 'color', 'color' => '#000'],
-            'catBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'catRadius' => (object)['lg' =>'2', 'unit' =>'px'],
-            'catHoverColor' => '#fff',
-            'catBgHoverColor' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#037fff'],
-            'catHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'catSacing' => (object)['lg' =>(object)['top' => -65,'bottom' => 5,'left' => 0,'right' => 0, 'unit' =>'px'], 'xs' =>(object)['top' => -34,'bottom' => 5,'left' => 0,'right' => 0, 'unit' =>'px']],
-            'catPadding' => (object)['lg' =>(object)['top' => 8,'bottom' => 6,'left' => 16,'right' => 16, 'unit' =>'px']],
-
+            
             //--------------------------
             // Image Style
             //--------------------------
@@ -200,14 +117,6 @@ class Post_Slider_1{
             'imgCrop' => 'full',
             'imgOverlay' => false,
             'imgOverlayType' => 'default',
-            'overlayColor' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
-            'imgOpacity' => .7,
-            'imgGrayScale' => (object)['lg' =>'0', 'ulg' =>'%', 'unit' =>'%'],
-            'imgHoverGrayScale' => (object)['lg' =>'0', 'unit' =>'%'],
-            'imgRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'imgHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'imgShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'imgHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'fallbackEnable' => true,
             'fallbackImg' => '',
             'imgSrcset' => false,
@@ -219,19 +128,7 @@ class Post_Slider_1{
             //--------------------------
             'readMoreText' => '',
             'readMoreIcon' => 'rightArrowLg',
-            'readMoreTypo' => (object)['openTypography' => 1, 'size' => (object)['lg' =>12, 'unit' =>'px'], 'height' => (object)['lg' =>'', 'unit' =>'px'], 'spacing' => (object)['lg' =>1, 'unit' =>'px'], 'transform' => '', 'weight' => '500', 'decoration' => 'none','family'=>'' ],
-            'readMoreIconSize' => (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreColor' => '#000',
-            'readMoreBgColor' => (object)['openColor' => 0,'type' => 'color', 'color' => '#037fff'],
-            'readMoreBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'readMoreRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreHoverColor' => '#037fff',
-            'readMoreBgHoverColor' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#0c32d8'],
-            'readMoreHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'readMoreHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreSacing' => (object)['lg' =>(object)['top' => 30,'bottom' => '','left' => '','right' => '', 'unit' =>'px']],
-            'readMorePadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '','right' => '', 'unit' =>'px']],
-
+            
             //--------------------------
             // Meta Setting/Style
             //--------------------------
@@ -243,30 +140,10 @@ class Post_Slider_1{
             'metaMinText' => 'min read',
             'metaAuthorPrefix' => 'By',
             'metaDateFormat' => 'M j, Y',
-            'metaTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>12, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'metaColor' => '#989898',
-            'metaHoverColor' => '#037fff',
-            'metaSpacing' => (object)['lg' =>'15', 'unit' =>'px'],
-            'metaMargin' => (object)['lg' =>(object)['top' => '5','bottom' => '', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'metaPadding' => (object)['lg' =>(object)['top' => '5','bottom' => '5', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'metaBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => '0', 'bottom' => '0', 'left' => '0'],'color' => '#009fd4','type' => 'solid'],
-            'metaBg' => '',
-
+            
             //--------------------------
             //  Wrapper Style
             //--------------------------
-            'loadingColor' => '#000',
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapInnerPadding' => (object)['lg' =>(object)['unit' =>'px']],
             'advanceId' => '',
             'advanceZindex' => '',
             'hideExtraLarge' => false,

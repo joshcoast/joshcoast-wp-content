@@ -18,26 +18,12 @@ class Post_Comments{
             //  Comments Form Heading
             'replyHeading' => true,
             'leaveRepText' => 'Leave a Reply',
-            'HeadingColor' => '#333',
-            'HeadingTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>24, 'unit' =>'px'],'height' => (object)['lg' => 26, 'unit' =>'px']],
-            'subHeadingColor' => '#888',
-            'headingSpace' => (object)['lg' =>'5', 'unit' =>'px'],
             
             /*============================
                 Comments Form Input
             ============================*/
             "inputPlaceHolder" => "Express your thoughts, idea or write a feedback by clicking here & start an awesome comment",
-            'inputPlaceValueColor' => '#555',
-            'inputValueColor' => '#555',
-            'inputValueBg' => '#eeee',
-            'inputValueTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'inputValuePad' => (object)['lg' =>'15', 'unit' =>'px'],
-            'inputBorder' => (object)['openBorder'=>1, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#e2e2e2','type' => 'solid'],
-            'inputHovBorder' => (object)['openBorder'=>1, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#777','type' => 'solid'],
-            'inputRadius' => (object)['lg' =>'0', 'unit' =>'px'],
-            'inputHovRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'inputSpacing' => (object)['lg' =>'10', 'unit' =>'px'],
-
+            
             /*============================
                 Comments Form label style
             ============================*/
@@ -46,102 +32,26 @@ class Post_Comments{
             "nameInputText" => "Name",
             "emailInputText" => "Email",
             "webInputText" => "Website Url",
-            'inputLabelColor' => '#5a5a5a',
-            'inputLabelTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>16, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             'cookiesEnable' => true,
             'cookiesText' => "Save my name, email, and website in this browser for the next time I comment.",
-            'cookiesColor' => "#777",
-
+            
             /*============================
                 Submit Button Style
             ============================*/
             'subBtnText' => 'Post Comment',
-            'subBtnTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'submitButton' => 'normal',
-            'subBtnColor' => '#fff',
-            'subBtnBg' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#333'],
-            'subBtnBorder' => (object)['openBorder'=> 1, 'width' =>(object)['top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0],'color' => '#333','type' => 'solid'],
-            'subBtnRadius' => (object)['lg' =>'0', 'unit' =>'px'],
-            'subBtnHovColor' => '',
-            'subBtnHovBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#151515'],
-            'subBtnHovBorder' => (object)['openBorder'=> 1, 'width' =>(object)['top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0],'color' => '#151515','type' => 'solid'],
-            'subBtnHovRadius' => (object)['lg' =>'0', 'unit' =>'px'],
-            'subBtnPad' => (object)['lg' =>'10', 'unit' =>'px'],
-            'subBtnSpace' => (object)['lg' =>'20', 'unit' =>'px'],
-            'subBtnAlign' => 'left',
 
             /*============================
                 Comment Reply Style
             ============================*/
             // Title and total Comment Count
-            'authColor' => '#333',
-            'authHovColor' => '#000',
-            'authorTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>18, 'unit' =>'px'],'height' => (object)['lg' =>25, 'unit' =>'px']],
-            'commentSpace' => (object)['lg' =>(object)['top' => '15','bottom' => '0','left' => '30', 'right' => '0', 'unit' =>'px']],
             'replyText' => 'Comments Text',
             'commentCount' => true,
-            'commentCountColor' => '#055553',
-            'commentCountTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => 30, 'unit' =>'px'],'height' => (object)['lg' =>28, 'unit' =>'px'],'weight'=>'600'],
-            'commentCountSpace' => (object)['lg' =>'30', 'unit' =>'px'],
-            'authMetaSpace' => (object)['lg' =>'7', 'unit' =>'px'],
-            
-            /*============================
-                Comment Reply Button
-            ============================*/
-            'replyButton' => 'normal',
-            'replyBtnTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'replyBtnColor' => '#333',
-            'replyBtnBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'replyBtnHovColor' => '#333',
-            'replyBtnBgHov' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'replyBtnBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'replyBtnRadius' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'replyBtnPad' => (object)['lg' =>(object)['top' => '5','bottom' => '5','left' => '5', 'right' => '5', 'unit' =>'px']],
-            'replyBtnSpace' => (object)['lg' =>'7', 'unit' =>'px'],
-
-            /*============================
-                Comment Author Meta
-            ============================*/
-            'authMeta' => true,
-            'authMetaColor' => '#9f9f9f',
-            'authMetaHovColor' => '#000',
-            'authMetaTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>12, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-
-            /*============================
-                Comment Author Image Style
-            ============================*/
-            'authImg' => true,
-            'authImgRadius' => (object)['lg' =>'50', 'unit' =>'px'],
-
-            /*============================
-                Comment Reply Message Text Style
-            ============================*/
-            'replyColor' => '#6c6c6c',
-            'replyHovColor' => '#000',
-            'replyTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            
-            /*============================
-                reply separator Style
-            ============================*/
-            'replySeparator' => true,
-            'replySepColor' => '#c1c1c1',
-            'replySepSpace'=> (object)['lg' =>'15', 'unit' =>'px'],
-            
+    
             //--------------------------
             //  Advanced Settings
             //--------------------------
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

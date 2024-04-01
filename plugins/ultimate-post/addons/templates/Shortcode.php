@@ -19,9 +19,7 @@ class Shortcode {
 
         if ($id) {
             $content = '';
-            if (!isset($GLOBALS['wp_scripts']->registered['ultp-script'])) {
-                ultimate_post()->register_scripts_common();
-            }
+            ultimate_post()->register_scripts_common();
             $css = ultimate_post()->set_css_style($id, true);
             $content_post = get_post($id);
             if ($content_post) {

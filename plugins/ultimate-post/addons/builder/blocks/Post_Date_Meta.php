@@ -19,41 +19,23 @@ class Post_Date_Meta {
             'metaDateIconShow' => true,
             "dateFormat" => "updated",
             'metaDateFormat' => 'M j, Y',
-            'metaDateColor' => '',
-            'metaDateTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' =>'px']],
-            'metaDateCountAlign' => [],
 
             /*============================
                 Post Date Meta Label
             ============================*/
             'datePubLabel' => 'Publish Date',
             'dateUpLabel' => 'Updated Date',
-            'datePrefixColor' => '',
-            'datePrefixSpace' => (object)['lg' =>'12', 'unit' =>'px'],
             
             /*============================
                 Post Date Meta icon style
             ============================*/
             'metaDateIconStyle' => 'date1',
-            'iconColor' => '',
-            'metaDateIconSize' => (object)['lg' =>'15', 'unit' =>'px'],
-            'metaDateIconSpace' => (object)['lg' =>'8', 'unit' =>'px'],
             
             //--------------------------
             //  Advanced Settings
             //--------------------------
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

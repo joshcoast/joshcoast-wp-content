@@ -17,8 +17,7 @@ function ultp_chatgpt_config( $config ) {
 		'live'     => 'https://www.wpxpo.com/postx-chatgpt-wordpress-ai-content-generator/live_demo_args',
 		'video'    => 'https://www.youtube.com/watch?v=NE4BPw4OTAA',
 		'is_pro'   => false,
-		'position' => 6,
-		'integration' => true
+		'position' => 6
 	);
 	$config['ultp_chatgpt'] = $configuration;
 	return $config;

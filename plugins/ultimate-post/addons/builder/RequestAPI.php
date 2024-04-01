@@ -492,28 +492,42 @@ class RequestAPI{
         }
 
         $post = $server->get_params();
-        $id = isset($post['ID']) ? ultimate_post()->ultp_rest_sanitize_params($post['ID']) : '';
+        $id = isset($post['ID']) ? sanitize_text_field($post['ID']) : '';
+        $api_endpoint = isset($post['apiEndPoint']) ? sanitize_text_field($post['apiEndPoint']) : '';
         $s_type = isset($post['type']) ? ultimate_post()->ultp_rest_sanitize_params($post['type']) : '';
-        
-        if ($id) {
-            $response = wp_remote_post( $this->api_endpoint.'single-premade', array(
-                'method' => 'POST',
-                'timeout' => 120,
-                'body' => array( 'section_id' => $id, 'license' => get_option('edd_ultp_license_key') )
-            ));
-            if (is_wp_error( $response ) ) {
-                return array( 'success' => false, 'data' => "Something went wrong:" . $response->get_error_message() );
-            } else {
-                if (isset($response['body']) && $s_type) {
-                    $body = json_decode($response['body']);
-                    if (isset($body->rawData) && isset($body->success) && $body->success) {
-                        $post_id = $this->set_post_content($s_type, wp_slash($body->rawData));
-                        return array( 'success' => true, 'link' => get_edit_post_link($post_id) );
-                    } else {
-                        return array( 'success' => false );
-                    }
-                }
+
+        if( $id ) {
+            $import_single = array(
+                'id'   => $id, 
+                'type' => 'single',
+                'license' => get_option('edd_ultp_license_key'),
+            );
+            $response = wp_remote_get(
+                $api_endpoint.'/wp-json/importer/single', 
+                array(
+                    'method' => 'POST',
+                    'timeout' => 120,
+                    'body' =>  $import_single
+                )
+            );
+
+            $response_data = json_decode($response['body']);
+
+            if( !$response_data->success ) {
+                wp_send_json([
+                    'success' => false,
+                    'data' => "Something went wrong:" . $response->get_error_message()
+                ]);
             }
+
+            $content = $response_data->content[0]->content;
+            $post_id = $this->set_post_content($s_type, wp_slash($content));
+
+            return rest_ensure_response([
+                'success' => true,
+                'link' => get_edit_post_link($post_id)
+            ]);
+    
         } else {
             $post_id = $this->set_post_content($s_type, '');
             return array( 'success' => true, 'link' => get_edit_post_link($post_id) );

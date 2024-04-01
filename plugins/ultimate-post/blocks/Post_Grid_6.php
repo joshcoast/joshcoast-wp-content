@@ -45,13 +45,9 @@ class Post_Grid_6{
             //--------------------------
             //      General Setting
             //--------------------------
-            'contentAlign' =>  "left",
-            'columnGridGap' =>  (object)['lg' =>'5', 'unit' =>'px'],
-            'overlayHeight' =>  (object)['lg' =>'500', 'unit' =>'px'],
             'columnFlip' =>  false,
             'titleShow' =>  true,
             'titleStyle' =>  'none',
-            'titleAnimColor' =>  'black',
             'headingShow' =>  true,
             'excerptShow' =>  true,
             'catShow' =>  true,
@@ -72,46 +68,22 @@ class Post_Grid_6{
             'headingStyle' =>  'style9',
             'headingTag' =>  'h2',
             'headingAlign' =>   'left',
-            'headingTypo' =>   (object)['openTypography' => 1,'size' => (object)['lg' => '20', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>'700'],
-            'headingColor' =>   '#0e1523',
-            'headingBorderBottomColor' =>   '#0e1523',
-            'headingBorderBottomColor2' =>   '#e5e5e5',
-            'headingBg' =>   '#037fff',
-            'headingBg2' =>   '#e5e5e5',
-            'headingBtnTypo' =>   (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none','family'=>''],
-            'headingBtnColor' =>   '#037fff',
-            'headingBtnHoverColor' =>   '#0a31da',
-            'headingBorder' =>  '3',
-            'headingSpacing' =>  (object)['lg'=>20, 'unit'=>'px'],
-            'headingRadius' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'headingPadding' =>  (object)['lg' =>(object)['unit' =>'px']],
             'subHeadingShow' =>  false,
             'subHeadingText' =>  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ut sem augue. Sed at felis ut enim dignissim sodales.',
-            'subHeadingTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'16', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'0', 'unit'=>'px'], 'height'=>(object)[ 'lg'=>'27', 'unit'=>'px'],'decoration'=>'none','transform' => '','family'=>'','weight'=>'500'],
-            'subHeadingColor' =>   '#989898',
-            'subHeadingSpacing' =>  (object)['lg' =>(object)['top' => '8', 'unit' =>'px']],
-
+            
             //--------------------------
             //      Title Setting/Style
             //--------------------------
             'titleTag' =>  'h3',
             'titleAnimation' =>  '',
             'titlePosition' =>  true,
-            'titleColor' =>  '#fff',
-            'titleHoverColor' =>  'rgba(255,255,255,0.70)',
-            'titleLgTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'28', 'unit'=>'px'], 'height'=>(object)[ 'lg'=>'32', 'unit'=>'px'],'decoration'=>'none','family'=>'','weight'=>'700'],
-            'titleTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'20', 'unit'=>'px'], 'height'=>(object)['lg'=>'26', 'unit'=>'px'], 'decoration'=>'none','family'=>'','weight'=>'600'],
-            'titlePadding' =>  (object)['lg'=>(object)['top'=>10,'bottom'=>5, 'unit'=>'px']],
             'titleLength' =>  0,
-            'titleBackground' =>   '',
-
+            
             //--------------------------
             // Overlay Content Setting/Style
             //--------------------------
             'overlayContentPosition' =>  'bottomPosition',
-            'overlayBgColor' =>  (object)['openColor' => 1,'type' => 'color', 'color' => ''],
-            'overlayWrapPadding' =>  (object)['lg' =>(object)['top' => '20','bottom' => '20', 'left'=>'20','right'=>'20', 'unit' =>'px']],
-
+            
             //--------------------------
             // Content Setting/Style
             //--------------------------
@@ -119,10 +91,7 @@ class Post_Grid_6{
             'showSmallExcerpt' =>  false,
             'showFullExcerpt' =>  false,
             'excerptLimit' =>  20,
-            'excerptColor' =>  '#fff',
-            'excerptTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'excerptPadding' =>  (object)['lg' =>(object)['top' => 15,'bottom' => '', 'unit' =>'px']],
-
+            
             //--------------------------
             // Category Setting/Style
             //--------------------------'
@@ -134,21 +103,7 @@ class Post_Grid_6{
             'customCatColor' =>  false,
             'seperatorLink' =>  admin_url( 'edit-tags.php?taxonomy=category' ),
             'onlyCatColor' =>  false,
-            'catLineWidth' =>  (object)['lg'=>'20'],
-            'catLineSpacing' =>  (object)['lg'=>'30'],
-            'catLineColor' =>  '#000',
-            'catLineHoverColor' =>  '#037fff',
-            'catTypo' =>  (object)['openTypography' => 1, 'size' => (object)['lg' =>11, 'unit' =>'px'], 'height' => (object)['lg' =>15, 'unit' =>'px'], 'spacing' => (object)['lg' =>1, 'unit' =>'px'], 'transform' => '', 'weight' => '500', 'decoration' => 'none','family'=>'' ],
-            'catColor' =>  '#fff',
-            'catBgColor' =>  (object)['openColor' => 1,'type' => 'color', 'color' => '#000'],
-            'catBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'catRadius' =>  (object)['lg' =>'2', 'unit' =>'px'],
-            'catHoverColor' =>  '#fff',
-            'catBgHoverColor' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#037fff'],
-            'catHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'catSacing' =>  (object)['lg' =>(object)['top' => 5,'bottom' => 5,'left' => 0,'right' => 0, 'unit' =>'px']],
-            'catPadding' =>  (object)['lg' =>(object)['top' => 3,'bottom' => 3,'left' => 7,'right' => 7, 'unit' =>'px']],
-
+            
             //--------------------------
             // Meta Setting/Style
             //--------------------------
@@ -162,15 +117,7 @@ class Post_Grid_6{
             'metaAuthorPrefix' =>  'By',
             'metaDateFormat' =>  'M j, Y',
             'metaListSmall' =>  '["metaDate"]',
-            'metaTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>13, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'metaColor' =>  'rgba(255,255,255,0.90)',
-            'metaHoverColor' =>  '#037fff',
-            'metaSpacing' =>  (object)['lg' =>'10', 'unit' =>'px'],
-            'metaMargin' =>  (object)['lg' =>(object)['top' => '5','bottom' => '', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'metaPadding' =>  (object)['lg' =>(object)['top' => '5','bottom' => '5', 'left'=>'','right'=>'', 'unit' =>'px']],
-            'metaBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => '0', 'bottom' => '0', 'left' => '0'],'color' => '#009fd4','type' => 'solid'],
-            'metaBg' =>  '',
-
+            
             //--------------------------
             // Image Setting/Style
             //--------------------------
@@ -178,16 +125,8 @@ class Post_Grid_6{
             'imgCrop' =>  (ultimate_post()->get_setting('disable_image_size') == 'yes' ? 'full' : 'ultp_layout_landscape'),
             'imgCropSmall' =>  (ultimate_post()->get_setting('disable_image_size') == 'yes' ? 'full' : 'ultp_layout_square'),
             'imgAnimation' =>  'zoomIn',
-            'imgGrayScale' =>  (object)['lg' =>'0', 'ulg' =>'%', 'unit' =>'%'],
-            'imgHoverGrayScale' =>  (object)['lg' =>'0', 'unit' =>'%'],
-            'imgRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'imgHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'imgShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'imgHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'imgOverlay' =>  true,
             'imgOverlayType' =>  'simgleGradient',
-            'overlayColor' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
-            'imgOpacity' =>  .7,
             'fallbackEnable' =>  true,
             'fallbackImg' =>  '',
             'imgSrcset' =>  false,
@@ -198,62 +137,25 @@ class Post_Grid_6{
             //--------------------------
             'vidIconEnable' =>  true,
             'popupAutoPlay' =>  true,
-            'vidIconPosition' =>  'topRight',
-            'popupIconColor' =>   '#fff',
-            'popupHovColor' =>   '#d2d2d2',
             'iconSize' =>  (object)['lg'=>'40', 'sm'=> '30', 'xs'=> '30', 'unit' => 'px'],
             // by default should be off
             'enablePopup' =>  false,
-            'popupWidth' =>  (object)['lg'=>'70'],
             'enablePopupTitle' =>  true,
-            'popupTitleColor' =>   '#fff',
-            'closeIconSep' =>   '#fff',
-            'closeIconColor' =>   '#fff',
-            'closeHovColor' =>   '#8f8f8f',
-            'closeSize' =>  (object)['lg'=>'70', 'unit' => 'px'],
-
+            
             //--------------------------
             // Read more Setting/Style
             //--------------------------
             'showSmallBtn' =>  false,
             'readMoreText' =>  '',
             'readMoreIcon' =>  'rightArrowLg',
-            'readMoreTypo' =>  (object)['openTypography' => 1, 'size' => (object)['lg' =>12, 'unit' =>'px'], 'height' => (object)['lg' =>'', 'unit' =>'px'], 'spacing' => (object)['lg' =>1, 'unit' =>'px'], 'transform' => '', 'weight' => '400', 'decoration' => 'none','family'=>'' ],
-            'readMoreIconSize' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreColor' =>  '#fff',
-            'readMoreBgColor' =>  (object)['openColor' => 0,'type' => 'color', 'color' => ''],
-            'readMoreBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'readMoreRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreHoverColor' =>  'rgba(255,255,255,0.80)',
-            'readMoreBgHoverColor' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => ''],
-            'readMoreHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'readMoreHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'readMoreSacing' =>  (object)['lg' =>(object)['top' => 15,'bottom' => '','left' => '','right' => '', 'unit' =>'px']],
-            'readMorePadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '','right' => '', 'unit' =>'px']],
-
+            
             //--------------------------
             // Filter Setting/Style
             //--------------------------
             'filterBelowTitle' =>  false,
-            'filterAlign' =>  (object)['lg' =>''],
             'filterType' =>  'category',
             'filterText' =>  'all',
             'filterValue' =>  '[]',
-            'fliterTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>22, 'unit' =>'px'], 'decoration' => 'none','family'=>'','weight'=>500],
-            'filterColor' =>  '#0e1523',
-            'filterHoverColor' =>   '#828282',
-            'filterBgColor' => '',
-            'filterHoverBgColor' => '',
-            'filterBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'filterHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'filterRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'fliterSpacing' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'right' => '', 'left' => '20', 'unit' =>'px']],
-            'fliterPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'filterDropdownColor' =>   '#0e1523',
-            'filterDropdownHoverColor' =>   '#037fff',
-            'filterDropdownBg' =>   '#fff',
-            'filterDropdownRadius' =>  (object)['lg'=>'0'],
-            'filterDropdownPadding' =>  (object)['lg' =>(object)['top' => '15','bottom' => '15','left' => '20','right' => '20', 'unit' =>'px']],
             'filterMobile' =>   true,
             'filterMobileText' =>  'More',
 
@@ -263,37 +165,10 @@ class Post_Grid_6{
             'paginationType' =>  'navigation',
             'paginationNav' =>  'textArrow',
             'navPosition' =>  'topRight',
-            'pagiAlign' =>   (object)['lg' =>'left'],
-            'pagiTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'pagiArrowSize' =>  (object)['lg'=>'14'],
-            'pagiColor' =>  '#fff',
-            'pagiBgColor' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
-            'pagiBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'pagiShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'pagiRadius' =>  (object)['lg' =>(object)['top' => '2','bottom' => '2','left' => '2','right' => '2', 'unit' =>'px']],
-            'pagiHoverColor' =>  '#fff',
-            'pagiHoverbg' =>  (object)['openColor' => 1, 'type' => 'color', 'color' => '#037fff','replace'=>1],
-            'pagiHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'pagiHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'pagiHoverRadius' =>  (object)['lg' =>(object)['top' => '2','bottom' => '2','left' => '2','right' => '2', 'unit' =>'px']],
-            'pagiPadding' =>  (object)['lg' =>(object)['top' => '8','bottom' => '8','left' => '14','right' => '14', 'unit' =>'px']],
-            'navMargin' =>  (object)['lg' =>(object)['top' => '0', 'right' => '0', 'bottom' => '0', 'left' => '0', 'unit' =>'px']],
-
+            
             //--------------------------
             //  Wrapper Style
             //--------------------------
-            'loadingColor' =>  '#000',
-            'wrapBg' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' =>  (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapMargin' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapInnerPadding' =>  (object)['lg' =>(object)['unit' =>'px']],
             'advanceId' =>  '',
             'advanceZindex' =>  '',
             'hideExtraLarge' =>  false,

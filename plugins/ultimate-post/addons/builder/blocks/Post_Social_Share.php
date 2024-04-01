@@ -20,47 +20,20 @@ class Post_Social_Share {
             /*============================
                 Social Share item style 
             ============================*/
-            'shareItemTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '18', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>''],
-            'shareIconSize' => (object)['lg' =>'20', 'unit' =>'px'],
-            'shareBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#c3c3c3','type' => 'solid' ],
-            'shareRadius' => (object)['lg' =>'', 'unit' =>'px'],
             'disInline' => true,
-            'itemPadding' => (object)['lg' =>(object)['top' => '15','bottom' => '15', 'left'=>'15','right'=>'15', 'unit' =>'px']],
-            'itemSpacing' => (object)['lg' =>(object)['top' => '5','bottom' => '5', 'left'=>'5','right'=>'5', 'unit' =>'px']],
-            "itemContentAlign" => "flex-start",
-            'itemAlign' => 'left',
             
             /*============================
                 Post Social Share Label Style
             ============================*/
             'shareLabelShow' => true,
-            'labelIconSize' => (object)['lg' => '24'],
-            'labelIconSpace' => (object)['lg' =>(object)['top' => '0','bottom' => '0', 'left'=>'0','right'=>'15', 'unit' =>'px']],
-            'shareLabelIconColor' => '#002dff',
             'shareLabelStyle' => 'style1',
             'shareCountShow' => true,
-            'Labels1BorderColor' => '#',
-            'shareCountColor' => '#',
-            'shareCountTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '20', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>''],
             'shareCountLabel' => 'Shares',
-            'shareLabelColor' => '#',
-            'shareLabelTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '12', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>''],
-            'shareLabelBackground' => '#fff',
-            'shareLabelBorder' => (object)['openBorder'=>1, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#c3c3c3','type' => 'solid' ],
-            'shareLabelRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'shareLabelPadding' => (object)['lg' =>(object)['top' => '10','bottom' => '10', 'left'=>'25','right'=>'25', 'unit' =>'px']],
 
             /*============================
                 Post Social Share sticky position Style
             ============================*/
             'enableSticky' => false,
-            'itemPosition' => 'bottom',
-            'stickyLeftOffset' => "20",
-            'stickyRightOffset' => "20",
-            'stickyTopOffset' => "20",
-            'stickyBottomOffset' => "20",
-            'resStickyPost' => false,
-            'floatingResponsive' => "600",
             'stopSticky' => false,
 
             //--------------------------
@@ -68,16 +41,6 @@ class Post_Social_Share {
             //--------------------------
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

@@ -16,16 +16,45 @@ defined('ABSPATH') || exit;
 class Functions{
 
     /**
+     * @since v.3.2.4
+     * Instance of the class.
+     *
+     * @var Functions | null
+     */
+    private static $instance = null;
+
+    /**
 	 * Setup class.
 	 *
 	 * @since v.1.0.0
 	 */
     public function __construct() {
-        if (!isset($GLOBALS['ultp_settings'])) {
+        // if (!isset($GLOBALS['ultp_settings'])) {
+        //     $GLOBALS['ultp_settings'] = get_option('ultp_options');
+        //     $GLOBALS['ultp_settings']['date_format'] = get_option('date_format');
+        //     $GLOBALS['ultp_settings']['time_format'] = get_option('time_format');
+        // }
+    }
+
+    /**
+     * Gets the instance of \WOPB\Functions class
+     * 
+     * @return Functions
+     * @since v.3.2.4
+     */
+    public static function get_instance()
+    {
+        if (!isset ($GLOBALS['ultp_settings'])) {
             $GLOBALS['ultp_settings'] = get_option('ultp_options');
             $GLOBALS['ultp_settings']['date_format'] = get_option('date_format');
             $GLOBALS['ultp_settings']['time_format'] = get_option('time_format');
         }
+
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -505,6 +534,31 @@ class Functions{
 	 * Get Image HTML
      * 
      * @since v.1.0.0
+     * @param  | URL (STRING) | size (STRING) | class (STRING) | alt (STRING) 
+	 * @return STRING
+	 */
+    public function get_image_html($url = '', $size = 'full', $class = '', $alt = '', $lazy = '', $darkImg=[]) {
+        $hasDarkImage = ( $darkImg['enable'] && $darkImg['url'] ) ? ' ultp-light-image-block ' : '';
+        $alt = $alt ? ' alt="'.$alt.'" ' : '';
+        $lazy_data = $lazy ? ' loading="lazy"' : '';
+        
+        $dlMode = isset($_COOKIE['ultplocalDLMode']) ? $_COOKIE['ultplocalDLMode'] : ultimate_post()->get_dl_mode();
+        
+        $lightMode = $hasDarkImage ? ( $dlMode == 'ultplight' ? '' : 'inactive ' ) : '';
+        $darkMode  = $hasDarkImage ? ( $hasDarkImage && $dlMode == 'ultpdark'  ? '' : ' inactive ' ) : '';
+
+        $image = '<img '.$lazy_data.' class="'.$class.$hasDarkImage.$lightMode.'" '.$alt.' src="'.$url.'" />';
+        if( $hasDarkImage ) {
+            $image .= '<img '.$lazy_data.' class="'.$class.$darkMode.' ultp-dark-image-block " '.$alt.' src="'.$darkImg['url'].'" />';
+        }
+        return $image;
+    }
+
+
+    /**
+	 * Get Image HTML
+     * 
+     * @since v.1.0.0
      * @param  | Attach ID (STRING) | size (STRING) | class (STRING) | alt (STRING) 
 	 * @return STRING
 	 */
@@ -892,7 +946,7 @@ class Functions{
             foreach ($temp as $val) {
                 $temp = explode('###', $val->value);
                 if (isset($temp[1])) {
-                    if (array_key_exists($temp[0], $_term)) {
+                    if ( is_array($_term) && array_key_exists($temp[0], $_term)) {
                         $_term[$temp[0]][] = $temp[1];
                     } else {
                         $_term[$temp[0]] = array($temp[1]);
@@ -910,7 +964,7 @@ class Functions{
                     );
                 }
 
-                if (array_key_exists('tax_query', $query_args)) {
+                if ( is_array($query_args) && array_key_exists('tax_query', $query_args)) {
                     $query_args['tax_query'] = array(
                         'relation' => 'AND',
                         $query_args['tax_query']
@@ -1177,22 +1231,28 @@ class Functions{
 	 * Svg Icon Source
      * 
      * @since v.1.0.0
-     * @param STRING | String Name
-	 * @return STRING
+     * @param string $ultp_icons
+	 * @return string
 	 */
     public function svg_icon( $ultp_icons = '' ) {
+        $svg = '';
         if ( $ultp_icons ) {
             global $wp_filesystem;
 			if (! $wp_filesystem ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
+                $init_fs = WP_Filesystem();
+                if (!$init_fs) {
+                    return '';
+                }
 			}
-            WP_Filesystem();
-            if ( file_exists( ULTP_PATH . 'assets/img/iconpack/' . $ultp_icons . '.svg' ) ) {
-                return $wp_filesystem->get_contents( ULTP_PATH . 'assets/img/iconpack/' . $ultp_icons . '.svg' );
+
+            $svg_file_path = ULTP_PATH . 'assets/img/iconpack/' . $ultp_icons . '.svg';
+
+            if ( $wp_filesystem->exists($svg_file_path) ) {
+                $svg = $wp_filesystem->get_contents($svg_file_path);
             }
-            return '';
         }
-        return '';
+        return $svg ? $svg : '';
     }
 
     /**
@@ -1250,7 +1310,10 @@ class Functions{
         if ($thumbnail_id) {
             $image_sizes = ultimate_post()->get_image_size();
             foreach ($image_sizes as $key => $value) {
-                $image_src[$key] = wp_get_attachment_image_src($thumbnail_id, $key, false)[0];
+                $img_src = wp_get_attachment_image_src($thumbnail_id, $key, false);
+                if( $img_src ) {
+                    $image_src[$key] = $img_src[0];
+                }
             }
         }
         $temp['url'] = get_term_link($terms);
@@ -2274,14 +2337,34 @@ class Functions{
 	 * @return NULL
 	 */
     public function register_scripts_common() {
-        wp_enqueue_style('ultp-style', ULTP_URL.'assets/css/style.min.css', array(), ULTP_VER );
-        wp_enqueue_script('ultp-script', ULTP_URL.'assets/js/ultp.min.js', array('jquery', 'wp-api-fetch'), ULTP_VER, true);
-        wp_localize_script('ultp-script', 'ultp_data_frontend', array(
-            'url' => ULTP_URL,
-            'ajax' => admin_url('admin-ajax.php'),
-            'security' => wp_create_nonce('ultp-nonce'),
-		    'home_url' => home_url(),
-        ));
+        if ( !( isset($GLOBALS['wp_scripts']) && isset($GLOBALS['wp_scripts']->registered) && isset($GLOBALS['wp_scripts']->registered['ultp-script']) ) ) {
+            wp_enqueue_style('ultp-style', ULTP_URL.'assets/css/style.min.css', array(), ULTP_VER );
+            wp_enqueue_script('ultp-script', ULTP_URL.'assets/js/ultp.min.js', array('jquery', 'wp-api-fetch'), ULTP_VER, true);
+            wp_localize_script('ultp-script', 'ultp_data_frontend', array(
+                'url' => ULTP_URL,
+                'active' => ultimate_post()->is_lc_active(),
+                'ultpSavedDLMode' => ultimate_post()->get_dl_mode(),
+                'ajax' => admin_url('admin-ajax.php'),
+                'security' => wp_create_nonce('ultp-nonce'),
+                'home_url' => home_url(),
+                'dark_logo' => get_option('ultp_site_dark_logo', false)
+            ));
+            
+        }
+    }
+    /**
+	 * Get Dark Light Mode
+     * 
+     * @since 4.0.0
+	 * @return string
+	 */
+    public function get_dl_mode() {
+        $data = get_option('postx_global', []);
+        $mode = 'ultplight';
+        if(!empty($data)) {
+            $mode = isset($data['enableDark']) && $data['enableDark'] ? 'ultpdark' : 'ultplight';
+        }
+        return $mode;
     }
 
     /**
@@ -2563,7 +2646,7 @@ class Functions{
      * Sanitize params
      * @param $params
      * @return array|bool|mixed|string
-     * @since v.3.2.5
+     * @since v.4.0.0
     */
     public function ultp_rest_sanitize_params($params) {
         if(is_array($params)) {

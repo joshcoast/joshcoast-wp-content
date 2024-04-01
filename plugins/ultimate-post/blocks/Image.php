@@ -8,40 +8,41 @@ class Image {
     public function __construct() {
         add_action( 'init', array( $this, 'register' ) );
     }
-
     public function get_attributes() {
         return array(
             'blockId' => '',
             'previewImg' => '',
             // Image Settings
             'imageUpload' => (object)[ 'id'=>'999999', 'url' => ULTP_URL.'assets/img/ultp-placeholder.jpg' ],
+            'darkImgEnable' => false,
+            'darkImage' => (object)[ 'id'=>'999999', 'url' => ULTP_URL.'assets/img/ultp-placeholder.jpg' ],
             'linkType' => 'link',
             'imgLink' => '',
             'linkTarget' => '_blank',
             'imgAlt' => 'Image',
             'imgAlignment' => ['lg' => 'left'],
-            'imgWidth' => (object)['lg' =>'', 'ulg' =>'px'],
-            'imgHeight' => (object)['lg' =>'', 'unit' =>'px'],
-            'imageScale' => 'cover',
+            // 'imgWidth' => (object)['lg' =>'', 'ulg' =>'px'],
+            // 'imgHeight' => (object)['lg' =>'', 'unit' =>'px'],
+            // 'imgHeight' => 'cover',
             'imgAnimation' => 'none',
-            'imgGrayScale' => (object)['lg' =>'0', 'ulg' =>'%', 'unit' =>'%'],
-            'imgHoverGrayScale' => (object)['lg' =>'0', 'unit' =>'%'],
-            'imgRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'imgHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'imgShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'imgHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
+            // 'imgAttr' => (object)['lg' =>'0', 'ulg' =>'%', 'unit' =>'%'],
+            // 'imgAttr' => (object)['lg' =>'0', 'unit' =>'%'],
+            // 'imgAttr' => (object)['lg' =>'', 'unit' =>'px'],
+            // 'imgAttr' => (object)['lg' =>'', 'unit' =>'px'],
+            // 'imgAttr' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
+            // 'imgAttr' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'imgMargin' => (object)['lg'=>''],
             'imgOverlay' => false,
             'imgOverlayType' => 'default',
-            'overlayColor' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
-            'imgOpacity' => .7,
+            // 'imgAttr' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#0e1523'],
+            // 'imgAttr' => .7,
             'imgLazy' => false,
             // Heading Setting/Style
             'headingText' => 'This is a Image Example',
             'headingEnable' => false,
-            'headingColor' => '',
+            // 'headingAttr' => '',
             'alignment' => ['lg' => 'left'],
-            'headingTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => '', 'transform' => '', 'family'=>'','weight'=>''],
+            // 'headingAttr' => (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => '', 'transform' => '', 'family'=>'','weight'=>''],
             'headingMargin' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
             // Button Settings
             'buttonEnable' => false,
@@ -63,17 +64,6 @@ class Image {
             'btnHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'btnSacing' => (object)['lg' =>(object)['top' => 0,'bottom' => 0,'left' => 0,'right' => 0, 'unit' =>'px']],
             'btnPadding' => (object)['lg' =>(object)['top' => "6",'bottom' => "6",'left' => "12",'right' => "12", 'unit' =>'px']],
-            // Wrapper Settings
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
             'advanceId' => '',
             'advanceZindex' => '',
             'hideExtraLarge' => false,
@@ -99,6 +89,12 @@ class Image {
         $wraper_before = '';
         $block_name = 'image';
         $attr['headingShow'] = true;
+        $darkImageArr = (array)$attr['darkImage'];
+        $darkImg = [
+            'enable'=> $attr['darkImgEnable'],
+            'url'=> $darkImageArr['url']
+        ];
+
 
         $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
             $wraper_before .= '<div class="ultp-block-wrapper">';
@@ -108,9 +104,9 @@ class Image {
                         $img_arr = (array)$attr['imageUpload'];
                         if ( ! empty( $img_arr ) ) {
                             if ( $attr['linkType'] == 'link' && $attr['imgLink'] ) {
-                                $wraper_before .= '<a href="'.$attr['imgLink'].'" target="'.$attr['linkTarget'].'">'.$this->get_image_html($img_arr['url'], 'full', 'ultp-image', $attr['imgAlt'], $attr['imgLazy']).'</a>';
+                                $wraper_before .= '<a href="'.$attr['imgLink'].'" target="'.$attr['linkTarget'].'">'.ultimate_post()->get_image_html($img_arr['url'], 'full', 'ultp-image', $attr['imgAlt'], $attr['imgLazy'], $darkImg).'</a>';
                             } else {
-                                $wraper_before .= $this->get_image_html($img_arr['url'], 'full', 'ultp-image', $attr['imgAlt'], $attr['imgLazy']);
+                                $wraper_before .= ultimate_post()->get_image_html($img_arr['url'], 'full', 'ultp-image', $attr['imgAlt'], $attr['imgLazy'], $darkImg);
                             }
                         }
                         if ( $attr['btnLink'] && $attr['linkType'] == 'button' ) {
@@ -125,12 +121,5 @@ class Image {
         $wraper_before .= '</div>';
 
         return $wraper_before;
-    }
-
-    public function get_image_html( $url = '', $size = 'full', $class = '', $alt = '', $lazy = '' ) {
-        $alt = $alt ? ' alt="'.$alt.'" ' : '';
-        $lazy_data = $lazy ? ' loading="lazy"' : '';
-        $class = $class ? ' class="'.$class.'" ' : '';
-        return '<img '.$lazy_data.$class.$alt.' src="'.$url.'" />';
     }
 }

@@ -15,52 +15,29 @@ class Post_Author_Meta {
             /*============================
                 Post Author Meta  Settings
             ============================*/
-            'authMetaIconColor' => '',
-            'authMetaHoverColor' => '',
-            'authMetaTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' =>'px']],
             'authMetAvatar' => true,
             'authMetaIconShow' => false,
-            'authMetaCountAlign' => [],
             
             /*============================
                 Post Author Avatar Style
             ============================*/
-            'authMetAvSize' => (object)['lg' =>'30', 'unit' =>'px'],
-            'authMetAvSpace' => (object)['lg' =>'10', 'unit' =>'px'],
-            'authMetAvRadius' => (object)['lg' =>'100', 'unit' =>'px'],
             'authMetaLabel' => true,
 
             /*============================
                 Post Author Icon Style
             ============================*/
             'authMetaIconStyle' => 'author1',
-            'iconColor' => '#656565',
-            'authMetaIconSize' => (object)['lg' =>'15', 'unit' =>'px'],
-            'authMetaSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             
             /*============================
                 Post Author Label Style
             ============================*/
             'authMetaLabelText' => 'By',
-            'authMetaLabelColor' => '#656565',
-            'authMetaLabelTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'authMetaLabelSpace' => (object)['lg' =>'8', 'unit' =>'px'],
             
             /*============================
                 Advance Settings
             ============================*/
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

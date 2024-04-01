@@ -15,58 +15,26 @@ class Post_Featured_Image {
                 Post Featured Image Setting
             ============================*/
             'altText'  => 'Image',
-            'imgWidth' => (object)['lg' =>'', 'ulg' =>'px', 'unit' =>'px'],
-            'imgHeight' => (object)['lg' =>'', 'ulg' =>'px', 'unit' =>'px'],
-            'imgRadius' => (object)['lg' =>'', 'ulg' =>'px', 'unit' =>'px'],
             'imgScale' => 'cover',
-            'imageScale' => 'cover',
             'imgAlign' => (object)['lg' =>'left'],
             
             /*============================
                 Dynamic Caption 
             ============================*/
             'enableCaption' => false,
-            'captionColor' => '#000',
-            'captionHoverColor' => '#222',
-            'captionTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' =>'px']],
-            'captionAlign' => 'center',
-            'captionSpace' => (object)['lg' =>'', 'unit' =>'px'],
-
+            
             /*============================
                 Video Settings
             ============================*/
             'enableVideoCaption' => false,
             'videoWidth' => (object)['lg' =>'100'],
-            'videoHeight' => (object)['lg' =>'', 'ulg' =>'px', 'unit' =>'px'],
-            'vidAlign' => '',
             'stickyEnable' => false,
-            'stickyWidth' => (object)['lg' =>'450'],
-            'stickyPosition' => 'bottomRight',
-            'flexiblePosition' => (object)['lg'=>'15', 'ulg' =>'px', 'unit' => 'px'],
-            'stickyBg' => '#000',
-            'stickyBorder' => (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'stickyBoxShadow' => (object)['openShadow' => 1, 'width' => (object)['top' => 0, 'right' => 0, 'bottom' => 24, 'left' => 1],'color' => '#000000e6'],
-            'stickyRadius' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'stickyPadding' => (object)['lg' =>(object)[]],
-            'stickyCloseSize' => '47',
-            'stickyCloseColor' => '#fff',
-            'stickyCloseBg' => ' rgb(43, 43, 43)',
 
             /*============================
                 Advanced Settings
             ============================*/
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

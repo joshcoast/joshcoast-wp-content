@@ -16,7 +16,7 @@ class Archive_Title{
                 General Settings
             ============================*/
             'layout' =>  '1',
-            'contentAlign' =>  "left",
+            // 'contentAlign' =>  "left",
             'titleShow' =>  true,
             'excerptShow' =>  true,
             'prefixShow' =>  false,
@@ -28,65 +28,25 @@ class Archive_Title{
             'titleTag' =>  'h1',
             'customTaxTitleColor' =>  false,
             'seperatorTaxTitleLink' =>  admin_url( 'edit-tags.php?taxonomy=category' ),
-            'titleColor' =>  '',
-            'titleTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'28', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'0', 'unit'=>'px'], 'height'=>(object)['lg'=>'32', 'unit'=>'px'],'transform' => '', 'decoration'=>'none','family'=>'','weight'=>''],
-            'titlePadding' =>  (object)['lg'=>(object)['unit'=>'px']],
-
-            /*============================
-                Content Setting/Style
-            ============================*/
-            'excerptColor' =>  '',
-            'excerptTypo' =>  (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>'22', 'unit' =>'px'], 'decoration' => 'none','family'=>''],
-            'excerptPadding' =>  (object)['lg' =>(object)['top' => '0','bottom' => '', 'unit' =>'px']],
-
+            
+            
             /*============================
                 Prefix Setting/Style
             ============================*/
             'prefixText' =>  'Sample Prefix Text',
             'prefixTop' => false,
-            'prefixColor' =>  '',
-            'prefixTypo' =>  (object)['openTypography'=>1,'size'=>(object)['lg'=>'', 'unit'=>'px'], 'spacing'=>(object)[ 'lg'=>'0', 'unit'=>'px'], 'height'=>(object)['lg'=>'', 'unit'=>'px'],'transform' => '', 'decoration'=>'none','family'=>'','weight'=>''],
-            'prefixPadding' =>  (object)['lg'=>(object)['top'=>10,'bottom'=>5, 'unit'=>'px']],
+            
 
-
-            /*============================
-                Image Setting/Style
-            ============================*/
-            'imgWidth' =>  (object)['lg' =>'', 'ulg' =>'%'],
-            'imgHeight' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'imgSpacing' =>  (object)['lg'=>'10'],
-
+            
             /*============================
                 Custom Wrapper Style
             ============================*/
             'customTaxColor' =>  false,
             'seperatorTaxLink' =>  admin_url( 'edit-tags.php?taxonomy=category' ),
-            'TaxAnimation' =>  'none',
-            'TaxWrapBg' =>  '',
-            'TaxWrapHoverBg' => '',
-            'TaxWrapBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'TaxWrapHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)[ 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid' ],
-            'TaxWrapShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'TaxWrapHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'TaxWrapRadius' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'TaxWrapHoverRadius' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'customOpacityTax' =>  .6,
-            'customTaxOpacityHover' =>  .9,
-            'TaxWrapPadding' =>  (object)['lg' =>(object)['top' => '20','bottom' => '20','left' => '20','right' => '20', 'unit' =>'px']],
-           
+            
             /*============================
                 Advance Settings
             ============================*/
-            'wrapBg' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' =>  (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' =>  (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' =>  (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' =>  (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' =>  (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapMargin' =>  (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' =>  (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
             'advanceId' =>  '',
             'advanceZindex' =>  '',
 

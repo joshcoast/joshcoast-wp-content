@@ -32,88 +32,38 @@ class Author_Box{
             'authorBoxAlign' => 'center',
 
 
-            /*============================
-                Container Style
-            ============================*/
-            'boxContentBg' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#f5f5f5'],
-            'boxContentBorder' => (object)['openBorder'=>0 ],
-            'boxContentRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'boxContentPad' => (object)['lg' =>'20', 'unit' =>'px'],
             
             /*============================
                 Author Image Settings
             ============================*/
-            'imgSize' => '100',
-            'imgSpace' => (object)['lg' =>'20', 'unit' =>'px'],
-            'imgUp' => (object)['lg' =>'60', 'unit' =>'px'],
-            'imgBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#000','type' => 'solid'],
-            'imgRadius' => (object)['lg' =>'100', 'unit' =>'px'],
-            
+            'imgSize' => (object)['lg' =>'100'],
+            'imgRatio' => '100',
 
             /*============================
                 Written by Settings
             ============================*/
             'writtenByText' => 'Written by',
-            'writtenByColor' => '#656565',
-            'writtenByTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '20', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px']],
-
+            
             /*============================
                 Author Name Settings
             ============================*/
             'authorNameTag' => 'h4',
-            'authorNameColor' => '#333',
-            'authorNameHoverColor' => '',
-            'authorNameTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '20', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px']],
-
-
-            /*============================
-                Author Bio Settings
-            ============================*/
-            'authorBioColor' => '#777',
-            'authorBioTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '22', 'unit' => 'px']],
-            'authorBioMargin' => (object)['lg' =>(object)['top' => '20','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
 
             /*============================
                 Meta Setting/Style Settings
             ============================*/
             'metaPosition' => 'bottom',
-            'metaColor' => '#656565',
-            'metaTypo' => (object)['openTypography' => 0,'size' => (object)['lg' => '', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>''],
-            'metaMargin' => (object)['lg' =>(object)['top'=> '12', 'unit' =>'px']],
-            'metaPadding' => (object)['lg' =>(object)['unit' =>'px']],
-            'metaBg' => '',
-            'metaBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => '0', 'bottom' => '0', 'left' => '0'],'color' => '#009fd4','type' => 'solid'],
-
 
             /*============================
                 View all Post Button Settings
             ============================*/
             'viewAllPostText' => 'View All Posts',
-            'viewAllPostTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => '14', 'unit' => 'px'], 'height' => (object)['lg' => '', 'unit' => 'px'],'decoration' => 'none', 'transform' => '', 'family'=>'','weight'=>''],
-            'viewAllPostColor' => '',
-            'viewAllPostBg' => '',
-            'viewAllPostRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'viewAllPostHoverColor' => '',
-            'viewAllPostBgHoverColor' => '',
-            'viewAllPostHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'viewAllPostPadding' => (object)['lg' =>(object)['unit' =>'px']],
-            'viewAllPostMargin' => (object)['lg' =>(object)['top' => '15','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
             
             /*============================
                 Advanced Settings
             ============================*/
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,
@@ -136,7 +86,7 @@ class Author_Box{
 
             // Author Image
             $author_image = '<div class="ultp-post-author-image-section">';
-            $author_image .= get_avatar($post_author->ID, $attr['imgSize']);
+            $author_image .= get_avatar($post_author->ID, $attr['imgRatio']);
             $author_image .= '</div>';
             
             // Author Meta

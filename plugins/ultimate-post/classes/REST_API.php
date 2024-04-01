@@ -202,6 +202,34 @@ class REST_API{
 				)
 			)
         );
+        register_rest_route(
+			'ultp/v2', 
+			'/init_site_dark_logo/',
+			array(
+				array(
+					'methods'  => 'POST', 
+					'callback' => array( $this, 'init_site_dark_logo_callback'),
+					'permission_callback' => function () {
+						return current_user_can( 'manage_options' );
+					},
+					'args' => array()
+				)
+			)
+        );
+        register_rest_route(
+			'ultp/v2', 
+			'/init_site_dark_logo/',
+			array(
+				array(
+					'methods'  => 'POST', 
+					'callback' => array( $this, 'init_site_dark_logo_callback'),
+					'permission_callback' => function () {
+						return current_user_can( 'edit_posts' );
+					},
+					'args' => array()
+				)
+			)
+        );
     }
 
     /**
@@ -429,8 +457,8 @@ class REST_API{
             case 'action_draft':
             case 'action_publish':
                 if (isset($post['ids']) && is_array($post['ids'])) {
-                    $post['ids'] = ultimate_post()->ultp_rest_sanitize_params($post['ids']);
-                    foreach ($post['ids'] as $id) {
+                    $post_ids = ultimate_post()->ultp_rest_sanitize_params($post['ids']);
+                    foreach ($post_ids as $id) {
                         wp_update_post(array(
                             'ID' => $id,
                             'post_status' => str_replace('action_', '',$request_type)
@@ -524,8 +552,8 @@ class REST_API{
 
             case 'action_delete':
                 if (isset($post['ids']) && is_array($post['ids'])) {
-                    $post['ids'] = ultimate_post()->ultp_rest_sanitize_params($post['ids']);
-                    foreach ($post['ids'] as $id) {
+                    $post_ids = ultimate_post()->ultp_rest_sanitize_params($post['ids']);
+                    foreach ($post_ids as $id) {
                         wp_delete_post( $id, true); 
                     }
                 }
@@ -571,6 +599,13 @@ class REST_API{
 
             case 'helloBarAction':
                 set_transient( 'ultp_helloBar'.ULTP_HELLOBAR, 'hide', 1296000);
+                return array(
+                    'success' => true, 
+                    'message' => __('Notice is removed.', 'ultimate-post')
+                );
+            break;
+            case 'generalDiscountAction':
+                set_transient( 'ultp_generalDiscount', 'hide', 60 * DAY_IN_SECONDS);
                 return array(
                     'success' => true, 
                     'message' => __('Notice is removed.', 'ultimate-post')
@@ -959,5 +994,25 @@ class REST_API{
         }
         
         return array('post_data' => $output, 'post_count' => $query_result->found_posts);
+    }
+    
+    /**
+	 * PostX Site Dark Logo Init
+     * 
+     * @since v.3.1.9
+     * @param ARRAY 
+	 * @return BOOOLEAN | Inserted Post Url 
+	 */
+    public function init_site_dark_logo_callback ($server) {
+        $logo_data = $server->get_params();
+        $success = true;
+        if( isset($logo_data['logo']['url'] ) ){
+            update_option( 'ultp_site_dark_logo', $logo_data['logo']['url'] );
+        } else {
+            $success = false;
+        }
+        return rest_ensure_response([
+            'success' => $success,
+        ]);
     }
 }

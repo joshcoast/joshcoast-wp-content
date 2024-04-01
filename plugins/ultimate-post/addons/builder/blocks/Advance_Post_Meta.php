@@ -22,35 +22,20 @@ class Advance_Post_Meta {
             "readTimeShow" => false,
             "catShow" => false,
             "tagShow" => false,
-            'metaSpacing' => (object)['lg' =>'15', 'unit' =>'px'],
-            'metaAlign' => 'left',
             'metaSeparator' => 'dot',
-            'separatorColor' => '#000',
             'metaItemSort' => ["author", "date", "cmtCount", "viewCount", "readTime", "cat", "tag"],
 
             /*============================
                 Post Author Style
             ============================*/
-            'authColor' => '#6b6b6b',
-            'authHovColor' => '#ddd',
-            'authTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             // Avatar
             'authImgShow' => false,
-            'authImgSize' => (object)['lg' =>'18', 'unit' =>'px'],
-            'authImgRadius' => (object)['lg' =>'50', 'unit' =>'px'],
-            'authImgSpace' => (object)['lg' =>'5', 'unit' =>'px'],
             // Author Label
             'authLabelShow' => true,
             'authLabel' => 'Author',
-            'authLabelColor' => '#a4a4a4',
-            'authLabelTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'authLabelSpace' => (object)['lg' =>'5', 'unit' =>'px'],
             // Auth Icon
             'authIconShow' => false,
             'authIconStyle' => 'author1',
-            'authIconColor' => '#a4a4a4',
-            'authIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'authIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             "authAlign" => false,
 
             /*============================
@@ -59,63 +44,36 @@ class Advance_Post_Meta {
             'dateFormat' => 'updated',
             'metaDateFormat' => 'M j, Y',
             'dateColor' => '#a4a4a4',
-            'dateTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             // Prefix
             'enablePrefix' => true,
             'datePubText' => 'Publish Update',
             'dateText' => 'Latest Update',
-            'datePrefixColor' => '#a4a4a4',
             // Icon
             'DateIconShow' => false,
             'dateIconStyle' => 'date1',
-            'dateIconColor' => '#a4a4a4',
-            'dateIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'dateIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             "dateAlign" => false,
 
             /*============================
                 Comment Style
             ============================*/
-            'commentColor' => '#a4a4a4',
-            'commentHovColor' => '#ddd',
-            'commentTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             // Prefix
             'cmtLabelShow' => true,
             'cmtLabel' => 'Comment',
-            'cmtLabelColor' => '#a4a4a4',
-            "commentLabelAlign" => "after",
             //  Icon
             'cmtIconShow' => false,
             'cmntIconStyle' => 'commentCount1',
-            'cmntIconColor' => '#a4a4a4',
-            'commentIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'cmntIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
-            "cmntAlign" => false,
-            /*============================
-                View Style
-            ============================*/
-            'viewColor' => '#a4a4a4',
-            'viewHovColor' => '#ddd',
-            'viewTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
+            'cmntAlign' => false,
             // Prefix Style
             'viewLabelShow' => true,
             'viewLabel' => 'View',
-            'viewLabelColor' => '#a4a4a4',
-            "viewLabelAlign" => "after",
             //  Icon
             'viewIconShow' => false,
             'viewIconStyle' => 'viewCount1',
-            'viewIconColor' => '#a4a4a4',
-            'viewIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'viewIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             "viewAlign" => false,
 
             /*============================
                 Reading Time Style
             ============================*/
-            'readColor' => '#a4a4a4',
-            'readHovColor' => '#ddd',
-            'readTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             // Prefix
             'readTimePrefix' => true,
             'readTimeText' => 'Minute Read',
@@ -123,27 +81,15 @@ class Advance_Post_Meta {
             //  Icon
             'readTimeIcon' => false,
             'readIconStyle' => 'readingTime2',
-            'readIconColor' => '#a4a4a4',
-            'readIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'readIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             "readAlign" => false,
             
             /*============================
                 Categories Style
             ============================*/
-            'catColor' => '#545454',
-            'catHovColor' => '#ddd',
-            'catTypo' => (object)['openTypography' => 1, 'decoration' => 'none', 'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'catSpace' => (object)['lg' =>'7', 'unit' =>'px'],
             'catLabelShow' => true,
             'catLabel' => 'Category',
-            'catLabelColor' => '#a4a4a4',
-            'catLabelSpace' => (object)['lg' =>'15', 'unit' =>'px'],
             'catIconShow' => false,
             'catIconStyle' => 'cat2',
-            'catIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'catIconColor' => '#a4a4a4',
-            'catIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             "catAlign" => false,
 
             /*============================
@@ -153,15 +99,11 @@ class Advance_Post_Meta {
             'tagHovColor' => '#ddd',
             'tagTypo' => (object)['openTypography' => 1, 'decoration' => 'none', 'size' => (object)['lg' =>15, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             'tagSpace' => (object)['lg' =>'7', 'unit' =>'px'],
+            
             'tagLabelShow' => true,
             'tagLabel' => 'Tag - ',
-            'tagLabelColor' => '#a4a4a4',
-            'tagLabelSpace' => (object)['lg' =>'15', 'unit' =>'px'],
             'tagIconShow' => false,
             'tagIconStyle' => 'tag2',
-            'tagIconColor' => '#a4a4a4',
-            'tagIconSize' => (object)['lg' =>'16', 'unit' =>'px'],
-            'tagIconSpace' => (object)['lg' =>'10', 'unit' =>'px'],
             "tagAlign" => false,
 
             /*============================
@@ -169,16 +111,6 @@ class Advance_Post_Meta {
             ============================*/
             'advanceId' => '',
             'advanceZindex' => '',
-            'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideDesktop' => false,
             'hideTablet' => false,

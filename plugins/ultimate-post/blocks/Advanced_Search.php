@@ -1,7 +1,7 @@
 <?php
 namespace ULTP\blocks;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 class Advanced_Search {
     public function __construct() {
@@ -20,38 +20,16 @@ class Advanced_Search {
             'searchAjaxEnable' => true,
             'searchResultLayout' => 'res',
             'searchnoresult' => 'No Results Found',
-            'noresultColor' => '#000',
-            'popupIconTextTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>16, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
             'searchPostType' => '',
-            // Popup Icon Style
-            'popupIconGap' => (object)['lg' =>'17', 'unit' =>'px'],
-            'popupIconSize' => (object)['lg' =>'17', 'unit' =>'px'],
-            'popupIconTextTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>16, 'unit' =>'px'],'height' => (object)['lg' =>20, 'unit' =>'px']],
-            'popupIconColor' => '#000',
-            'popupIconBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'popupIconHoverBg' =>(object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            'popupIconTextColor' =>  '',
-            'popupIconHoverColor' =>  '',
-            'popupIconTextHoverColor' =>  '',
+            
             // Popup Canvas
             'popupAnimation' =>  'popup',
-            'popupCloseSize' =>  (object)['lg' =>'20', 'unit' =>'px'],
-            'popupCloseColor' =>  '#000',
-            'popupCloseHoverColor' => '#7777',
-            'windowpopupHeadingTypo' => (object)['openTypography' => 1,'size' => (object)['lg' => 16, 'unit' =>'px'],'height' => (object)['lg' => 24, 'unit' =>'px'], 'weight' => '600'],
-            'windowpopupHeadingColor' => '#000',
+            
             'searchPopupPosition' => 'right',
             'popupCloseIconSeparator' => 'Close Icon Style',
             'windowpopupHeading' => true,
             'windowpopupText' => 'Search The Query',
-            'windowpopupHeadingAlignment' => 'center',
-            'popupHeadingSpacing' => (object)['lg' =>'12'],
-            'popupBG' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#FCFCFC'], 
-            'canvasWidth' => (object)['lg' =>'600', 'xs' => '100', 'ulg' => 'px', 'unit' =>'%'], 
-            'popupPadding' => (object)['lg' =>(object)['top' => '40','bottom' => '40','left' => '40', 'right' => '40', 'unit' =>'px']], 
-            'popupRadius' => (object)['lg' =>(object)['top' => '20','bottom' => '20','left' => '20', 'right' => '20', 'unit' =>'px'], 
-            'popupShadow' => (object)['openShadow' => 1, 'width' => (object)['top' => 0, 'right' => 3, 'bottom' => 6, 'left' => 0],'color' => 'rgba(0, 0, 0, 0.16)']], 
-            'popupPositionY' => (object)['lg' =>'10', 'unit' =>'px'],
+            
             // Search Button Style
             'searchBtnEnable' => false,
             'btnNewTab' => false,
@@ -60,59 +38,22 @@ class Advanced_Search {
             'searchBtnText' => true,
             'searchBtnIcon' => true,
             'searchIconAfterText' => false,
-            'searchButtonPosition' => (object)['lg' =>'7', 'unit' =>'px'],
-            'searchTextGap' => (object)['lg' =>'8', 'unit' =>'px'],
-            'searchBtnIconSize' => (object)['lg' =>'17', 'unit' =>'px'],
-            'searchBtnTextTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>22, 'unit' =>'px']],
-            'searchBtnIconColor' => '#fff',
-            'searchBtnTextColor' => '#fff',
-            'searchBtnBg' => (object)['openColor' => 1, 'type' => 'color', 'color' => '#212121'],
-            'searchBtnRadius' => (object)['lg' =>(object)['top' => '13','bottom' => '13','left' => '13', 'right' => '13', 'unit' =>'px']],
+
             // Search Form Style
-            'searchBtnReverse' => false,
             'searchInputPlaceholder' => 'Search...',
-            'inputColor' => '#000',
-            'searchFormWidth' => (object)['lg' =>'', 'sm' => '100', 'ulg' => 'px', 'unit' =>'%'], 
-            'inputFocusBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#000','type' => 'solid'],
-            'inputBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#989898','type' => 'solid'],
+            
             // Search Result Settings
-            'resColumn' => (object)['lg' =>'1'],
             'resExcerptEnable' => true,
             'resCatEnable' => true,
             'resAuthEnable' => true,
             'resDateEnable' => true,
             'resImageEnable' => true,
-            'resImageSize' => (object)['lg' =>'70', 'unit' =>'px'],
-            'resImageRadius' => (object)['lg' =>(object)['top' => '0','bottom' => '0','left' => '0', 'right' => '0', 'unit' =>'px']],
-            'resImageSpace' => (object)['lg' =>'20', 'unit' =>'px'],
-            'resTitleColor' => '#101010',
-            'resExcerptColor' => '#000',
-            'resCatColor' => '#000',
-            'resAuthorColor' => '#101010',
-            'resDateColor' => '#6e6e6e',
-            'resTitleHoverColor' => '#037fff',
-            'resAuthorHovertColor' => '#037fff',
-            'resTitleTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>23, 'unit' =>'px']],
-            'excerptTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>23, 'unit' =>'px']],
-            'resMetaTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>12, 'unit' =>'px'],'height' => (object)['lg' =>22, 'unit' =>'px']],
             'resExcerptLimit' => '25',
-            'resultMetaSpace' => (object)['lg' =>'8', 'unit' =>'px'],
-            'resultMetaSeparatorSize' => (object)['lg' =>'5', 'unit' =>'px'],
-            'resMetaSeparatorColor' => '#4A4A4A',
-            'resultWidth' => (object)['lg' =>'100', 'unit' =>'%'],
-            'resultMaxHeight' => (object)['lg' =>'300', 'unit' =>'px'],
-            'resultPadding' => (object)['lg' =>(object)['top' => '15','bottom' => '15','left' => '15', 'right' => '15', 'unit' =>'px']],
-            'resultSpacingX' => (object)['lg' =>'0', 'unit' =>'px'],
-            'resultSpacingY' => (object)['lg' =>'0', 'unit' =>'px'],
-            'resultSeparatorColor' => '#DEDEDE',
-            'resultSeparatorWidth' => (object)['lg' =>'1', 'unit' =>'px'],  
+            
             // Search Result Settings
             'moreResultsbtn' => true,
             'moreResultPosts' => 3,
             'moreResultsText' => 'View More Results',
-            'moreResultsTypo' => (object)['openTypography' => 1,'size' => (object)['lg' =>14, 'unit' =>'px'],'height' => (object)['lg' =>23, 'unit' =>'px']],
-            'moreResultsColor' => '#646464',
-            'moreResultsHoverColor' => '#000'
         );
     }
 
@@ -126,7 +67,7 @@ class Advanced_Search {
         );
     }
 
-    public function content( $attr, $noAjax ) {
+    public function content($attr, $noAjax) {
         $wraper_before = $wraper_after = $content = $popup_content = '';
         $block_name = 'advanced-search';
         $is_active = ultimate_post()->is_lc_active(); 

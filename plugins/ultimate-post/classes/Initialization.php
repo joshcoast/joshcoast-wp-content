@@ -29,26 +29,169 @@ class ULTP_Initialization {
         $this->include_addons(); // Include Addons
 
         add_action( 'wp',                            array( $this, 'popular_posts_tracker_callback' ) );
-        add_filter( 'block_categories_all',          array( $this, 'register_category_callback' ) , 999999999, 2);      // Block Category Register
+        add_filter( 'block_categories_all',          array( $this, 'register_category_callback' ), 999999999, 2 );  // Block Category Register
         add_action( 'after_setup_theme',             array( $this, 'add_image_size' ) );
-        add_action( 'enqueue_block_editor_assets',   array( $this, 'register_scripts_back_callback' ) );        // Only editor
-        add_action( 'admin_enqueue_scripts',         array( $this, 'register_scripts_option_panel_callback' ) );        // Option Panel
-        add_action( 'wp_enqueue_scripts',            array( $this, 'register_scripts_front_callback' ) );       // Both frontend
-        add_action( 'activated_plugin',              array( $this, 'activation_redirect' ) );
+
+        add_action( 'enqueue_block_editor_assets',   array( $this, 'register_scripts_back_callback' ) );    // Only editor
+        add_action( 'admin_enqueue_scripts',         array( $this, 'register_scripts_option_panel_callback' ) );    // Option Panel
+        add_action( 'wp_enqueue_scripts',            array( $this, 'register_scripts_front_callback' ) );   // Both frontend
         register_activation_hook( ULTP_PATH.'ultimate-post.php', array( $this, 'install_hook' ) );
+        add_action( 'activated_plugin',             array( $this, 'activation_redirect' ) );
 
-        add_action( 'wp_ajax_ultp_next_prev',        array( $this, 'ultp_next_prev_callback' ) );       // Next Previous AJAX Call
-        add_action( 'wp_ajax_nopriv_ultp_next_prev', array( $this, 'ultp_next_prev_callback' ) );       // Next Previous AJAX Call Logout User
-        add_action( 'wp_ajax_ultp_filter',           array( $this, 'ultp_filter_callback' ) );          // Next Previous AJAX Call
-        add_action( 'wp_ajax_nopriv_ultp_filter',    array( $this, 'ultp_filter_callback' ) );          // Next Previous AJAX Call Logout User
-        add_action( 'wp_ajax_ultp_pagination',       array( $this, 'ultp_pagination_callback' ) );      // Page Number AJAX Call
-        add_action( 'wp_ajax_nopriv_ultp_pagination',array( $this, 'ultp_pagination_callback' ) );      // Page Number AJAX Call Logout User
-        add_action( 'wp_ajax_ultp_share_count',      array( $this, 'ultp_shareCount_callback' ) );      // share Count save
+        add_action( 'wp_ajax_ultp_next_prev',        array( $this, 'ultp_next_prev_callback' )); // Next Previous AJAX Call
+        add_action( 'wp_ajax_nopriv_ultp_next_prev', array( $this, 'ultp_next_prev_callback' )); // Next Previous AJAX Call Logout User
+        add_action( 'wp_ajax_ultp_filter',           array( $this, 'ultp_filter_callback' )); // Next Previous AJAX Call
+        add_action( 'wp_ajax_nopriv_ultp_filter',    array( $this, 'ultp_filter_callback' )); // Next Previous AJAX Call Logout User
+        add_action( 'wp_ajax_ultp_pagination',       array( $this, 'ultp_pagination_callback' )); // Page Number AJAX Call
+        add_action( 'wp_ajax_nopriv_ultp_pagination',array( $this, 'ultp_pagination_callback' )); // Page Number AJAX Call Logout User
+        add_action( 'wp_ajax_ultp_share_count',      array( $this, 'ultp_shareCount_callback' )); // share Count save
 
-        add_action( 'admin_init',                    array( $this, 'check_theme_compatibility' ) );
-        add_action( 'after_switch_theme',            array( $this, 'wpxpo_swithch_thememe' ) );
-        // add_action( 'in_plugin_update_message-'.ULTP_BASE, array( $this, 'in_plugin_settings_update_message' ) ); // only major update changelog shows 
-        add_action( 'upgrader_process_complete', array( $this, 'plugin_upgrade_completed'), 10, 2 );
+        add_action('admin_init',                    array($this, 'check_theme_compatibility'));
+        add_action( 'after_switch_theme',           array($this, 'wpxpo_swithch_thememe'));
+
+        // add_action( 'in_plugin_update_message-'.ULTP_BASE, array( $this, 'in_plugin_settings_update_message' ) );
+
+        add_action( 'upgrader_process_complete', array($this, 'plugin_upgrade_completed'), 10, 2 );
+
+        // add_action( 'wp_ajax_ultp_getsearch_result',        array($this, 'ultp_get_search_result')); // Search Result Showing
+
+        add_filter( 'admin_body_class',        array( $this, 'add_admin_body_class' ) );  // add body class in editor
+        add_filter( 'body_class',        array( $this, 'add_body_class') );  // add body class in front end
+
+        add_filter( 'wp_kses_allowed_html', [ $this, 'ultp_handle_allowed_html' ], 99, 2 );   // support for svg icon used in list, row, icon block
+        add_filter( 'safe_style_css', [ $this, 'ultp_handle_safe_style_css' ] );  // support for css used in svg icon
+    }
+
+    /**
+	 * Add support for css to use svg
+     * 
+     * @since 4.0.0
+	 * @return styles
+	*/
+    public function ultp_handle_safe_style_css( $styles ) {
+        if( !is_multisite() && !current_user_can('edit_posts') ) {
+            return $styles;
+        }
+        return array_merge( $styles, array(
+            'opacity',
+            // for SVG gradients.
+            // 'stop-opacity',
+            // 'stop-color',
+        ) );
+    }
+
+    /**
+	 * Add support for html tag to use svg
+     * 
+     * @since 4.0.0
+	 * @return supported_tags
+	*/
+    public function ultp_handle_allowed_html ($tags, $context) {
+        if ( 'post' !== $context && !is_multisite() && !current_user_can('edit_posts') ) {
+            return $tags;
+        }
+        if ( ! isset( $tags['svg'] ) ) {
+            $tags['svg'] = array_merge(
+                [
+                    'xmlns'   => true,
+                    // 'xmlns:xlink'   => true,
+                    // 'xlink:href'     => true,
+                    // 'xml:id'     => true,
+                    // 'xlink:title'    => true,
+                    // 'xml:space'  => true,
+                    'viewbox' => true,
+                    'enable-background' => true,
+                    'version' => true,
+                    'preserveaspectratio' => true,
+                    'fill' => true,
+                ]
+            );
+        }
+        if ( ! isset( $tags['path'] ) ) {
+            $tags['path'] = [
+                'd'    => true,
+                'stroke'    => true,
+                'stroke-miterlimit'    => true,
+                'data-original'    => true,
+                'class'    => true,
+                'transform'    => true,
+                'style'    => true,
+                'opacity'    => true,
+                'fill' => true
+            ];
+        }
+        if ( ! isset( $tags['g'] ) ) {
+            $tags['g'] = [
+                'transform'    => true,
+                'clip-path'    => true,
+            ];
+        }
+        if ( ! isset( $tags['clippath'] ) ) {
+            $tags['clippath'] = [];
+        }
+        if ( ! isset( $tags['defs'] ) ) {
+            $tags['defs'] = [
+            ];
+        }
+        if ( ! isset( $tags['rect'] ) ) {
+            $tags['rect'] = [
+                'rx'    => true,
+                'height'    => true,
+                'width'    => true,
+                'transform'    => true,
+                'x'    => true,
+                'fill'    => true,
+            ];
+        }
+        if ( ! isset( $tags['circle'] ) ) {
+            $tags['circle'] = [
+                'cx'    => true,
+                'cy'    => true,
+                'transform'    => true,
+                'r'    => true,
+            ];
+        }
+        if ( ! isset( $tags['polygon'] ) ) {
+            $tags['polygon'] = [
+                'points'    => true,
+            ];
+        }
+        if ( ! isset( $tags['lineargradient'] ) ) {
+            $tags['lineargradient'] = [
+                'gradienttransform'    => true,
+                'id'    => true,
+            ];
+        }
+        if ( ! isset( $tags['stop'] ) ) {
+            $tags['stop'] = [
+                'offset'    => true,
+                'stop-color'    => true,
+                'style' => true,
+                'stop-opacity' => true,
+            ];
+        }
+        return $tags;
+    }
+     
+    /**
+	 * Add Admin Body_class
+     * 
+     * @since v.3.1.6
+	 * @return NULL
+	 */
+    public function add_admin_body_class ($classes) {
+        $classes .= " postx-admin-page ";
+        return $classes;
+    }
+    /**
+	 * Theme Switch Callback
+     * 
+     * @since v.3.1.6
+	 * @return NULL
+	 */
+    public function add_body_class ($classes) {
+        $classes[] = "postx-page";
+        return $classes; 
     }
 
     /**
@@ -195,9 +338,12 @@ class ULTP_Initialization {
         }
         
         /* === Dashboard === */
-        if ( $_page == 'ultp-settings' ) {
-            wp_enqueue_script( 'ultp-dashboard-script', ULTP_URL.'assets/js/ultp_dashboard_min.js', array('wp-i18n', 'wp-api-fetch', 'wp-api-request', 'wp-components','wp-blocks'), ULTP_VER, true );
-            wp_localize_script( 'ultp-dashboard-script', 'ultp_dashboard_pannel', array(
+        $_page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
+        if ($_page == 'ultp-settings') {
+            wp_enqueue_script('ultp-dashboard-script', ULTP_URL.'assets/js/ultp_dashboard_min.js', array('wp-i18n', 'wp-api-fetch', 'wp-api-request', 'wp-components','wp-blocks'), ULTP_VER, true);
+            wp_localize_script('ultp-dashboard-script', 'ultp_dashboard_pannel', array(
+                'ajax' => admin_url('admin-ajax.php'),
+                'security' => wp_create_nonce('ultp-nonce'),
                 'url' => ULTP_URL,
                 'active' => $is_active,
                 'license' => $license_key,
@@ -213,7 +359,10 @@ class ULTP_Initialization {
                 'status' => get_option( 'edd_ultp_license_status' ),
                 'expire' => get_option( 'edd_ultp_license_expire' ),
                 'is_free' => !ultimate_post()->is_lc_active(),
-                'is_pro' =>  (ultimate_post()->is_lc_active() && get_option('edd_ultp_license_expire') != 'lifetime')
+                'is_pro' =>  (ultimate_post()->is_lc_active() && get_option('edd_ultp_license_expire') != 'lifetime'),
+                'user_email' => wp_get_current_user()->user_email,
+                'home_url' => home_url(),
+                'generalDiscount' => get_transient('ultp_generalDiscount'),
             ) );
             wp_set_script_translations( 'ultp-dashboard-script', 'ultimate-post', ULTP_PATH . 'languages/' );
         }
@@ -322,8 +471,10 @@ class ULTP_Initialization {
             'archive_child' => ultimate_post()->is_archive_child_builder(),
             'affiliate_id' => apply_filters( 'ultp_affiliate_id', FALSE ),
             'category_url' =>admin_url( 'edit-tags.php?taxonomy=category' ),
-            'disable_image_size' => ultimate_post()->get_setting('disable_image_size')
-        ) );
+            'disable_image_size' => ultimate_post()->get_setting('disable_image_size'),
+            'dark_logo' => get_option('ultp_site_dark_logo') ? get_option('ultp_site_dark_logo') : false,
+            'builder_url' => admin_url('admin.php?page=ultp-settings#builder')
+        ));
         wp_set_script_translations( 'ultp-blocks-editor-script', 'ultimate-post', ULTP_PATH . 'languages/' );
     }
 
@@ -462,6 +613,7 @@ class ULTP_Initialization {
         require_once ULTP_PATH.'blocks/Taxonomy.php';
         require_once ULTP_PATH.'blocks/News_Ticker.php';
         require_once ULTP_PATH.'blocks/Advanced_Search.php';
+        require_once ULTP_PATH.'blocks/Dark_Light.php';
         
         $this->all_blocks['ultimate-post_post-list-1'] = new \ULTP\blocks\Post_List_1();
         $this->all_blocks['ultimate-post_post-list-2'] = new \ULTP\blocks\Post_List_2();
@@ -483,6 +635,7 @@ class ULTP_Initialization {
         $this->all_blocks['ultimate-post_ultp-taxonomy'] = new \ULTP\blocks\Taxonomy();
         $this->all_blocks['ultimate-post_news-ticker'] = new \ULTP\blocks\News_Ticker();
         $this->all_blocks['ultimate-post_news-ticker'] = new \ULTP\blocks\Advanced_Search();
+        $this->all_blocks['ultimate-post_dark-light'] = new \ULTP\blocks\Dark_Light();
 
         if ( ultimate_post()->get_setting('ultp_builder') == 'true' ) {
             require_once ULTP_PATH.'addons/builder/blocks/Archive_Title.php';
@@ -538,11 +691,13 @@ class ULTP_Initialization {
         require_once ULTP_PATH.'classes/Options.php';
         require_once ULTP_PATH.'classes/REST_API.php';
         require_once ULTP_PATH.'classes/Caches.php';
+        require_once ULTP_PATH.'classes/Importer.php';
         new \ULTP\REST_API();
         new \ULTP\Options();
         new \ULTP\Caches();
         new \ULTP\Styles();
         new \ULTP\Notice();
+        new \ULTP\Importer();
 
         require_once ULTP_PATH.'classes/Deactive.php';
         new \ULTP\Deactive();
@@ -833,6 +988,27 @@ class ULTP_Initialization {
             $post_id = $id;
             $new_count = $count+1; 
             update_post_meta($post_id, 'share_count', $new_count);
+    }
+
+    /**
+	 * update_block_attrUpdate Block Attr for Pagination Loadmore and Navigation
+     * 
+     * @since v.3.1.1
+	 */
+    function update_block_attr($postId, $blocks, $key, $widgetBlockId ) {
+        if( $widgetBlockId ) {
+            $widget_blocks = get_option('widget_block');
+            $block_parsed = parse_blocks($widget_blocks[$widgetBlockId]['content']);
+            $block_parsed[$key]['attrs']['currentPostId'] = 'widgets';
+            $widget_blocks[$widgetBlockId]['content'] = serialize_blocks($block_parsed);
+            update_option('widget_block', str_replace('u0022', '\u0022', $widget_blocks));
+        } else {
+            $blocks[$key]['attrs']['currentPostId'] = $postId;
+            wp_update_post(array(
+                'ID' => $postId,
+                'post_content' => str_replace('u0022', '\u0022', serialize_blocks($blocks))
+            ));
+        }
     }
 
     /**

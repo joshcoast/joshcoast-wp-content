@@ -23,7 +23,7 @@ class Options{
         add_action( 'admin_init', array( $this, 'handle_external_redirects' ) );
         add_action( 'admin_menu', array( $this, 'menu_page_callback' ) );
         add_action( 'in_admin_header', array( $this, 'remove_all_notices' ) );
-        add_filter( 'plugin_row_meta', array( $this, 'plugin_settings_meta' ), 10, 2 );
+        // add_filter( 'plugin_row_meta', array( $this, 'plugin_settings_meta' ), 10, 2 );
         add_filter( 'plugin_action_links_'.ULTP_BASE, array( $this, 'plugin_action_links_callback' ) );
         // add_filter( 'ultp_plugin_notice', array( $this, 'plugin_notice_callback' ) );
     }
@@ -70,24 +70,15 @@ class Options{
 	 * @return ARRAY
 	 */
     public function plugin_action_links_callback( $links ) {
-        $upgrade_link = array();
         $setting_link = array();
+        $setting_link['ultp_starter_sites'] = '<a href="'. esc_url(admin_url('admin.php?page=ultp-settings#startersites')) .'">'. esc_html__('Starter Sites', 'ultimate-post') .'</a>';
+        $setting_link['ultp_docs'] = '<a href="https://wpxpo.com/docs/postx/" target="_blank">'.esc_html__('Docs', 'ultimate-post').'</a>';
         if ( !defined('ULTP_PRO_VER') ) {
-            $upgrade_link = array(
-                'ultp_pro' => '<a href="'.esc_url(ultimate_post()->get_premium_link('', 'plugin_dir_pro')).'" target="_blank"><span style="color: #e83838; font-weight: bold;">'.esc_html__('Get PostX Pro', 'ultimate-post').'</span></a>'
-            );
+            $setting_link['ultp_pro'] = '<a href="'.esc_url(ultimate_post()->get_premium_link('', 'plugin_dir_pro')).'" target="_blank">'.esc_html__('Get PostX Pro', 'ultimate-post').'</a>';
 
-            $notice = apply_filters( 'ultp_plugin_notice', array() );
-
-            if ( count($notice) > 0 ) {
-                $current_time = gmdate('U');
-                if ( $current_time > strtotime($notice['start']) && $current_time < strtotime($notice['end']) ) {
-                    $upgrade_link['ultp_pro'] = '<a href="'.esc_url(ultimate_post()->get_premium_link('', 'plugin_dir_pro')).'" target="_blank"><span style="color: #e83838; font-weight: bold;">'.$notice['content'].'</span></a>';
-                }
-            }
         }
-        $setting_link['ultp_settings'] = '<a href="'. esc_url(admin_url('admin.php?page=ultp-settings#settings')) .'">'. esc_html__('Settings', 'ultimate-post') .'</a>';
-        return array_merge( $setting_link, $links, $upgrade_link);
+        $support_link['ultp_support'] = '<a href="'. esc_url(admin_url('admin.php?page=ultp-settings#support')) .'">'. esc_html__('Quick Support', 'ultimate-post') .'</a>';
+        return array_merge( $setting_link, $links, $support_link);
     }
 
 
@@ -119,14 +110,10 @@ class Options{
     
         $menu_lists = array(
             'builder'           => esc_html__( 'Site Builder', 'ultimate-post' ),
-            'templatekit'       => esc_html__( 'Template Kits', 'ultimate-post' ),
-            'saved-templates'   => esc_html__( 'Saved Templates', 'ultimate-post' ),
-            'custom-font'       => esc_html__( 'Custom Font', 'ultimate-post' ),
-            'addons'            => esc_html__( 'Addons', 'ultimate-post' ),
+            'startersites'       => esc_html__( 'Starter Sites', 'ultimate-post' ),
             'blocks'            => esc_html__( 'Blocks', 'ultimate-post' ),
-            'settings'          => esc_html__( 'Settings', 'ultimate-post' ),
-            'tutorials'         => esc_html__( 'Tutorials', 'ultimate-post' ),
-            'license'           => esc_html__( 'License', 'ultimate-post' ),
+            'integrations'          => esc_html__( 'Integrations', 'ultimate-post' ),
+            'license'          => esc_html__( 'License', 'ultimate-post' ),
             'support'           => esc_html__( 'Quick Support', 'ultimate-post' )
         );
         foreach ( $menu_lists as $key => $val ) {
@@ -151,7 +138,7 @@ class Options{
             add_submenu_page(
                 'ultp-settings',
                 '',
-                '<span class="dashicons dashicons-star-filled" style="font-size: 17px"></span> ' . esc_html__( 'Upgrade to Pro', 'ultimate-post' ),
+                esc_html__( 'Upgrade to Pro', 'ultimate-post' ),
                 'manage_options',
                 'go_postx_pro',
                 array(self::class, 'handle_external_redirects')
