@@ -58,7 +58,13 @@ class Post_View_Count {
 
         $count = get_post_meta( get_the_ID(), '__post_views_count', true );
 
-        $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['viewLabelText'] = wp_kses($attr['viewLabelText'], ultimate_post()->ultp_allowed_html_tags());
+        
+        $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ? ' '.$attr["className"]:'').''.( $attr["align"] ? ' align' .$attr["align"] : '' ).'">';
             $wrapper_before .= '<div class="ultp-block-wrapper">';     
                 $content .= '<span class="ultp-view-count">';
                     if ($attr["viewIconShow"] && $attr["viewIconStyle"]) {

@@ -366,3 +366,47 @@ function generateblocks_pro_with_custom_attributes( $attributes, $settings ) {
 
 	return $attributes;
 }
+
+/**
+ * Get our script dependencies and version.
+ *
+ * @param string $filename The filename to use.
+ * @param array  $fallback_assets The assets to fallback to.
+ */
+function generateblocks_pro_get_enqueue_assets(
+	$filename = '',
+	$fallback_assets = [
+		'dependencies' => [],
+		'version' => '',
+	]
+) {
+	if ( ! $filename ) {
+		return $fallback_assets;
+	}
+
+	$assets_file = GENERATEBLOCKS_PRO_DIR . 'dist/' . $filename . '.asset.php';
+	$compiled_assets = file_exists( $assets_file )
+		? require $assets_file
+		: false;
+
+	$assets =
+		isset( $compiled_assets['dependencies'] ) &&
+		isset( $compiled_assets['version'] )
+		? $compiled_assets
+		: $fallback_assets;
+
+	return $assets;
+}
+
+/**
+ * Check if we have any legacy patterns.
+ */
+function generateblocks_pro_has_legacy_patterns() {
+	if ( ! isset( wp_count_posts( 'gblocks_templates' )->publish ) ) {
+		return false;
+	}
+
+	return wp_count_posts( 'gblocks_templates' )->publish > 0 ||
+		wp_count_posts( 'gblocks_templates' )->draft > 0 ||
+		wp_count_posts( 'gblocks_templates' )->trash > 0;
+}

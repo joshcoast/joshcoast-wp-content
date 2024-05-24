@@ -137,7 +137,22 @@ class Advance_Post_Meta {
         $wrapper_before = $wrapper_after = $wrapper_content = $authContent = $updateLabel = $dateLabel = "";
 
         $post_id = get_the_ID();
-        $contentAlign = ($attr["catAlign"] || $attr["tagAlign"] || $attr["cmntAlign"] || $attr["viewAlign"] || $attr["readAlign"] || $attr["authAlign"] || $attr["dateAlign"]) ? 'ultp-contentMeta-align' : 'ultp-contentMeta';
+        $contentAlign = ( $attr["catAlign"] || $attr["tagAlign"] || $attr["cmntAlign"] || $attr["viewAlign"] || $attr["readAlign"] || $attr["authAlign"] || $attr["dateAlign"] ) ? 'ultp-contentMeta-align' : 'ultp-contentMeta';
+
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['metaSeparator'] = sanitize_html_class( $attr['metaSeparator'] );
+        $allowed_html_tags = ultimate_post()->ultp_allowed_html_tags();
+        $attr['authLabel'] = wp_kses($attr['authLabel'], $allowed_html_tags);
+        $attr['dateText'] = wp_kses($attr['dateText'], $allowed_html_tags);
+        $attr['datePubText'] = wp_kses($attr['datePubText'], $allowed_html_tags);
+        $attr['cmtLabel'] = wp_kses( $attr['cmtLabel'], $allowed_html_tags );
+        $attr['viewLabel'] = wp_kses( $attr['viewLabel'], $allowed_html_tags );
+        $attr['readTimeText'] = wp_kses( $attr['readTimeText'], $allowed_html_tags );
+        $attr['catLabel'] = wp_kses( $attr['catLabel'], $allowed_html_tags );
+        $attr['tagLabel'] = wp_kses( $attr['tagLabel'], $allowed_html_tags );
 
         // Author Content
         if ($attr["authorShow"] ) {
@@ -183,7 +198,7 @@ class Advance_Post_Meta {
         }
 
         // Main Content
-        $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+        $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ? ' '.$attr["className"]:'' ).''.( $attr["align"] ? ' align' .$attr["align"]:'' ).'">';
             $wrapper_before .= '<div class="ultp-block-wrapper">';
                 $wrapper_content .= '<div class="ultp-advance-post-meta '.$contentAlign.' ultp-post-meta-'.$attr["metaSeparator"].'">'; 
                     $wrapper_content .= '<div>'; 

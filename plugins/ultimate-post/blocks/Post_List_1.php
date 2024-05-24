@@ -66,7 +66,7 @@ class Post_List_1{
             'headingText' =>  'Post List #1',
             'headingURL' =>  '',
             'headingBtnText' =>   'View More',
-            'headingStyle' =>  'style9',
+            'headingStyle' =>  'style1',
             'headingTag' =>  'h2',
             'headingAlign' =>   'left',
             'subHeadingShow' =>  false,
@@ -176,6 +176,17 @@ class Post_List_1{
             'hideMobile' =>  false,
             'advanceCss' =>  '',
             'currentPostId' =>  '',
+
+                        // --------------------------------
+            // Advance Filter Block Compatibility
+            // --------------------------------
+            'advFilterEnable' => false,
+            'querySearch' =>  '',
+
+            // --------------------------------
+            // Pagination block compatibility
+            // --------------------------------
+            'advPaginationEnable' => false,
         );
     }
 
@@ -218,9 +229,25 @@ class Post_List_1{
             $unique_ID = $attr['loadMoreQueryUnique'];
             $current_unique_posts = $attr['ultp_current_unique_posts'];
         }
+
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['contentTag'] = in_array( $attr['contentTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['contentTag'] : 'div';
+        $attr['layout'] = sanitize_html_class( $attr['layout'] );
+        $attr['imgAnimation'] = sanitize_html_class( $attr['imgAnimation'] );
+        $attr['imgOverlayType'] = sanitize_html_class( $attr['imgOverlayType'] );
+        $attr['popupAutoPlay'] =  $attr['popupAutoPlay'] == true ;
+        $attr['readMoreText'] = wp_kses($attr['readMoreText'], ultimate_post()->ultp_allowed_html_tags());
+        $attr['gridStyle'] = sanitize_html_class( $attr['gridStyle'] );
     
         if ($recent_posts->have_posts()) {
-            $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+
+            // Pagination Block Html
+            include ULTP_PATH . 'blocks/template/pagination_block.php';
+
+            $wraper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="ultp-post-grid-block wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.( $attr["align"] ? ' align' .$attr["align"]:'' ).''.( $attr["className"] ? ' '.$attr["className"]:'' ). '">';
                 $wraper_before .= '<div class="ultp-block-wrapper">';
                     
                     // Loading
@@ -251,7 +278,7 @@ class Post_List_1{
                         $wraper_before .= '</div>';
                     }
              
-                    $wraper_before .= '<div class="ultp-block-items-wrap ultp-block-row ultp-block-column-'.json_decode(wp_json_encode($attr['columns']), True)['lg'].' ultp-pl1a-'.$attr['gridStyle'].' ultp-post-list1-'.$attr['layout'].'">';
+                    $wraper_before .= '<div class="ultp-block-items-wrap ultp-block-row ultp-block-column-'.sanitize_html_class( json_decode(wp_json_encode($attr['columns']), true)['lg'] ).' ultp-pl1a-'.$attr['gridStyle'].' ultp-post-list1-'.$attr['layout'].'">';
                         $idx = ($attr['paginationShow'] && ($attr['paginationType'] == 'loadMore')) ? ( $noAjax ? 1 : 0 ) : 0;
                         $index = 0;
                         while ( $recent_posts->have_posts() ): $recent_posts->the_post();
@@ -358,7 +385,7 @@ class Post_List_1{
                         if($attr['queryUnique']) {
                             $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".wp_json_encode($unique_ID)." data-current-unique-posts= ".wp_json_encode($current_unique_posts)."> </span>";
                         }
-                        if ($attr['paginationShow'] && ($attr['paginationType'] == 'loadMore')) {
+                        if ( ($attr['paginationShow'] || $attr['advPaginationEnable'] )  && ($attr['paginationType'] == 'loadMore')) {
                             $wraper_after .= '<span class="ultp-loadmore-insert-before"></span>';
                         }
                     $wraper_after .= '</div>';//ultp-block-items-wrap
@@ -379,6 +406,7 @@ class Post_List_1{
                     }
 
                 $wraper_after .= '</div>';
+                $wraper_after .= $pagi_block_html;
             $wraper_after .= '</div>';
 
             wp_reset_query();

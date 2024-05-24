@@ -101,16 +101,6 @@ class News_Ticker {
             // Advanced
             'advanceId' => '',
             'advanceZindex' => '',
-            // 'wrapMargin' => (object)['lg' =>(object)['top' => '','bottom' => '', 'unit' =>'px']],
-            // 'wrapOuterPadding' => (object)['lg' =>(object)['top' => '','bottom' => '','left' => '', 'right' => '', 'unit' =>'px']],
-            // 'wrapBg' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#f5f5f5'],
-            // 'wrapBorder' => (object)['openBorder'=>0, 'width' =>(object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            // 'wrapShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
-            // 'wrapRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            // 'wrapHoverBackground' => (object)['openColor' => 0, 'type' => 'color', 'color' => '#037fff'],
-            // 'wrapHoverBorder' => (object)['openBorder'=>0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4','type' => 'solid'],
-            // 'wrapHoverRadius' => (object)['lg' =>'', 'unit' =>'px'],
-            // 'wrapHoverShadow' => (object)['openShadow' => 0, 'width' => (object)['top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1],'color' => '#009fd4'],
             'hideExtraLarge' => false,
             'hideTablet' => false,
             'hideMobile' => false,
@@ -151,9 +141,25 @@ class News_Ticker {
             $arrowRight .= ultimate_post()->svg_icon('right'.$attr['TickNavIconStyle']);
         }
 
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['TickNavStyle'] = sanitize_html_class( $attr['TickNavStyle'] );
+        $attr['TickNavIconStyle'] = sanitize_html_class( $attr['TickNavIconStyle'] );
+        $attr['tickerType'] = sanitize_html_class( $attr['tickerType'] );
+        $attr['headingText'] = sanitize_html_class( $attr['headingText'] );
+        $attr['typeAnimation'] = sanitize_html_class( $attr['typeAnimation'] );
+        $attr['tickerAnimation'] = sanitize_html_class( $attr['tickerAnimation'] );
+        $attr['tickerDirectionVer'] = sanitize_html_class( $attr['tickerDirectionVer'] );
+        $attr['tickerDirectionHorizon'] = sanitize_html_class( $attr['tickerDirectionHorizon'] );
+        $attr['tickerSpeed'] = sanitize_html_class( $attr['tickerSpeed'] );
+        $attr['marqueSpeed'] = sanitize_html_class( $attr['marqueSpeed'] );
+        $attr['tickTxtStyle'] = sanitize_html_class( $attr['tickTxtStyle'] );
+        $attr['pauseOnHover'] = isset($attr['pauseOnHover']) ? $attr['pauseOnHover'] == true : true ;
+
 
         if ( $recent_posts->have_posts() ) {
-            $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+            $wraper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.($attr["className"] ? ' '.$attr["className"]:'').'">';
                 $wraper_before .= '<div class="ultp-block-wrapper ultp-news-sticky">';
                     $wraper_before .= '<div class="ultp-block-items-wrap">';
 

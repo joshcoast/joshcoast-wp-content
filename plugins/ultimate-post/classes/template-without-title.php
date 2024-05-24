@@ -2,8 +2,8 @@
 defined( 'ABSPATH' ) || exit;
 
 $is_block_theme = wp_is_block_theme();
-$header_id = ultimate_post()->conditions( 'header' );
-$footer_id = ultimate_post()->conditions( 'footer' );
+$header_id = ultimate_post()->get_setting('ultp_builder') != 'false' ? ultimate_post()->conditions( 'header' ) : '';
+$footer_id = ultimate_post()->get_setting('ultp_builder') != 'false' ? ultimate_post()->conditions( 'footer' ) : '';
 
 if( $is_block_theme ) {
 	?><!DOCTYPE html>

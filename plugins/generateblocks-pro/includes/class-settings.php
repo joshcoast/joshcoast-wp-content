@@ -52,11 +52,19 @@ class GenerateBlocks_Pro_Settings {
 		$screen = get_current_screen();
 
 		if ( 'generateblocks_page_generateblocks-settings' === $screen->id ) {
+			$assets = generateblocks_pro_get_enqueue_assets(
+				'dashboard',
+				[
+					'dependencies' => array( 'generateblocks-settings', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-api-fetch' ),
+					'version' => GENERATEBLOCKS_PRO_VERSION,
+				]
+			);
+
 			wp_enqueue_script(
 				'generateblocks-pro-settings',
 				GENERATEBLOCKS_PRO_DIR_URL . 'dist/dashboard.js',
-				array( 'generateblocks-settings', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-api-fetch' ),
-				GENERATEBLOCKS_PRO_VERSION,
+				$assets['dependencies'],
+				$assets['version'],
 				true
 			);
 
@@ -78,6 +86,7 @@ class GenerateBlocks_Pro_Settings {
 						get_option( 'generateblocks_pro_licensing', array() ),
 						generateblocks_pro_get_license_defaults()
 					),
+					'useLegacyPatternLibrary' => generateblocks_pro_has_legacy_patterns(),
 				)
 			);
 

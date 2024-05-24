@@ -76,6 +76,25 @@ class Post_Comments{
         $wrapper_before = $wrapper_after = $wrapper_content = '';
 
         if(is_single()){
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['layout'] = sanitize_html_class( $attr['layout'] );
+            
+            $allowed_html_tags = ultimate_post()->ultp_allowed_html_tags();
+            $attr['nameInputText'] = wp_kses($attr['nameInputText'], $allowed_html_tags);
+            $attr['emailInputText'] = wp_kses($attr['emailInputText'], $allowed_html_tags);
+            $attr['webInputText'] = wp_kses($attr['webInputText'], $allowed_html_tags);
+            $attr['cmntInputText'] = wp_kses($attr['cmntInputText'], $allowed_html_tags);
+            $attr['cookiesText'] = wp_kses($attr['cookiesText'], $allowed_html_tags);
+            $attr['inputPlaceHolder'] = wp_kses($attr['inputPlaceHolder'], $allowed_html_tags);
+            $attr['subBtnText'] = wp_kses($attr['subBtnText'], $allowed_html_tags);
+            $attr['leaveRepText'] = wp_kses($attr['leaveRepText'], $allowed_html_tags);
+            $attr['replyText'] = wp_kses($attr['replyText'], $allowed_html_tags);
+
+            
             $commenter = wp_get_current_commenter();
             $req = get_option( 'require_name_email' );
             $aria_req = ( $req ? " aria-required='true'" : '' );
@@ -122,7 +141,7 @@ class Post_Comments{
 
             $comments = get_comments(array( 'post_id' => get_the_ID() ));
 
-            $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+            $wrapper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"]:'').''.( $attr["align"] ? ' align' .$attr["align"]:'').'">';
                 $wrapper_before .= '<div class="ultp-block-wrapper  ultp-block-comments ultp-comments-'.$attr['layout'].'">';
                     if ($attr["commentCount"] && count($comments) > 0) {
                         $wrapper_content .= '<div class="ultp-comment-reply-heading">';    

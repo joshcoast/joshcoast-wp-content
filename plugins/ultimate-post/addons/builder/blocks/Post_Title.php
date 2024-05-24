@@ -46,7 +46,13 @@ class Post_Title{
         $post_title = get_the_title();
 
         if ($post_title) {
-            $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['titleTag'] = in_array( $attr['titleTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['titleTag'] : 'h1';
+            
+            $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"] : '' ).''.( $attr["align"] ? ' align' .$attr["align"] : '' ).'">';
                 $wrapper_before .= '<div class="ultp-block-wrapper">';
                     $content .= '<'.$attr['titleTag'].' class="ultp-builder-title">'.$post_title.'</'.$attr['titleTag'].'>';
                 $wrapper_after .= '</div>';

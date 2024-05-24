@@ -46,8 +46,8 @@ class Functions{
     {
         if (!isset ($GLOBALS['ultp_settings'])) {
             $GLOBALS['ultp_settings'] = get_option('ultp_options');
-            $GLOBALS['ultp_settings']['date_format'] = get_option('date_format');
-            $GLOBALS['ultp_settings']['time_format'] = get_option('time_format');
+            // $GLOBALS['ultp_settings']['date_format'] = get_option('date_format');
+            // $GLOBALS['ultp_settings']['time_format'] = get_option('time_format');
         }
 
         if (is_null(self::$instance)) {
@@ -299,7 +299,7 @@ class Functions{
                 $sticky = get_option('sticky_posts');
                 if (is_array($sticky)) { 
 					rsort($sticky);
-                    $sticky = array_slice($sticky, 0, $args['posts_per_page']);
+                    // $sticky = array_slice($sticky, 0, $args['posts_per_page']);
                 }
 				$args['ignore_sticky_posts'] = 1;
                 $args['post__in'] = $sticky;
@@ -537,7 +537,9 @@ class Functions{
      * @param  | URL (STRING) | size (STRING) | class (STRING) | alt (STRING) 
 	 * @return STRING
 	 */
-    public function get_image_html($url = '', $size = 'full', $class = '', $alt = '', $lazy = '', $darkImg=[]) {
+    public function get_image_html($url = '', $size = 'full', $class = '', $alt = '', $lazy = '', $darkImg=[], $srcset = '') {
+        $class = sanitize_html_class($class);
+        $alt = preg_replace('/[^A-Za-z0-9_ -]/', '', $alt);
         $hasDarkImage = ( $darkImg['enable'] && $darkImg['url'] ) ? ' ultp-light-image-block ' : '';
         $alt = $alt ? ' alt="'.$alt.'" ' : '';
         $lazy_data = $lazy ? ' loading="lazy"' : '';
@@ -547,9 +549,9 @@ class Functions{
         $lightMode = $hasDarkImage ? ( $dlMode == 'ultplight' ? '' : 'inactive ' ) : '';
         $darkMode  = $hasDarkImage ? ( $hasDarkImage && $dlMode == 'ultpdark'  ? '' : ' inactive ' ) : '';
 
-        $image = '<img '.$lazy_data.' class="'.$class.$hasDarkImage.$lightMode.'" '.$alt.' src="'.$url.'" />';
+        $image = '<img '.$lazy_data.$srcset.' class="'.$class.$hasDarkImage.$lightMode.'" '.$alt.' src="'.esc_url($url).'" />';
         if( $hasDarkImage ) {
-            $image .= '<img '.$lazy_data.' class="'.$class.$darkMode.' ultp-dark-image-block " '.$alt.' src="'.$darkImg['url'].'" />';
+            $image .= '<img '.$lazy_data.$darkImg['srcset'].' class="'.$class.$darkMode.' ultp-dark-image-block " '.$alt.' src="'.esc_url($darkImg['url']).'" />';
         }
         return $image;
     }
@@ -565,7 +567,7 @@ class Functions{
     public function get_image($attach_id, $size = 'full', $class = '', $alt = '', $srcset = '', $lazy = '') {
         $img_alt = get_post_meta($attach_id, '_wp_attachment_image_alt', true);
         $alt = $img_alt ? $img_alt : $alt;
-        $alt = $alt ? ' alt="'.$alt.'" ' : '';
+        $alt = $alt ? ' alt="'.esc_html($alt).'" ' : '';
         $class = $class ? ' class="'.$class.'" ' : '';
         $size = ( ultimate_post()->get_setting('disable_image_size') == 'yes' && strpos($size, 'ultp_layout_') !== false ) ? 'full' : $size;
         $lazy_data = $lazy ? ' loading="lazy"' : '';
@@ -717,7 +719,12 @@ class Functions{
                 if ($attr['queryTax'] == 'multiTaxonomy') {
                     $temp = explode('###', $val);
                     if (isset($temp[1])) {
-                        $val = $temp[1];
+
+                        if ($temp[1] === "_all") {
+                            continue;
+                        }
+
+                        $val      = $temp[1];
                         $tax_name = $temp[0];
                     }
                 }
@@ -837,8 +844,8 @@ class Functions{
             }
 
             if (!isset($attr['ajaxCall'])) {
-                if(isset($attr['filterShow']) && $attr['filterShow']) {
-                    if(isset($attr['filterType']) && isset($attr['filterValue'])) {
+                if(isset($attr['filterShow']) && $attr['filterShow'] && $attr['filterShow'] != 'false') {
+                    if(isset($attr['filterType']) && isset($attr['filterValue']) ) {
                         $filterValue = strlen($attr['filterValue']) > 2 ? $attr['filterValue'] : []; 
                         $filterValue = is_array($filterValue) ? $filterValue : json_decode($filterValue);
                         if (count($filterValue) > 0 && $attr['filterType']) {
@@ -863,8 +870,24 @@ class Functions{
             return apply_filters('ultp_archive_query', $archive_query);
         }
 
+        // When you use load more pagination block for a grid that did not have load more feature,
+        // the incoming posts would not align properly with the blocks design and looked bad.
+        // This fixes that.
+        if (
+            isset($attr['paginationType']) && 
+            isset($attr['queryNumber2']) &&
+            isset($attr['notFirstLoad']) &&
+            $attr['paginationType'] === "loadMore" &&
+            $attr['notFirstLoad']
+        ) {
+            $query_number = $attr['queryNumber2'];
+            // $query_number = isset($attr['queryNumber']) ? $attr['queryNumber'] : 3;
+        } else {
+            $query_number = isset($attr['queryNumber']) ? $attr['queryNumber'] : 3;
+        }
+
         $query_args = array(
-            'posts_per_page'    => isset($attr['queryNumber']) ? $attr['queryNumber'] : 3,
+            'posts_per_page'    => $query_number,
             'post_type'         => $post_type == 'archiveBuilder' ? 'post' : $post_type,
             'orderby'           => isset($attr['queryOrderBy']) ? $attr['queryOrderBy'] : 'date',
             'order'             => isset($attr['queryOrder']) ? $attr['queryOrder'] : 'desc',
@@ -1012,6 +1035,10 @@ class Functions{
             }
         }
 
+        if (isset($attr['querySearch']) && $attr['querySearch'] ) {
+            $query_args['s'] = $attr['querySearch'];
+        }
+
         if(isset($attr['querySticky']) && $attr['querySticky']) {
             if (filter_var($attr['querySticky'], FILTER_VALIDATE_BOOLEAN)) {
                 $sticky = get_option( 'sticky_posts', [] );
@@ -1020,7 +1047,7 @@ class Functions{
         }
 
         if (!isset($attr['ajaxCall'])) {
-            if(isset($attr['filterShow']) && $attr['filterShow']) {
+            if(isset($attr['filterShow']) && $attr['filterShow'] && $attr['filterShow'] != 'false') {
                 if(isset($attr['checkFilter']) && isset($attr['queryTax']) && isset($attr['queryTaxValue']) ) {
                     $var = $this->getFilterQueryArgs($attr);
                     if (isset($var) && count($var) > 1) {
@@ -1193,8 +1220,8 @@ class Functions{
 
         $paginationText = explode('|', $paginationText);
 
-        $prev_text = isset($paginationText[0]) ? $paginationText[0] : __("Previous", "ultimate-post");
-        $next_text = isset($paginationText[1]) ? $paginationText[1] : __("Next", "ultimate-post");
+        $prev_text = isset($paginationText[0]) ? esc_html($paginationText[0]) : __("Previous", "ultimate-post");
+        $next_text = isset($paginationText[1]) ? esc_html($paginationText[1]) : __("Next", "ultimate-post");
 
         if (1 != $pages) {
             $html .= '<ul class="ultp-pagination">';            
@@ -1209,6 +1236,9 @@ class Functions{
                     $html .= '<li class="ultp-first-dot"'.($paged == 1 ? $display_none : "").'><a href="#">...</a></li>';
                 }
                 foreach ($data as $i) {
+                    if ( $pages > 3 && $pages == $i ) {
+                        continue;
+                    }
                     if ($pages >= $i) {
                         $html .= ($paged == $i) ? '<li class="ultp-center-item pagination-active" data-current="'.$i.'"><a href="'.$this->generatePaginationUrl($i, $baseUrl).'">'.$i.'</a></li>':'<li class="ultp-center-item" data-current="'.$i.'" '.( ( $pages > 4 && $paged == 2 && $i == 1 && !$paginationAjax ) ? $display_none : "").'><a href="'.$this->generatePaginationUrl($i, $baseUrl).'">'.$i.'</a></li>';
                     }
@@ -2322,9 +2352,9 @@ class Functions{
 	 */
     public function get_format($format) {
         if ($format == 'default_date') {
-            return $this->get_setting('date_format');
+            return get_option('date_format');
         } else if ($format == 'default_date_time') {
-            return $this->get_setting('date_format').' '.$this->get_setting('time_format');
+            return get_option('date_format').' '.get_option('time_format');
         } else {
             return $format;
         }
@@ -2400,7 +2430,7 @@ class Functions{
 	 * @return STRING | Taxonomy Lists as array
 	 */
     public function get_no_result_found_html($text) {
-        return $text ? '<div class="ultp-not-found-message" role="alert">'.$text.'</div>' : '';
+        return $text ? '<div class="ultp-not-found-message" role="alert">'.wp_kses($text, ultimate_post()->ultp_allowed_html_tags()).'</div>' : '';
     }
 
     /**
@@ -2660,5 +2690,144 @@ class Functions{
                 return sanitize_text_field($params);
             }
         }
+    }
+
+    /**
+     * Get Adv Filter Data Attributes
+     * @param array|null $attr
+     * @param array|null $filter_attributes
+     * @return string
+     * @since v.3.2.5
+    */
+    public function get_adv_data_attrs($attr, $filter_attributes=null) {
+        // Adv Filter Integration
+        $adv_filter_dataset = array();
+
+        if ($filter_attributes) {
+            $adv_filter_dataset[] = 'data-filter-value="' . htmlspecialchars($filter_attributes['queryTaxValue']) . '"';
+            $adv_filter_dataset[] = 'data-filter-type="' . htmlspecialchars($filter_attributes['queryTax']) . '"';
+
+            $is_adv = isset($filter_attributes['isAdv']) ? $filter_attributes['isAdv'] : 0;
+            $adv_filter_dataset[] = 'data-filter-is-adv="' . $is_adv . '"';
+
+            if ($is_adv) {
+                if ( isset($filter_attributes['queryAuthor'] ) ) {
+                    $adv_filter_dataset[] = "data-filter-author='" . $filter_attributes['queryAuthor'] . "'";
+                }
+
+                if ( isset($filter_attributes['queryOrder'] ) ) {
+                    $adv_filter_dataset[] = "data-filter-order='" . $filter_attributes['queryOrder'] . "'";
+                }
+
+                if ( isset($filter_attributes['queryOrderBy'] ) ) {
+                    $adv_filter_dataset[] = "data-filter-orderby='" . $filter_attributes['queryOrderBy'] . "'";
+                }
+
+                if ( isset($filter_attributes['search'] ) ) {
+                    $adv_filter_dataset[] = 'data-filter-search="' . $filter_attributes['search'] . '"';
+                }
+
+                if ( isset($filter_attributes['queryQuick'] ) && $filter_attributes['queryQuick'] ) {
+                    $adv_filter_dataset[] = 'data-filter-adv-sort="' . $filter_attributes['queryQuick'] . '"';
+                }
+            }
+        }
+
+        if ($attr && isset($attr['advFilterEnable']) && $attr['advFilterEnable']) {
+            $adv_filter_dataset[] = 'data-filter-is-adv="1"';
+            $adv_filter_dataset[] = 'data-filter-type="multiTaxonomy"';
+
+            $data_filter_value = isset($attr['filterValue']) && $attr['filterValue'] ? $attr['filterValue'] : "[]";
+            $adv_filter_dataset[] = 'data-filter-value="' . htmlspecialchars($data_filter_value) . '"';
+
+            $data_author = isset($attr['queryAuthor']) && $attr['queryAuthor'] ? $attr['queryAuthor'] : "[]";
+            $adv_filter_dataset[] = 'data-filter-author="' . $data_author . '"';
+
+            $data_order = isset($attr['queryOrder']) && $attr['queryOrder'] ? $attr['queryOrder'] : "DESC";
+            $adv_filter_dataset[] = 'data-filter-order="' . $data_order . '"';
+
+            $data_orderby = isset($attr['queryOrderBy']) && $attr['queryOrderBy'] ? $attr['queryOrderBy'] : "date";
+            $adv_filter_dataset[] = 'data-filter-orderby="' . $data_orderby . '"';
+
+            $adv_filter_dataset[] = 'data-filter-search="' . (isset($attr['querySearch']) ? $attr['querySearch'] : '') . '"';
+
+            $adv_filter_dataset[] = 'data-filter-adv-sort="' . (isset($attr['queryQuick']) ? $attr['queryQuick'] : '') . '"';
+        } 
+        
+        $adv_filter_dataset = implode(' ', $adv_filter_dataset);
+        return $adv_filter_dataset;
+    }
+
+    /**
+     * Custom Text kses
+     * @param $params
+     * @return array|bool|mixed|string
+     * @since v.4.0.2
+    */
+    public function ultp_allowed_html_tags($extras=[]) {
+        $allowed =  array(
+            'a'          => array(
+                'href'  => true,
+                'title' => true,
+            ),
+            'abbr'       => array(
+                'title' => true,
+            ),
+            'b'          => array(),
+            'br'          => array(),
+            'blockquote' => array(
+                'cite' => true,
+            ),
+            'em'         => array(),
+            'i'          => array(),
+            'q'          => array(
+                'cite' => true,
+            ),
+            'strong'     => array(),
+        );
+
+        return array_merge($allowed, $extras);
+    }
+
+    /**
+     * Allowed Block Tags
+     * @return array
+     * @since v.4.0.2
+    */
+    public function ultp_allowed_block_tags($search='') {
+        $array_lists = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span', 'p', 'div', 'section', 'article' ];
+        return $search ? in_array($search, $array_lists) : $array_lists ;
+    }
+
+    /**
+     * Formats datasets for html
+     * @since v.4.0.2
+     *
+     * @param array $datasets
+     * @return string
+     */
+    public function get_formatted_datasets(&$datasets) {
+        $res = '';
+        foreach($datasets as $key => $value) {
+            $res .= ' data-' . $key . '="' . $value . '" ';
+        }
+        return $res;
+    }
+
+    /**
+     * Sanitizes a attributes after running necessary checks
+     * @since v.4.1.0
+     *
+     * @param array $datasets
+     * @return string
+     */
+    public function sanitize_attr(&$attr, $key, $sanitize_callback = null, $def_value = '') {
+        return isset($attr[$key]) && $attr[$key] ? 
+            (
+                $sanitize_callback ? 
+                    $sanitize_callback($attr[$key]) : 
+                    $attr[$key]
+            ) 
+            : $def_value;
     }
 }

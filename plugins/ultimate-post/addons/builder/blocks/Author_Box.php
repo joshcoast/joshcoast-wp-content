@@ -81,6 +81,15 @@ class Author_Box{
         $page_post_id = get_the_ID(); // ultimate_post()->get_ID();
         
         if($page_post_id){
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['authorNameTag'] = in_array( $attr['authorNameTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['authorNameTag'] : 'h4';
+            $attr['layout'] = sanitize_html_class( $attr['layout'] );
+            $attr['writtenByText'] = wp_kses($attr['writtenByText'], ultimate_post()->ultp_allowed_html_tags());
+
             $_post = get_post( $page_post_id );
             $post_author = get_userdata( $_post->post_author );
 
@@ -109,7 +118,7 @@ class Author_Box{
                 $all_post_link .= '</div>';
             }
             
-            $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+            $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"]:'' ).''.( $attr["align"] ? ' align' .$attr["align"]:'' ).'">';
                 $wrapper_before .= '<div class="ultp-block-wrapper">';
                     $content .= '<div class="ultp-author-box ultp-author-box-'.$attr["layout"].'-content">';
                         $content .= ($attr['imgShow'] && $attr['layout'] !== 'layout4' ? $author_image : '');

@@ -1,14 +1,14 @@
-=== Post Grid Gutenberg Blocks and WordPress News Plugin - PostX ===
+=== Post Grid Gutenberg Blocks and WordPress Blog Plugin – PostX ===
 Contributors: wpxpo, anik4e, jakirhasan
-Tags: Post Grid, Gutenberg Blocks, News, Magazine, News Plugin
+Tags: post grid, gutenberg blocks, magazine, news, blog plugin
 Requires at least: 5.0    
-Tested up to: 6.4.1
+Tested up to: 6.5
 Requires PHP: 5.6
-Stable tag: 4.0.1
+Stable tag: 4.1.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-PostX is the #1 WordPress News Magazine Plugin to create any kind of News, Magazine, and Blogging sites with Gutenberg Post Grid Blocks.
+PostX is the #1 WordPress Blog Magazine Plugin to create any kind of News, Magazine, and Blogging sites with Gutenberg Post Grid Blocks.
 
 == Description ==
 
@@ -261,14 +261,50 @@ It is a Gutenberg plugin it works great with WordPress version 5.x.x or more. An
 11. With the help of the Elementor and Saved Template addons, you can use any of the post blocks of PostX to any pages while editing with Elementor builder.
 
 == Changelog ==
+= 4.1.1 – 22 May 2024 =
+* Update: Updated Setup Wizard
+
+= 4.1.0 – 19 May 2024 =
+* New: Advanced Post Pagination block
+* New: Advanced Post Filter block
+* Update: Revamped block settings
+
+= 4.0.4 – 24 April 2024 =
+* Fix: Pattern block is not working inside Row/Column block
+
+= 4.0.3 – 22 April 2024 =
+* New: Sports Template - SP Portal
+* New: Blog Template - Qubit
+* New: Gaming Template - Grand Gaming
+* New: Saved Template duplicate option added
+* Fix: Post query not working properly for sticky posts
+* Fix: Video Popup issue from daily-moition video source
+* Fix: Responsive device option in working properly in settings panel
+* Fix: Multiselect field issue in Front End Post Submission addon settings 
+* Fix: Broken design of Post Slider 2 block when previewing in mobile device on editor
+* New: Option added to show either featured video or featured image when both are attached to a post in Post Featured Image/Video block
+
+= 4.0.2 – 3 April 2024 =
+* Fix: Block attribute sanitize and escaping, issue raised by patchstack site and Dmitrii from cleantalk site.
+* Fix: Below Spacing issue in Post Slider 1 block
+* Fix: Image overlay issue after disabling navigation in Next Previous Block 
+* Fix: Dot hover color and count with issue in Taxonomy block
+* Fix: Small and large post excerpt individual settings in Post Module 2 block
+* Fix: Large image spacing issue in Post Module 1 block
+* Fix: Large and small item category appearance issue in Post List 2 block
+* New: Image srcset and custom size option added in Post Featured Image and Image Block
+* New: News Template - NFTNews
+* New: Blog Template - FitTalk
+* New: Magazine Template - Magazino
+
 = 4.0.1 – 27 March 2024 =
 * Fix: Additional css class field option is not working
 * Fix: PHP warning in Dark Logo
 
 = 4.0.0 – 25 March 2024 =
 * New: Starter Sites
-* New: News Sites Templates 
-* New: Magazine Sites Templates
+* New: News Site Templates 
+* New: Magazine Site Templates
 * New: Travel Blog Templates
 * New: Fashion Blog Templates
 * New: Global Setting for controlling site color and typography

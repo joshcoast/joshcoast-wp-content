@@ -91,7 +91,16 @@ class Taxonomy {
         $recent_posts = ultimate_post()->get_category_data( json_decode($attr['taxValue']), $attr['queryNumber'], $attr['taxType'], $attr['taxSlug'] );
 
         if ( ! empty( $recent_posts ) ) {
-            $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].' '.(isset($attr["class"])?$attr["class"]:'').'">';
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['imgCrop'] = isset($attr['imgCrop']) && $attr['imgCrop'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['imgCrop']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['titleTag'] = in_array( $attr['titleTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['titleTag'] : 'span';
+            $attr['layout'] = sanitize_html_class( $attr['layout'] );
+            $attr['TaxAnimation'] = sanitize_html_class( $attr['TaxAnimation'] );
+
+            $wraper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].' '.( $attr["className"] ? $attr["className"]:'' ).'">';
                 $wraper_before .= '<div class="ultp-block-wrapper">';
                     $wraper_before .= ultimate_post()->loading(); // Loading
                     
@@ -104,7 +113,7 @@ class Taxonomy {
                     }
 
                     $wraper_before .= '<div class="ultp-block-items-wrap">';
-                        $wraper_before .= '<ul class="ultp-taxonomy-items '.(isset($attr["TaxAnimation"])? ' ultp-taxonomy-animation-' .$attr["TaxAnimation"]:'').' ultp-taxonomy-column-'.json_decode(wp_json_encode($attr['columns']), True)['lg'].' ultp-taxonomy-layout-'.$attr['layout'].'">';
+                        $wraper_before .= '<ul class="ultp-taxonomy-items '.(isset($attr["TaxAnimation"])? ' ultp-taxonomy-animation-' .$attr["TaxAnimation"]:'').' ultp-taxonomy-column-'.sanitize_html_class( json_decode(wp_json_encode($attr['columns']), true)['lg'] ).' ultp-taxonomy-layout-'.$attr['layout'].'">';
                         
                         foreach ( $recent_posts as $value ) {
                             $_style = ( ($attr["customTaxColor"] && $value['color'])  ? ' style="background-color:'.$value['color'].';"' : '');

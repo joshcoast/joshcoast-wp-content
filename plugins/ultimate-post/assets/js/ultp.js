@@ -122,6 +122,30 @@
         $('.flexMenu-viewMore').removeClass('active');
         $('.flexMenu-viewMore').children("ul.flexMenu-popup").css("display","none")
     });
+
+    
+    // *************************************
+    // Pagination Block
+    // *************************************
+    $('.ultp-post-grid-parent').each(function() {
+        const grid = $(this).find('.ultp-post-grid-block');
+        const pagiWrapper = $(this).find('.ultp-pagination-block');
+        const pagi = grid.find('.pagination-block-html > div');
+
+        if (pagiWrapper.length < 1 || pagi.length < 1) {
+            return;
+        }
+
+
+        pagiWrapper
+            .attr('class')
+            .split(' ')
+            .forEach(cl => {
+                pagi.addClass(cl);
+            });
+
+        pagiWrapper.html(pagi);
+    });
     
     // *************************************
     // Previous Next
@@ -133,7 +157,18 @@
         let parents = $(this).closest('.ultp-next-prev-wrap'),
             wrap    = parents.closest('.ultp-block-wrapper').find('.ultp-block-items-wrap'),
             paged   = parseInt(parents.data('pagenum')),
-            pages   = parseInt(parents.data('pages'));
+            pages   = parseInt(parents.data('pages')),
+            blockWrapper = parents.closest('.ultp-block-wrapper');
+
+        const postBlock = parents.parents(".ultp-post-grid-parent");
+        
+        // Pagination block integration
+        if (wrap.length < 1) {
+            const pagiFor = parents.data('for');
+            if (pagiFor) {
+                wrap = $( '.' + pagiFor + ' .ultp-block-items-wrap');
+            }
+        }
         
         if (parents.is('.ultp-disable-editor-click')) {
             return
@@ -177,6 +212,20 @@
         const ultpUniqueIds = sessionStorage.getItem('ultp_uniqueIds');
         const ultpCurrentUniquePosts = JSON.stringify(wrap.find('.ultp-current-unique-posts').data('current-unique-posts'));
 
+        // Adv Filter Integration
+        const filterValue = parents.data('filter-value') || '';
+        const advFilterData = {};
+        
+        if (Array.isArray(filterValue) && filterValue.length > 0) {
+            advFilterData.filterShow = true;
+            advFilterData.checkFilter = true;
+            advFilterData.isAdv = true;
+            advFilterData.author = parents.data('filter-author') || '';
+            advFilterData.order = parents.data('filter-order') || '';
+            advFilterData.orderby = parents.data('filter-orderby') || '';
+            advFilterData.adv_sort = parents.data('filter-adv-sort') || '';
+        }
+
 		$.ajax({
             url: ultp_data_frontend.ajax,
             type: 'POST',
@@ -188,15 +237,22 @@
                 exclude: parents.data('expost'),
                 blockName: parents.data('blockname'),
                 builder: parents.data('builder'),
-                filterValue: parents.data('filter-value') || '',
+                filterValue: filterValue,
                 filterType: parents.data('filter-type') || '',
                 widgetBlockId: widgetBlockId,
                 ultpUniqueIds : ultpUniqueIds || [],
                 ultpCurrentUniquePosts: ultpCurrentUniquePosts || [],
+
+                ...advFilterData,
+
                 wpnonce: ultp_data_frontend.security
             },
             beforeSend: function() {
-                parents.closest('.ultp-block-wrapper').addClass('ultp-loading-active')
+                if (blockWrapper.length < 1 && postBlock.length > 0) {
+                    postBlock.find('.ultp-block-wrapper').addClass('ultp-loading-active');
+                } else {
+                    blockWrapper.addClass('ultp-loading-active')
+                }
             },
             success: function(data) {
                 if (data) {
@@ -205,7 +261,12 @@
                 }
             },
             complete:function() {
-                parents.closest('.ultp-block-wrapper').removeClass('ultp-loading-active');
+                if (blockWrapper.length < 1 && postBlock.length > 0) {
+                    postBlock.find('.ultp-block-wrapper').removeClass('ultp-loading-active');
+                } else {
+                    blockWrapper.removeClass('ultp-loading-active');
+                }
+                handleDailyMotion();
             },
             error: function(xhr) {
                 console.log('Error occured.please try again' + xhr.statusText + xhr.responseText );
@@ -223,10 +284,21 @@
             return
         }
         e.preventDefault();
-        let that    = $(this),
-            parents = that.closest('.ultp-block-wrapper'),
-            paged   = parseInt(that.data('pagenum')),
-            pages   = parseInt(that.data('pages'));
+        let that    = $(this);
+        let parents = that.closest('.ultp-block-wrapper');
+        let isPagiBlock = false;
+
+        // Pagination block integration
+        if (parents.length < 1) {
+            const pagiFor = that.data('for');
+            if (pagiFor) {
+                parents = $( '.' + pagiFor + ' .ultp-block-wrapper');
+                isPagiBlock = parents.length > 0;
+            }
+        }
+
+        let paged   = parseInt(that.data('pagenum'));
+        let pages   = parseInt(that.data('pages'));
         
         if (that.hasClass('ultp-disable')) {
             return
@@ -254,6 +326,21 @@
 
         const ultpUniqueIds = sessionStorage.getItem('ultp_uniqueIds');
         const ultpCurrentUniquePosts = JSON.stringify(parents.find('.ultp-current-unique-posts').data('current-unique-posts'));
+
+        // Adv Filter Integration
+        const filterValue = that.data('filter-value') || '';
+        const advFilterData = {};
+        
+        if (Array.isArray(filterValue) && filterValue.length > 0) {
+            advFilterData.filterShow = true;
+            advFilterData.checkFilter = true;
+            advFilterData.isAdv = true;
+            advFilterData.author = that.data('filter-author') || '';
+            advFilterData.order = that.data('filter-order') || '';
+            advFilterData.orderby = that.data('filter-orderby') || '';
+            advFilterData.adv_sort = that.data('filter-adv-sort') || '';
+        }
+
         $.ajax({
             url: ultp_data_frontend.ajax,
             type: 'POST',
@@ -265,29 +352,56 @@
                 blockName: that.data('blockname'),
                 builder: that.data('builder'),
                 exclude: that.data('expost'),
-                filterValue: that.closest('.ultp-loadmore').data('filter-value') || '',
-                filterType: that.closest('.ultp-loadmore').data('filter-type') || '',
+                filterValue: filterValue,
+                filterType: that.data('filter-type') || '',
                 widgetBlockId: widgetBlockId,
                 ultpUniqueIds : ultpUniqueIds || [],
                 ultpCurrentUniquePosts: ultpCurrentUniquePosts || [],
+
+                ...advFilterData,
+
                 wpnonce: ultp_data_frontend.security
             },
             beforeSend: function() {
                 parents.addClass('ultp-loading-active');
+
+                if (isPagiBlock) {
+                    that.find('.ultp-spin').css('display', 'flex');
+                }
             },
             success: function(data) {
                 if (data) {
+
+                    // Fix for grids that have fixed max-height (Adv Pagination Block integration)
+                    parents.find('.ultp-block-row').css('max-height', 'unset');
+
                     parents.find('.ultp-current-unique-posts').remove();
+
+                    // Adv Pagination block loadmore fix for post modules
+                    if (that.data('blockname').includes("post-module")) {
+                        $('<div style="clear:left;width:100%;padding-block:15px;"></div>')
+                            .insertBefore(parents.find('.ultp-loadmore-insert-before'));
+                    }
+
                     $(data).insertBefore( parents.find('.ultp-loadmore-insert-before') );
+
                     setSession('ultp_uniqueIds', JSON.stringify(parents.find('.ultp-current-unique-posts').data('ultp-unique-ids')) );
                 }
             },
             complete:function() {
                 parents.removeClass('ultp-loading-active');
+
+                if (isPagiBlock) {
+                    that.find('.ultp-spin').css('display', 'none');
+                }
             },
             error: function(xhr) {
                 console.log('Error occured.please try again' + xhr.statusText + xhr.responseText );
                 parents.removeClass('ultp-loading-active');
+
+                if (isPagiBlock) {
+                    that.find('.ultp-spin').css('display', 'none');
+                }
             },
         });
     });
@@ -303,6 +417,7 @@
             let that    = $(this),
                 parents = that.closest('.ultp-filter-wrap'),
                 wrap = that.closest('.ultp-block-wrapper');
+            const postBlock = that.parents('.ultp-post-grid-parent');
 
                 parents.find('a').removeClass('filter-active');
                 that.addClass('filter-active');
@@ -320,6 +435,10 @@
                 let widget_items = widgetBlock.attr('id').split("-");
                 widgetBlockId = widget_items[widget_items.length-1]
             }
+
+            const ultpUniqueIds = sessionStorage.getItem('ultp_uniqueIds');
+            const ultpCurrentUniquePosts = JSON.stringify(wrap.find('.ultp-current-unique-posts').data('current-unique-posts'));
+
             if (parents.data('blockid')) {
                 $.ajax({
                     url: ultp_data_frontend.ajax,
@@ -332,12 +451,15 @@
                         postId: post_ID,
                         blockName: parents.data('blockname'),
                         widgetBlockId: widgetBlockId,
+                        ultpUniqueIds : ultpUniqueIds || [],
+                        ultpCurrentUniquePosts: ultpCurrentUniquePosts || [],
                         wpnonce: ultp_data_frontend.security
                     },
                     beforeSend: function() {
                         wrap.addClass('ultp-loading-active');
                     },
                     success: function(response) {
+
                         wrap.find('.ultp-block-items-wrap').html(response?.data?.filteredData?.blocks);
                         if (response?.data?.filteredData?.paginationType == 'loadMore' && response?.data?.filteredData?.paginationShow) {
                             wrap.find('.ultp-block-items-wrap').append('<span class="ultp-loadmore-insert-before"></span>');
@@ -349,9 +471,34 @@
                         else if (response?.data?.filteredData?.paginationType == 'pagination') {
                             wrap.find('.ultp-pagination-wrap').replaceWith(response?.data?.filteredData?.pagination);
                         }
+
+                        // Adv Pagination Block Integration
+                        if (response?.data?.filteredData?.pagination && postBlock.length > 0) {
+                            postBlock.data('pagi')?.map(pagiClass => {
+                                let pagi = [];
+                                
+                                if (response?.data?.filteredData?.paginationType === "loadMore") {
+                                    pagi = $('.ultp-loadmore.' + pagiClass);
+                                    if (pagi.length > 0) {
+                                        wrap.find('.ultp-block-items-wrap').append('<span class="ultp-loadmore-insert-before"></span>');
+                                    }
+                                } else {
+                                    pagi = $('.' + pagiClass + '[data-for]');
+                                }
+
+                                if (pagi.length > 0) {
+                                    const newPagi = $(response.data.filteredData.pagination);
+                                    pagi.attr('class').split(' ').forEach(cl => newPagi.addClass(cl));
+                                    pagi.replaceWith(newPagi);
+                                }
+                            });
+                        }
+
                     },
                     complete:function() {
                         wrap.removeClass('ultp-loading-active');
+                        setSession('ultp_uniqueIds', JSON.stringify(wrap.find('.ultp-current-unique-posts').data('ultp-unique-ids')) );
+                        handleDailyMotion();
                     },
                     error: function(xhr) {
                         console.log('Error occured.please try again' + xhr.statusText + xhr.responseText );
@@ -437,6 +584,15 @@
         let that    = $(this),
             parents = that.closest('.ultp-pagination-ajax-action'),
             wrap = that.closest('.ultp-block-wrapper');
+        
+        // Pagination block integration
+        if (wrap.length < 1) {
+            const pagiFor = parents.data('for');
+            if (pagiFor) {
+                wrap = $( '.' + pagiFor + ' .ultp-block-wrapper');
+            }
+        }
+
         if (parents.is('.ultp-disable-editor-click')) {
             return
         }
@@ -479,6 +635,20 @@
         const ultpUniqueIds = sessionStorage.getItem('ultp_uniqueIds');
         const ultpCurrentUniquePosts = JSON.stringify(wrap.find('.ultp-current-unique-posts').data('current-unique-posts'));
 
+        // Adv Filter Integration
+        const filterValue = parents.data('filter-value') || '';
+        const advFilterData = {};
+        
+        if (Array.isArray(filterValue) && filterValue.length > 0) {
+            advFilterData.filterShow = true;
+            advFilterData.checkFilter = true;
+            advFilterData.isAdv = true;
+            advFilterData.author = parents.data('filter-author') || '';
+            advFilterData.order = parents.data('filter-order') || '';
+            advFilterData.orderby = parents.data('filter-orderby') || '';
+            advFilterData.adv_sort = parents.data('filter-adv-sort') || '';
+        }
+
         if (pageNum) {
             $.ajax({
                 url: ultp_data_frontend.ajax,
@@ -491,11 +661,16 @@
                     postId: post_ID,
                     blockName: parents.data('blockname'),
                     builder: parents.data('builder'),
-                    filterValue: parents.data('filter-value') || '',
-                    filterType: parents.data('filter-type') || '',
                     widgetBlockId: widgetBlockId,
                     ultpUniqueIds : ultpUniqueIds || [],
                     ultpCurrentUniquePosts: ultpCurrentUniquePosts || [],
+
+                    filterType: parents.data('filter-type') || '',
+                    filterValue: filterValue,
+
+
+                    ...advFilterData,
+
                     wpnonce: ultp_data_frontend.security
                 },
                 beforeSend: function() {
@@ -512,6 +687,7 @@
                 },
                 complete:function() {
                     wrap.removeClass('ultp-loading-active');
+                    handleDailyMotion();
                 },
                 error: function(xhr) {
                     console.log('Error occured.please try again' + xhr.statusText + xhr.responseText );
@@ -639,7 +815,7 @@
     // *************************************
     // Accessibility for Loadmore Added
     // *************************************
-    $('span[role="button"]').on('keydown', function (e) {
+    $('span[role="button"].ultp-loadmore-action').on('keydown', function (e) {
         const keyD = e.key !== undefined ? e.key : e.keyCode;
         if ((keyD === 'Enter' || keyD === 13) || (['Spacebar', ' '].indexOf(keyD) >= 0 || keyD === 32)) {
             e.preventDefault();
@@ -650,6 +826,16 @@
     // *************************************
     // Post Grid Popup Modal 
     // *************************************
+    function handleDailyMotion() {
+        $('.ultp-video-modal .ultp-video-modal__content .ultp-video-wrapper > iframe').each(function() {
+            const that = $(this);
+            const videoSrc = that.attr('src');
+            if ( videoSrc && videoSrc.includes('dailymotion.com/player') && videoSrc[videoSrc.length - 1] == '&' ) {
+                that.attr('src', videoSrc.slice(0, videoSrc.length-1) + '?autoplay=0');
+            }
+        })
+    }
+    handleDailyMotion();
     $(document).on('click', '.ultp-block-item .ultp-video-icon', function () {
         const parent = $(this).parents('.ultp-block-item');
         let videoIframe = parent.find('iframe');
@@ -657,8 +843,13 @@
         if (videoIframe.length) {
             let isAutoPlay = parent.find('.ultp-video-icon').attr('enableAutoPlay');
             // Update Src For Autoplay
-            if (videoIframe.attr('src') && isAutoPlay) {
-                videoIframe.attr('src', `${videoIframe.attr('src')}&autoplay=1`);
+            const videoSrc = videoIframe.attr('src');
+            if ( videoSrc && isAutoPlay ) {
+                if ( videoSrc.includes('dailymotion.com/player') ) {
+                    videoIframe.attr('src', videoSrc.includes('?autoplay=0') ? videoSrc.replace("?autoplay=0", "&?autoplay=1") : `${videoSrc}?autoplay=1`)
+                } else {
+                    videoIframe.attr('src', `${videoSrc}&autoplay=1`);
+                }
             }
             // Spinner for Video
             parent.find('iframe').on("load", function() {
@@ -682,9 +873,17 @@
         if ($('.ultp-video-modal.modal_active').length > 0) {
             let videoIframe = $('.ultp-video-modal.modal_active').find('iframe');
             if (videoIframe.length) {
-                if (videoIframe.attr('src')) {
-                    const stopVideo = videoIframe.attr('src').replace("&autoplay=1", "");
-                    videoIframe.attr('src', stopVideo);
+                const videoSrc = videoIframe.attr('src');
+                if ( videoSrc ) {
+                    let stopVideo = '';
+                    if ( videoSrc.includes('dailymotion.com/player') ) {
+                        stopVideo = videoSrc.replaceAll("&?autoplay=1", "?autoplay=0");
+                    } else {
+                        stopVideo = videoSrc.replaceAll("&autoplay=1", "");
+                    }
+                    if ( stopVideo ) {
+                        videoIframe.attr('src', stopVideo);
+                    }
                 }
             } else {
                 $('.ultp-video-modal.modal_active').find('video').trigger('pause');
@@ -732,6 +931,450 @@
             }
         })
     });
+
+    // *************************************
+    // Advanced Filter
+    // *************************************
+    function getTax(name) {
+        switch(name){
+            case 'categories':
+                return 'category';
+            case 'tag':
+            case 'tags':
+                return 'post_tag';
+            case 'authors':
+                return 'author';
+            case 'order_by':
+                return 'orderby';
+            default:
+                return name;
+        }
+
+    }
+
+    function getFormattedSelectedFilter(type, name) {
+        const fType = type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        return `${fType}: ${name}`;
+    }
+
+    function applyFilter(parent, blockId, blockName, postId, grids) {
+
+        const selectedFilters = [];
+        const filterData = {};
+        const pagis = parent.data('pagi');
+
+        parent.find('.ultp-filter-button[data-is-active="true"]').each(function() {
+            const type = $(this).attr('data-type');
+            const selected = $(this).attr('data-selected');
+            const cTax = $(this).attr('data-tax');
+
+            if (getTax(type) === "author") {
+                if (selected !== "_all") {
+                    filterData.author = [{value:selected}]
+                }
+                return;
+            }
+
+            if (getTax(type) === "order") {
+                filterData.order = selected;
+                return;
+            }
+
+            if (getTax(type) === "orderby") {
+                filterData.orderby = selected;
+                return;
+            }
+
+            if (getTax(type) === "adv_sort") {
+                filterData.adv_sort = selected;
+                return;
+            }
+
+            if (getTax(type) === "custom_tax") {
+                if (cTax) {
+                    selectedFilters.push({
+                        value: cTax + '###' + selected
+                    });
+                }
+                return;
+            }
+
+            selectedFilters.push({
+                value: getTax(type) + '###' + selected
+            })
+        });
+
+        parent.find('.ultp-filter-select').each(function() {
+            const type = $(this).attr('data-type');
+            const selected = $(this).attr('data-selected');
+            const cTax = $(this).find('.ultp-filter-select__dropdown-inner[data-id="' + selected +'"]').data('tax');
+
+            if (getTax(type) === "author") {
+                if (selected !== "_all") {
+                    filterData.author = [{value:selected}]
+                }
+                return;
+            }
+
+            if (getTax(type) === "order") {
+                filterData.order = selected;
+                return;
+            }
+
+            if (getTax(type) === "orderby") {
+                filterData.orderby = selected;
+                return;
+            }
+
+            if (getTax(type) === "adv_sort") {
+                filterData.adv_sort = selected;
+                return;
+            }
+
+            if (getTax(type) === "custom_tax") {
+                if (cTax) {
+                    selectedFilters.push({
+                        value: cTax + '###' + selected
+                    });
+                }
+                return;
+            }
+
+            selectedFilters.push({
+                value: getTax(type) + '###' + selected
+            })
+
+        })
+        
+        filterData.taxonomy = selectedFilters;
+
+        const searchVal = parent.find('.ultp-filter-search input')
+        if (searchVal.length > 0) {
+            filterData.search = searchVal.val();
+        }
+
+        const ultpUniqueIds = sessionStorage.getItem('ultp_uniqueIds');
+        const ultpCurrentUniquePosts = JSON.stringify(parent.find('.ultp-current-unique-posts').data('current-unique-posts'));
+
+        let widgetBlockId = '';
+        let widgetBlock = parent.parents('.widget_block:first');
+        if (widgetBlock.length > 0) {
+            let widget_items = widgetBlock.attr('id').split("-");
+            widgetBlockId = widget_items[widget_items.length-1]
+        }
+
+        $(grids).each(function () {
+            const grid = $(this);
+
+            $.ajax({
+                url: ultp_data_frontend.ajax,
+                type: "POST",
+                data: {
+                    action: "ultp_adv_filter",
+
+                    ...filterData,
+
+                    blockId: blockId,
+                    blockName: blockName,
+                    postId: postId,
+                    ultpUniqueIds : ultpUniqueIds || [],
+                    ultpCurrentUniquePosts: ultpCurrentUniquePosts || [],
+                    widgetBlockId: widgetBlockId,
+                    wpnonce: ultp_data_frontend.security,
+                },
+                beforeSend: function () {
+                    grid.addClass("ultp-loading-active");
+                },
+                success: function (response) {
+                    grid.find(".ultp-block-items-wrap").html(
+                        response?.data?.filteredData?.blocks
+                    );
+                    if (response?.data?.filteredData?.paginationType =="loadMore" &&
+                        response?.data?.filteredData?.paginationShow) 
+                    {
+                        grid.find(".ultp-block-items-wrap")
+                            .append('<span class="ultp-loadmore-insert-before"></span>');
+                        grid.find(".ultp-loadmore")
+                            .replaceWith(response?.data?.filteredData?.pagination);
+
+                    } else if (response?.data?.filteredData?.paginationType =="navigation") {
+                        grid.find(".ultp-next-prev-wrap")
+                            .replaceWith(response?.data?.filteredData?.pagination);
+
+                    } else if (response?.data?.filteredData?.paginationType == "pagination") {
+                        grid.find(".ultp-pagination-wrap")
+                            .replaceWith(response?.data?.filteredData?.pagination);
+                    }
+
+                    // Pagination Block Integration
+                    if (response?.data?.filteredData?.pagination) {
+                        pagis?.map(pagiClass => {
+                            let pagi = [];
+                            
+                            if (response?.data?.filteredData?.paginationType === "loadMore") {
+                                pagi = $('.ultp-loadmore.' + pagiClass);
+                                if (pagi.length > 0) {
+                                    grid.find(".ultp-block-items-wrap")
+                                        .append('<span class="ultp-loadmore-insert-before"></span>');
+                                }
+                            } else {
+                                pagi = $('.' + pagiClass + '[data-for]');
+                            }
+
+                            if (pagi.length > 0) {
+                                const newPagi = $(response.data.filteredData.pagination);
+                                pagi.attr('class').split(' ').forEach(cl => newPagi.addClass(cl));
+                                pagi.replaceWith(newPagi);
+                            }
+                        });
+                    }
+                },
+                complete: function () {
+                    grid.removeClass("ultp-loading-active");
+                    setSession('ultp_uniqueIds', JSON.stringify(parent.find('.ultp-current-unique-posts').data('ultp-unique-ids')) );
+                },
+                error: function (xhr) {
+                    console.log(
+                        "Error occured.please try again" +
+                            xhr.statusText +
+                            xhr.responseText
+                    );
+                    grid.removeClass("ultp-loading-active");
+                },
+            });
+        });
+    }
+
+    $('.ultp-filter-block').each(function() {
+        const that = $(this);
+        const parent = $(this).parents('.ultp-post-grid-parent');
+        const grids = parent.find('.ultp-block-wrapper');
+        const gridData = JSON.parse(parent.attr('data-grids'));
+        const postId = parent.attr('data-postid');
+        const selectedFilterTemp = $(this).find('.ultp-filter-clear-template');
+        const clearBtn = $(this).find('.ultp-filter-clear-button');
+        const firstElClass = 'ultp-block-'+clearBtn.data('blockid')+'-first';
+
+        function resetFilters() {
+            // Resetting select fields
+            that.find('.ultp-filter-select').each(function () {
+                const defVal = $(this).find('.ultp-filter-select-options li').first();
+                $(this).attr('data-selected', defVal.attr('data-id'));
+                $(this).find('.ultp-filter-select-field-selected').text(defVal.text());
+            })
+
+            // Resetting clear button
+            const selectedFilter = that.find('.ultp-filter-clear-selected-filter');
+            if (selectedFilter.hasClass(firstElClass)){
+                clearBtn.addClass(firstElClass);
+            }
+            selectedFilter.remove();
+
+            // Resetting search input
+            that.find('.ultp-filter-search input').val('');
+
+            // Resetting filter buttons
+            that.find('.ultp-filter-button[data-is-active="true"]').each(function() {
+                $(this).removeClass('ultp-filter-button-active');
+                $(this).attr('data-is-active', 'false');
+            });
+        }
+
+        function fetchPostsWithFilter() {
+            gridData.forEach(data => {
+                applyFilter(
+                    parent,
+                    data['blockId'],
+                    data['name'],
+                    postId,
+                    grids
+                );
+            });
+        }
+
+        that.find('.ultp-filter-select').each(function() {
+            const dropdown = $(this).find('.ultp-filter-select-options');
+            const selected = $(this).find('.ultp-filter-select-field-selected');
+            const icon = $(this).find('.ultp-filter-select-field-icon');
+            const filter = $(this);
+            const type = $(this).attr('data-type');
+
+            function showDropdown(show) {
+                if (show) {
+                    $('.ultp-filter-select .ultp-filter-select-options').css('display', 'none');
+                    $('.ultp-filter-select .ultp-filter-select-field-icon').removeClass('ultp-dropdown-icon-rotate');
+                    $('.ultp-filter-select').attr('aria-expanded', false);
+
+                    dropdown.css('display', 'block');
+                    icon.addClass('ultp-dropdown-icon-rotate');
+
+                } else {
+                    dropdown.css('display', 'none');
+                    icon.removeClass('ultp-dropdown-icon-rotate');
+                }
+
+                filter.attr('aria-expanded', show);
+            }
+
+            const defValue = dropdown.find('li').first();
+
+            function resetFilter() {
+                selected.text(defValue.text());
+                filter.attr('data-selected', defValue.attr('data-id'));
+
+            }
+
+            $(this).on('click', function (e) {
+                e.stopPropagation();
+                const isHidden = dropdown.css('display') === 'none';
+                showDropdown(isHidden);
+            });
+
+            $(dropdown).find('li').each(function() {
+                const value = $(this).attr('data-id');
+                const filterId = $(this).attr('data-blockId');
+                const text = $(this).text();
+
+                $(this).on('click', function() {
+                    selected.text(text);
+                    filter.attr('data-selected', value);
+
+                    // Selected filters
+                    if (value === "_all") {
+                        that.find(`.ultp-filter-clear[data-type="${type}"]`).remove();
+                    } else if (clearBtn.length > 0) {
+                        let isNew = false;
+
+                        let copy = that.find(`.ultp-filter-clear[data-type="${type}"]`)
+                        
+                        if (copy.length < 1) {
+                            isNew = true;
+                            copy = selectedFilterTemp.clone();
+                        }
+
+                        copy.removeClass('ultp-filter-clear-template');
+                        copy.addClass('ultp-filter-clear-selected-filter');
+                        copy.find('.ultp-selected-filter-text').text(getFormattedSelectedFilter(type, text));
+
+                        // Alignment
+                        if (clearBtn.hasClass(firstElClass)) {
+                            clearBtn.removeClass(firstElClass);
+                            copy.addClass(firstElClass);
+                        }
+
+                        copy.find('.ultp-selected-filter-icon').on('click', function() {
+                            resetFilter();
+                            if(copy.hasClass(firstElClass)) {
+
+                                if (copy.next().hasClass('ultp-filter-clear-selected-filter')) {
+                                    copy.next().addClass(firstElClass);
+                                } else {
+                                    clearBtn.addClass(firstElClass);
+                                }
+
+                            }
+                            copy.remove();
+                            fetchPostsWithFilter();
+                        });
+
+                        copy.attr('data-id', value);
+                        copy.attr('data-type', type);
+                        copy.attr('data-for', filterId);
+                        copy.css({
+                            display: 'block'
+                        });
+
+                        isNew && copy.insertBefore(clearBtn);
+                    }
+
+                    fetchPostsWithFilter();
+                    showDropdown(true);
+                });
+            })
+
+            $(document).on('click', function(e) {
+                if (
+                    !filter.is(e.target) &&
+                    !filter.has(e.target).length
+                ) {
+                    showDropdown(false);
+                }
+            })
+        });
+
+        that.find('.ultp-filter-button').each(function () {
+            const currFBtn = this;
+            const fBtnType = $(this).data('type');
+            $(this).on('click', function() {
+                const isActive = $(currFBtn).attr('data-is-active') === 'true';
+                const value = $(this).data('selected');
+
+                // Clicking all button will disable other
+                if (value === "_all") {
+                    const otherBtns = that.find('.ultp-filter-button[data-selected]:not([data-selected="_all"])');
+                    if (otherBtns.length > 0) {
+                        otherBtns.attr('data-is-active', 'false');
+                        otherBtns.removeClass('ultp-filter-button-active');
+                    }
+                } 
+                
+                // This buttons are exclusive
+                else if (["adv_sort", "order", "order_by"].includes(fBtnType) && !isActive) {
+                    const otherBtns = that.find(`.ultp-filter-button[data-type="${fBtnType}"]`);
+                    if (otherBtns.length > 0) {
+                        otherBtns.attr('data-is-active', 'false');
+                        otherBtns.removeClass('ultp-filter-button-active');
+                    }
+                }
+
+                // Click a button should disable all button
+                else {
+                    const allBtn = that.find('.ultp-filter-button[data-selected="_all"]');
+                    if (allBtn.length > 0) {
+                        allBtn.attr('data-is-active', 'false');
+                        allBtn.removeClass('ultp-filter-button-active');
+                    }
+                }
+
+                if (isActive) {
+                    $(currFBtn).attr('data-is-active', 'false');
+                    $(currFBtn).removeClass('ultp-filter-button-active');
+                } else {
+                    $(currFBtn).attr('data-is-active', 'true');
+                    $(currFBtn).addClass('ultp-filter-button-active');
+                }
+
+                fetchPostsWithFilter();
+            });
+        });
+
+        clearBtn.on('click', function() {
+            resetFilters();
+            fetchPostsWithFilter();
+        });
+
+        let searchTimeout;
+
+        function performSearch(isDebounce) {
+            clearTimeout(searchTimeout);
+            searchTimeout = isDebounce ? setTimeout(fetchPostsWithFilter, 500) : fetchPostsWithFilter();
+        }
+
+        parent.find('.ultp-filter-search input').off('input').on('input', function() {
+            performSearch(true);
+        });
+
+        parent.find('.ultp-filter-search input').on('keydown', function(e) {
+            if (e.key === 'Enter') {
+                performSearch(false);
+            }
+        });
+
+        parent.find('.ultp-filter-search-icon').on('click', function() {
+            performSearch(false);
+        });
+    });
+
 
     
     // *************************************

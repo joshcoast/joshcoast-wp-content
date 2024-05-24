@@ -10,9 +10,9 @@ namespace ULTP;
 defined('ABSPATH') || exit;
 
 /**
- * Styles class.
- */
-class REST_API{
+ * REST_API class.
+*/
+class REST_API {
     
     /**
 	 * Setup class.
@@ -23,20 +23,13 @@ class REST_API{
         add_action( 'rest_api_init', array($this, 'ultp_register_route') );
     }
 
-
     /**
 	 * REST API Action
      * 
      * @since v.1.0.0
 	 * @return NULL
-	 */
+	*/
     public function ultp_register_route() {
-        register_rest_route( 'ultp', 'posts', array(
-                'args' => array(),
-                'callback' => array($this,'ultp_route_post_data'),
-                'permission_callback' => '__return_true'
-            )
-        );
         register_rest_route( 'ultp', 'common', array(
                 'methods' => \WP_REST_Server::READABLE,
                 'args' => array('wpnonce' => []),
@@ -44,13 +37,30 @@ class REST_API{
                 'permission_callback' => '__return_true'
             )
         );
-        register_rest_route( 'ultp', 'specific_taxonomy', array(
-                'methods' => \WP_REST_Server::READABLE,
-                'args' => array('taxType' => [], 'taxSlug' => [], 'taxValue' => [], 'queryNumber' => [], 'wpnonce' => [], 'archiveBuilder' => []),
-                'callback' => array($this,'ultp_route_taxonomy_info_data'),
-                'permission_callback' => '__return_true'
-            )
-        );
+        register_rest_route(
+			'ultp',
+			'/fetch_posts/',
+			array(
+				array(
+					'methods'  => 'POST',
+                    'args' => array(),
+                    'callback' => array($this, 'ultp_route_post_data'),
+                    'permission_callback' => '__return_true'
+				)
+			)
+		);
+        register_rest_route(
+			'ultp',
+			'/specific_taxonomy/',
+			array(
+				array(
+					'methods'  => 'POST',
+                    'args' => array(),
+                    'callback' => array($this, 'ultp_route_taxonomy_info_data'),
+                    'permission_callback' => '__return_true'
+				)
+			)
+		);
         register_rest_route(
 			'ultp/v1',
 			'/search/',
@@ -204,6 +214,20 @@ class REST_API{
         );
         register_rest_route(
 			'ultp/v2', 
+			'/custom_tax/',
+			array(
+				array(
+					'methods'  => 'POST', 
+					'callback' => array( $this, 'custom_tax_callback'),
+					'permission_callback' => function () {
+						return current_user_can( 'manage_options' );
+					},
+					'args' => array()
+				)
+			)
+        );
+        register_rest_route(
+			'ultp/v2', 
 			'/init_site_dark_logo/',
 			array(
 				array(
@@ -230,6 +254,120 @@ class REST_API{
 				)
 			)
         );
+        register_rest_route(
+			'ultp/v2', 
+			'/get_ultp_image_size/',
+			array(
+				array(
+					'methods'  => 'POST', 
+					'callback' => array( $this, 'get_custom_image_size'),
+                    'permission_callback' => '__return_true',
+					'args' => array()
+				)
+			)
+        );
+        register_rest_route(
+			'ultp/v2',
+			'/template_action/',
+			array(
+				array(
+					'methods'  => 'POST',
+					'callback' => array($this, 'template_page_action'),
+					'permission_callback' => function () {
+						return current_user_can('manage_options');
+					},
+					'args' => array()
+				)
+			)
+		);
+    }
+
+    /**
+	 * Delete Template Page and Handle builder, saved templates, custom font actions
+     * 
+     * @since v.2.6.6 // Shifted from RequestAPI since v4.0.3
+     * @param STRING
+	 * @return ARRAY | Success Message
+	*/
+    public function template_page_action($server) {
+        $post = $server->get_params();
+        $message = '';
+        $s_Type = isset($post['type']) ? ultimate_post()->ultp_rest_sanitize_params($post['type']) : '';
+        $s_id = isset($post['id']) ? ultimate_post()->ultp_rest_sanitize_params($post['id']) : '';
+        $s_status = isset($post['status']) ? ultimate_post()->ultp_rest_sanitize_params($post['status']) : '';
+
+        if ( $s_Type && $s_id ) {
+            if ( $s_Type == 'delete' ) {
+                if ( isset($post['section']) && $post['section'] == 'builder' ) { // phpcs:ignore WordPress.Security
+                    $conditions = get_option('ultp_builder_conditions', []);
+                    $builder_type = get_post_meta( $s_id, '__ultp_builder_type', true );
+                    if ( isset($conditions[$builder_type][$s_id]) ) {
+                        unset($conditions[$builder_type][$s_id]);
+                        update_option('ultp_builder_conditions', $conditions);
+                    }
+                }
+                wp_delete_post( $s_id, true);
+                $message = __('Template has been deleted.', 'ultimate-post');
+            } else if ( $s_Type == 'duplicate' ) {
+                $fromBuilder = ( isset($post['section']) && $post['section'] == 'builder' ) ? true : false; // phpcs:ignore WordPress.Security
+                $post_id = $s_id;
+                $r_post = get_post( $post_id );
+                $current_user = wp_get_current_user();
+                $new_post_author = $current_user->ID;
+                if ( isset( $r_post ) && $r_post != null ) {
+                    $args = array(
+                        'post_author'    => $new_post_author,
+                        'post_content'   => str_replace('u0022', '\u0022', $r_post->post_content),
+                        'post_excerpt'   => $r_post->post_excerpt,
+                        'post_name'      => $r_post->post_name,
+                        'post_status'    => $fromBuilder ? 'draft' : $r_post->post_status,
+                        'post_title'     => $r_post->post_title,
+                        'post_type'      => $r_post->post_type,
+                    );
+                }
+                $new_post_id = wp_insert_post( $args );
+
+                $css = get_post_meta( $post_id, '_ultp_css', true );
+                update_post_meta( $new_post_id, '_ultp_css', $css );
+                update_post_meta( $new_post_id, '_ultp_active', 'yes' );
+
+                if ( $fromBuilder ) {
+                    $type = get_post_meta( $post_id, '__ultp_builder_type', true );
+                    update_post_meta( $new_post_id, '__ultp_builder_type', $type );
+
+                    $width = get_post_meta( $post_id, '__container_width', true );
+                    update_post_meta( $new_post_id, '__container_width', $width );
+                    
+                    $sidebar = get_post_meta( $post_id, '__builder_sidebar', true );
+                    update_post_meta( $new_post_id, '__builder_sidebar', $sidebar );
+    
+                    $widget_area = get_post_meta( $post_id, '__builder_widget_area', true );
+                    update_post_meta( $new_post_id, '__builder_widget_area', $widget_area );
+
+                    $conditions = get_option('ultp_builder_conditions', array());
+                    if ($conditions && $type) {
+                        if (isset($conditions[$type][$post_id])) {
+                            $conditions[$type][$new_post_id] = $conditions[$type][$post_id];
+                            update_option('ultp_builder_conditions', $conditions);
+                        }
+                    }
+                }
+                $message = __('Template has been duplicated.', 'ultimate-post');
+            } else if ( $s_Type == 'status') {
+                if ( $s_status ) {
+                    wp_update_post(array(
+                        'ID' => $s_id,
+                        'post_status' => $s_status
+                    ));
+                }
+                $message = __('Status has been changed.', 'ultimate-post');
+            }
+        }
+        
+        return array(
+            'success' => true,
+            'message' => $message
+        );
     }
 
     /**
@@ -237,7 +375,7 @@ class REST_API{
      *
      * * @since v.2.8.1
      * @return STRING
-     */
+    */
     public static function initial_setup_complete_callback($server) {
         $post = $server->get_params();
         if ( ! (isset($post['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($post['wpnonce'])), 'ultp-nonce' )) ) {
@@ -246,7 +384,7 @@ class REST_API{
         ultimate_post()->set_setting('init_setup', 'yes');
         return rest_ensure_response([
             'success' => true, 
-            'redirect' => admin_url('admin.php?page=ultp-settings'),
+            'redirect' => admin_url('admin.php?page=ultp-settings#home'),
         ]);
     }
 
@@ -255,7 +393,7 @@ class REST_API{
      *
      * * @since v.2.8.1
      * @return STRING
-     */
+    */
     public function send_initial_plugin_data_callback($server) {
         $post = $server->get_params();
         if ( ! (isset($post['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($post['wpnonce'])), 'ultp-nonce' )) ) {
@@ -275,32 +413,19 @@ class REST_API{
      *
      * * @since v.3.0.0
      * @return STRING
-     */
+    */
     public static function wizard_site_status_callback() {
         if ( ! (isset($_POST['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($_POST['wpnonce'])), 'ultp-nonce' )) ) {
 			die();
-		}
-        if ( isset( $_FILES['siteIcon'],$_FILES['siteIcon']['name'] )  ) {
-            $file_extension     = strtolower( pathinfo( $_FILES['siteIcon']['name'], PATHINFO_EXTENSION ) ); //phpcs:ignore
-			$allowed_extenstion = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'ico' );
-			if ( in_array( $file_extension, $allowed_extenstion ) ) {
-                require_once ABSPATH . 'wp-admin/includes/image.php';
-				require_once ABSPATH . 'wp-admin/includes/file.php';
-				require_once ABSPATH . 'wp-admin/includes/media.php';
-				$file_id = media_handle_upload( 'siteIcon', 0 );
-				if ( $file_id ) {
-                    update_option( 'site_icon', $file_id );
-				}
-			}
-		}
-		if ( isset( $_POST['siteName'] ) ) {
-            $site_name = ultimate_post()->ultp_rest_sanitize_params( $_POST['siteName'] );
-			update_option( 'blogname', $site_name );
 		}
 		if ( isset( $_POST['siteType'] ) ) {
             $site_type = ultimate_post()->ultp_rest_sanitize_params( $_POST['siteType'] );
 			update_option( '__ultp_site_type', $site_type );
 		}
+        require_once ULTP_PATH.'classes/Deactive.php';
+        $obj = new \ULTP\Deactive();
+        $obj->send_plugin_data('postx_wizard', $site_type ? $site_type : 'other');
+
         return rest_ensure_response( ['success' => true ]);
     }
 
@@ -309,7 +434,7 @@ class REST_API{
      * 
      * @since v.3.0.0
 	 * @return NULL
-	 */
+	*/
     public function get_all_settings($server) {
         return rest_ensure_response(['success' => true, 'settings' => ultimate_post()->get_setting()]);
     }
@@ -318,7 +443,7 @@ class REST_API{
      * 
      * @since v.3.0.0
 	 * @return NULL
-	 */
+	*/
     public function save_plugin_settings($server) {
         $post = $server->get_params();
         $data = ultimate_post()->ultp_rest_sanitize_params($post['settings']);
@@ -340,7 +465,7 @@ class REST_API{
      * @since v.3.0.0
      * @param STRING
 	 * @return ARRAY | Inserted Post Url 
-	 */
+	*/
     public function premade_wishlist_save($server) {
         $post = $server->get_params();
         $id = isset($post['id'])? ultimate_post()->ultp_rest_sanitize_params($post['id']):'';
@@ -373,7 +498,7 @@ class REST_API{
      * @since v.3.0.0
      * @param STRING
 	 * @return ARRAY | Inserted Post Url 
-	 */
+	*/
     public function addon_block_action($server) {
         $post = $server->get_params();
         $addon_name = isset($post['key'])? ultimate_post()->ultp_rest_sanitize_params($post['key']):'';
@@ -395,7 +520,7 @@ class REST_API{
      * @since v.3.0.0
      * @param STRING
 	 * @return ARRAY | Inserted Post Url 
-	 */
+	*/
     public function get_dashboard_callback($server) {
         $post = $server->get_params();
         $request_type = isset($post['type'])?ultimate_post()->ultp_rest_sanitize_params($post['type']):'';
@@ -625,7 +750,7 @@ class REST_API{
      * @since v.2.6.7
      * @param STRING
 	 * @return ARRAY | Inserted Post Url 
-	 */
+	*/
     public function template_page_insert($server) {
         $post = $server->get_params();
         $new_page = array(
@@ -720,7 +845,7 @@ class REST_API{
                         if ($split[1] == 'multiTaxonomy') {
                             $data[] = array('value'=>$val->taxonomy.'###'.$val->slug, 'title'=> '[ID: '.$val->term_id.'] '.$val->taxonomy.': '.$val->name);
                         } else {
-                            $data[] = array('value'=>urldecode($val->slug), 'title'=>'[ID: '.$val->term_id.'] '.$val->name);
+                            $data[] = array('value'=>urldecode($val->slug), 'title'=>'[ID: '.$val->term_id.'] '.$val->name, 'live_title'=> $val->name);
                         }
                     }
                 }
@@ -773,16 +898,15 @@ class REST_API{
      * @since v.1.0.0
      * @param MIXED | Pram (ARRAY), Local (BOOLEAN)
 	 * @return ARRAY | Response Image Size as Array
-	 */
+	*/
     public function ultp_route_post_data($prams) {
-        if ( ! (isset($_REQUEST['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($_REQUEST['wpnonce'])), 'ultp-nonce' )) ) {
+        $prams = $prams->get_params();
+        if ( !(isset($prams['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($prams['wpnonce'])), 'ultp-nonce' )) ) {
 			die();
 		}
-        $prams = $prams->get_params();
         $data = [];
         $loop = new \WP_Query( ultimate_post()->get_query(ultimate_post()->ultp_rest_sanitize_params($prams)) );
         $max_tax = isset($prams['maxTaxonomy']) && $prams['maxTaxonomy'] ? ( ultimate_post()->ultp_rest_sanitize_params($prams['maxTaxonomy']) == '0' ? 0 : ultimate_post()->ultp_rest_sanitize_params($prams['maxTaxonomy']) ) : 30 ;
-        
 
         if ($loop->have_posts()) {
             while($loop->have_posts()) {
@@ -864,7 +988,7 @@ class REST_API{
      * @since v.1.0.0
      * @param ARRAY | Parameter (ARRAY)
 	 * @return ARRAY | Response Taxonomy List as Array
-	 */
+	*/
     public function ultp_route_common_data($prams) {
         if ( ! (isset($_REQUEST['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($_REQUEST['wpnonce'])), 'ultp-nonce' )) ) {
             return rest_ensure_response([]);
@@ -908,7 +1032,8 @@ class REST_API{
 	 * @return ARRAY | Response Taxonomy List as Array
 	 */
     public function ultp_route_taxonomy_info_data($prams) {
-        if ( ! (isset($_REQUEST['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($_REQUEST['wpnonce'])), 'ultp-nonce' )) ) {
+        $prams = $prams->get_params();
+        if ( ! (isset($prams['wpnonce']) && wp_verify_nonce( sanitize_key(wp_unslash($prams['wpnonce'])), 'ultp-nonce' )) ) {
             return rest_ensure_response([]);
 		}
         $taxValue = isset($prams['taxValue'])?ultimate_post()->ultp_rest_sanitize_params($prams['taxValue']):'';
@@ -921,12 +1046,49 @@ class REST_API{
     }
 
     /**
+	 * Get Taxonomies for Custom Post Type
+     * 
+     * @since v.3.2.8
+     * @param array $params
+	 * @return array
+	 */
+    public function custom_tax_callback($prams) {
+
+        $post_types = isset($prams['postTypes']) ? ultimate_post()->ultp_rest_sanitize_params($prams['postTypes']) : array();
+
+        $data = array(
+            array(
+                'id' => '_all',
+                'name' => __('All', 'ultimate-post')
+            )
+        );
+
+        foreach ($post_types as $post_type) {
+            $taxonomies = get_object_taxonomies($post_type);
+            foreach ($taxonomies as $taxonomy) {
+                $terms = get_terms(array(
+                    'taxonomy' => $taxonomy,
+                    'hide_empty' => false
+                ));
+                foreach ($terms as $term) {
+                    $data[] = array(
+                        'id' => $term->slug,
+                        'name' => $term->name
+                    );
+                }
+            }
+        }
+
+        return rest_ensure_response($data);
+    }
+
+    /**
 	 * Search Block Data Showing
      * 
      * @since v.2.9.9
      * @param STRING
 	 * @return ARRAY | Inserted Post Url 
-	 */
+	*/
     public function ultp_search_result($server) {
         $post = $server->get_params();
         $searchText = isset($post['searchText'])?ultimate_post()->ultp_rest_sanitize_params($post['searchText']):'';
@@ -1002,7 +1164,7 @@ class REST_API{
      * @since v.3.1.9
      * @param ARRAY 
 	 * @return BOOOLEAN | Inserted Post Url 
-	 */
+	*/
     public function init_site_dark_logo_callback ($server) {
         $logo_data = $server->get_params();
         $success = true;
@@ -1014,5 +1176,23 @@ class REST_API{
         return rest_ensure_response([
             'success' => $success,
         ]);
+    }
+
+    
+    /**
+	 * Getting Image Size
+     * 
+     * @since v.4.0.1     
+     * @param ARRAY | Parameter (number)
+	 * @return ARRAY | Image Size List as Array
+	*/
+    public function get_custom_image_size($server) {
+        $img = $server->get_params();
+        $image_src = array();
+        $image_sizes = ultimate_post()->get_image_size();
+        foreach ($image_sizes as $key => $value) {
+            $image_src[$key] = wp_get_attachment_image_src($img['id'], $key, false)[0];
+        }
+        return rest_ensure_response( ['success' => true, 'size' => $image_src, 'id' => $img  ]);
     }
 }

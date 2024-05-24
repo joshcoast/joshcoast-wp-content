@@ -144,13 +144,23 @@ class Options{
                 array(self::class, 'handle_external_redirects')
             );
         }
+        add_theme_page(
+            __( 'Starter Sites', 'ultimate-post' ),
+            __( 'Starter Sites', 'ultimate-post' ),
+            'manage_options',
+            'ultp-startersites',
+            array(self::class, 'handle_external_redirects')
+        );
     }
 
     public function handle_external_redirects() {
         if ( empty( $_GET['page'] ) ) {     // @codingStandardsIgnoreLine
             return;
         }
-        if ( 'go_postx_pro' === sanitize_key($_GET['page']) ) {   // @codingStandardsIgnoreLine
+        $_page = sanitize_key($_GET['page']);
+        if ( 'ultp-startersites' === $_page  ) {   // @codingStandardsIgnoreLine
+            exit(wp_safe_redirect(admin_url('admin.php?page=ultp-settings#startersites')));
+        } else if ( 'go_postx_pro' === $_page ) {   // @codingStandardsIgnoreLine
             wp_redirect( ultimate_post()->get_premium_link('', 'dashboard_go_pro'));
             die();
         }

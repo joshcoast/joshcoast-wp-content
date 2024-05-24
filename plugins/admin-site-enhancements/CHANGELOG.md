@@ -1,10 +1,220 @@
 ## Changelog
 
-**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **69 _point_ releases** (e.g. 1.1.0 ) and **84 _patch_ releases** (e.g. 4.9.1). 
+**Admin and Site Enhancements (ASE) v1.0.0** was released on October 17, 2022. Since then, there have been **69 _point_ releases** (e.g. 1.1.0 ) and **96 _patch_ releases** (e.g. 4.9.1). 
 
 Each **_point release_** usually corresponds with the addition of one new module/feature. Each module/feature usually is the equivalent of one (or more) single-purpose plugin. Each **_patch release_** usually contain one or more bugfix or improvements to existing modules/features.
 
 [**Upgrade to ASE Pro**](https://www.wpase.com/chnlg-to-web) now. Lifetime Deal (LTD) available.
+
+### 6.9.13.2 (2024.05.27) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Log In | Log Out >> Change Login URL**: add trailing slash suffix in the custom login URL input field, and make sure if a trailing slash is added in the input, it will be stripped. Props to Wence W. for reporting the issue with the trailing slash that prompted this improvement.
+
+* **[FIXED in Pro] Utilities >> Display System Summary**: fixed fatal error when trying to get the total size of the wp-content folder in certain scenarios. Props to Marcellus J. for reporting the issue and facilitating the troubleshooting process.
+
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fixed an issue where the option to hide submenu items did not appear on click of the 'Hide' checkbox. Props to Geoff L. for reporting the issue when The Events Calendar Pro is active, showing it's submenu items. Unfortunately, this fix introduces a breaking change, so, you may need to re-do the hide settings for your submenu items done with v6.9.13. Please check on your site(s).
+
+### 6.9.13.1 (2024.05.20) - ASE Free
+
+* **[FIXED] Admin Interface >> Admin Menu Organizer**: fixed fatal error when installing / updating to v6.9.13. Props to [@timbre-design](https://wordpress.org/support/users/timbre-design/) and Kenneth L. for [reporting the issue](https://wordpress.org/support/topic/fatal-error-4684/).
+
+### 6.9.13 (2024.05.20) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Log In | Log Out >> Change Login URL**: will now respect the Redirect After Login settings when a logged-in user is trying to open the custom login URL, i.e. will no longer redirect to the Dashboard /wp-admin/ and instead to the custom redirect URL for the user role. Props to Jacob O. for suggesting this improvement.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Menu Organizer**: implemented the option to add new separators. Props to Claudio P., Gabriel A. and Brandon Z. for suggesting this feature. Also implemented the option to hide submenu items. Props to Bengt R., Dana S., Steven Y., Andreas A. and Bill J. for suggesting this feature.
+
+* **[IMPROVED in Pro] Utilities >> Search Engine Visibility Status**: added an option to set the live / production site's URL, which will automatically prevent search engine visibility from being enabled on the development / staging site. Props to Gregory V. for suggesting this.
+
+* **[IMPROVED in Pro] Security >> Limit Login Attempts || Security >> Password Protection**: added detected user IP address along with the header it was detected from in the IP whitelisting section, to make it easy to whitelist your IP address. Also added a way to detect the real IP address of users/visitors if the site is behind Cloudflare proxy. Additionally, also added a way to define the preferred header to use when detecting the IP address. Props to Sebastian A. for prompting these improvements.
+
+* **[FIXED in Free and Pro] Admin Interface >> Hide Admin Notices**: properly hide notices on WooCommerce and TranslatePress settings pages. Props to @designidit and Simon L. for reporting the issues.
+
+* **[TRANSLATION]** French translation added. German translation completed. ASE is now translated into 15 languages:
+  * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/).
+  * **Portuguese (Brazil)**: ASE Free and ASE Pro (completed). Props to [Dennis F.](https://profiles.wordpress.org/dnn/).
+  * **Hungarian**: ASE Free and Pro (completed). Props to [R. József G.](https://profiles.wordpress.org/radicsjg/).
+  * **Vietnamese**: ASE Free and Pro (completed). Props to [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/).
+  * **Italian**: ASE Free and Pro (completed). Props to [Fabio P.](https://profiles.wordpress.org/fabioperri/) et. al.
+  * **Dutch**: ASE Free and Pro (completed). Props to [Toine R](https://profiles.wordpress.org/toineenzo/) and [Peter S.](https://profiles.wordpress.org/psmits1567/) et al.
+  * **Korean**: ASE Free and Pro (completed). Props to [@chazmlab](https://profiles.wordpress.org/chazmlab/).
+  * **German (Formal)**: ASE Free and Pro (completed). Props to [@markussss](https://profiles.wordpress.org/markussss/), Bastian S. et al.
+  * **Polish**: ASE Free (completed) | ASE Pro (partial). Props to [Dariusz Z.](https://profiles.wordpress.org/dariobros/).
+  * **Portuguese (Portugal)**: ASE Free (completed) | ASE Pro (partial). Props to [Ricardo C.](https://profiles.wordpress.org/madebyuh/).
+  * **Ukrainian**: ASE Free (completed) | ASE Pro (partial). Props to [Irina](https://profiles.wordpress.org/irinashl/).
+  * **Urdu**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/).
+  * **Swedish**: ASE Free (completed) | ASE Pro (partial). Props to [Robert M.](https://profiles.wordpress.org/robertmichalski/) and [Tor-Bjorn F.](https://profiles.wordpress.org/tobifjellner/).
+  * **Danish**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/).
+  * **French**: ASE Free (completed) | ASE Pro (partial). Props to [Stéphan G.](https://profiles.wordpress.org/gongonzo/), [@jeanfrancoisdelvin](https://profiles.wordpress.org/jeanfrancoisdelvin/), [@srossignol](https://profiles.wordpress.org/srossignol/), [@lucashw](https://profiles.wordpress.org/lucashw/), [@skippy43](https://profiles.wordpress.org/skippy43/), [@anlip](https://profiles.wordpress.org/anlip/), [@agencefacton](https://profiles.wordpress.org/agencefacton/), [@injsbx](https://profiles.wordpress.org/injsbx/) et al.
+  * **Translation updates**: added new/improved translation for Chinese, Vietnamese and Danish.
+  * **More strings** have been internationalized. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
+  * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
+
+### 6.9.12 (2024.05.07) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: if the menu title for 'Posts' has been modified, the word 'Posts' will be changed as well throughout wp-admin. Props to [@tinnyfusion](https://wordpress.org/support/users/tinnyfusion/) for [sharing the snippet](https://wordpress.org/support/topic/recent-update-renaming-posts/) this improvement is based upon.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Menu Organizer**: the 'Contact' menu item from Contact Form 7 can now be always hidden. Props to Wence W. for reporting the issue.
+
+* **[IMPROVED in Free and Pro] Log In | Log Out >> Last Login Column**: Date time format now uses the one set in Settings >> General. In ASE Pro, the last login column is now sortable.
+
+* **[IMPROVED in Pro] Utilities >> Display System Summary**: added info on database, site, wp-content, plugins, themes and upload folders sizes. Props to [@unrealnfs](https://wordpress.org/support/users/unrealnfs/) for [suggesting this](https://wordpress.org/support/topic/request-dashboard-widget-plugin-my-simple-space/).
+
+* **[IMPROVED in Pro] Utilities >> Email Delivery**: added the option to specify a custom reply-to name and email address. Props to @designidit for suggesting this.
+
+* **[TRANSLATION]** Korean translation has been completed. ASE has now been translated into 14 languages:
+  * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/).
+  * **Portuguese (Brazil)**: ASE Free and ASE Pro (completed). Props to [Dennis F.](https://profiles.wordpress.org/dnn/).
+  * **Hungarian**: ASE Free and Pro (completed). Props to [R. József G.](https://profiles.wordpress.org/radicsjg/).
+  * **Vietnamese**: ASE Free and Pro (completed). Props to [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/).
+  * **Italian**: ASE Free and Pro (completed). Props to [Fabio P.](https://profiles.wordpress.org/fabioperri/) et. al.
+  * **Dutch**: ASE Free and Pro (completed). Props to [Toine R](https://profiles.wordpress.org/toineenzo/) and [Peter S.](https://profiles.wordpress.org/psmits1567/) et al.
+  * **Korean**: ASE Free (completed) | ASE Pro (completed). Props to [@chazmlab](https://profiles.wordpress.org/chazmlab/).
+  * **Polish**: ASE Free (completed) | ASE Pro (in progress). Props to [Dariusz Z.](https://profiles.wordpress.org/dariobros/).
+  * **Portuguese (Portugal)**: ASE Free (completed) | ASE Pro (partial). Props to [Ricardo C.](https://profiles.wordpress.org/madebyuh/).
+  * **Ukrainian**: ASE Free (completed) | ASE Pro (partial). Props to [Irina](https://profiles.wordpress.org/irinashl/).
+  * **Urdu**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/).
+  * **Swedish**: ASE Free (completed) | ASE Pro (partial). Props to [Robert M.](https://profiles.wordpress.org/robertmichalski/) and [Tor-Bjorn F.](https://profiles.wordpress.org/tobifjellner/).
+  * **Danish**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/).
+  * **German (Formal)**: ASE Free (completed) | ASE Pro (partial). Props to [@markussss](https://profiles.wordpress.org/markussss/) et al.
+  * **More strings** have been internationalized. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
+  * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
+  
+### 6.9.11 (2024.05.07) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Admin Menu Organizer**: allow renaming the Posts menu item. Some projects require renaming this to News, Articles, etc. Props to Simone S. for the sharing the use case and suggesting this.
+
+* **[IMPROVED in Pro] Optimizations >> Image Upload Control**: added GD library WebP conversion fallback for when Imagick is the active editor but has no WebP support. Props to Aleš S. for reporting the issue that prompted the improvement.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: improved protection against XSS (cross-site scripting) by escaping unescaped variables.
+
+* **[CHANGED in Pro] Admin Interface >> Admin Columns Manager**: disable formatting that adds thousands separator (comma) to columns for number fields. Also made columns for ASE radio and number fields sortable.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Options Pages**: fixed an issue in Bricks builder query loop where querying for repeater field's sub-fields returned nothing. Props to Jacob O. for reporthing the issue.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: fixed an issue where default and custom field columns are not able to be sorted properly despite being marked as sortable. Props to Sebastian A. and Uli L. for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: fixed deprecation notices on custom field group editing screen in PHP 8.2.
+
+* **[TRANSLATION]** 2 new languages have been added. ASE has now been translated into 14 languages:
+  * **Chinese (China)**: ASE Free and Pro (completed). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/).
+  * **Portuguese (Brazil)**: ASE Free and ASE Pro (completed). Props to [Dennis F.](https://profiles.wordpress.org/dnn/).
+  * **Hungarian**: ASE Free and Pro (completed). Props to [R. József G.](https://profiles.wordpress.org/radicsjg/).
+  * **Vietnamese**: ASE Free and Pro (completed). Props to [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/).
+  * **Italian**: ASE Free and Pro (completed). Props to [Fabio P.](https://profiles.wordpress.org/fabioperri/) et. al.
+  * **Dutch**: ASE Free and Pro (completed). Props to [Toine R](https://profiles.wordpress.org/toineenzo/) and [Peter S.](https://profiles.wordpress.org/psmits1567/) et al.
+  * **Polish**: ASE Free (completed) | ASE Pro (in progress). Props to [Dariusz Z.](https://profiles.wordpress.org/dariobros/).
+  * **Portuguese (Portugal)**: ASE Free (completed) | ASE Pro (partial). Props to [Ricardo C.](https://profiles.wordpress.org/madebyuh/).
+  * **Ukrainian**: ASE Free (completed) | ASE Pro (partial). Props to [Irina](https://profiles.wordpress.org/irinashl/).
+  * **Urdu**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/).
+  * **Swedish**: ASE Free (completed) | ASE Pro (partial). Props to [Robert M.](https://profiles.wordpress.org/robertmichalski/) and [Tor-Bjorn F.](https://profiles.wordpress.org/tobifjellner/).
+  * **Danish**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/).
+  * **Korean**: ASE Free (completed) | ASE Pro (partial). Props to [@chazmlab](https://profiles.wordpress.org/chazmlab/).
+  * **German (Formal)**: ASE Free (completed) | ASE Pro (partial). Props to [@markussss](https://profiles.wordpress.org/markussss/) et al.
+  * **More strings** have been internationalized. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings, if you havent' done so already.
+  * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
+
+### 6.9.10.1 (2024.05.01) - ASE Pro
+
+* **[FIXED in Pro] Optimizations >> Image Upload Control**: fixed an issue with WebP upload as reported by Konstantin T, where the resulting upload is a broken image. Also made sure WebP upload will be resized to the maximum dimension defined in the settings.
+
+### 6.9.10 (2024.04.30) - ASE Free and Pro
+
+* **[IMPROVED in Free and Pro] Admin Interface >> Disable Dashboard Widgets**: added an option to disable the Welcome to WordPress widget/panel. Props to [@tinnyfusion](https://wordpress.org/support/users/tinnyfusion/) for [suggesting this](https://wordpress.org/support/topic/feature-request-remove-welcome-panel/) and providing the snippet to base this on.
+
+* **[IMPROVED in Pro] Admin Interface >> Show Custom Taxonomy Filters**: this has been disabled for ASE's Media Categories to prevent showing the filter twice on the list view of the media library.
+
+* **[IMPROVED in Pro] Optimizations >> Image Upload Control**: WebP conversion now works on sites where the active editor for media handling is WP_Image_Editor_Imagick. Props to Konstantin T. for reporting the issue which prompted this improvement.
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: remove irrelevant CPTs from ASE, WooCommerce and page builders from the field group's Placement >> Post Types drop down list, and sort the list alphabetically.
+
+* **[IMPROVED in Pro] Admin Interface >> Admin Menu Organizer**: when trying to hide a menu item with the "Always hide for user role(s) >> all roles except" option for a certain role, e.g. Administrator, it will not work correctly if a user has that certain role and another role (e.g. Web Designer), which can be assigned via the Utilities >> Multiple User Roles module. Previously, the menu item will also be hidden for users with multiple roles that includes that certain role. This release fixes that issue, i.e. a user with multiple roles will now see the correct behaviour. Props to Ingo R. for reporting the issue in detail and also posting the code fix!
+
+* **[IMPROVED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: fixed an issue in WYSIWYG field where inserting an image with caption will output the plain shortcode in the editor with the image placed within the shortcode. Props to Jacob O. for reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Taxonomies**: fixed PHP warning in custom taxonomies list table.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: fixed empty value being returned for ASE hyperlink field in certain scenarios.
+
+* **[TRANSLATION]** ASE has now been translated into 12 languages:
+  * **Chinese (China)**: ASE Free and Pro (**completed**). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/).
+  * **Portuguese (Brazil)**: ASE Free and ASE Pro (**completed**). Props to [Dennis F.](https://profiles.wordpress.org/dnn/).
+  * **Hungarian**: ASE Free and Pro (**completed**). Props to [R. József G.](https://profiles.wordpress.org/radicsjg/).
+  * **Vietnamese**: ASE Free and Pro (**completed**). Props to [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/).
+  * **Italian**: ASE Free and Pro (**completed**). Props to [Fabio P.](https://profiles.wordpress.org/fabioperri/) et. al.
+  * **Dutch**: ASE Free (completed) | ASE Pro (partial). Props to [Toine R](https://profiles.wordpress.org/toineenzo/) and [Peter S.](https://profiles.wordpress.org/psmits1567/) et al.
+  * **Polish**: ASE Free (completed) | ASE Pro (partial). Props to [Dariusz Z.](https://profiles.wordpress.org/dariobros/).
+  * **Portuguese (Portugal)**: ASE Free (completed) | ASE Pro (partial). Props to [Ricardo C.](https://profiles.wordpress.org/madebyuh/).
+  * **Ukrainian**: ASE Free (completed) | ASE Pro (partial). Props to [Irina](https://profiles.wordpress.org/irinashl/).
+  * **Urdu**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/).
+  * **Swedish**: ASE Free (completed) | ASE Pro (partial). Props to [Robert M.](https://profiles.wordpress.org/robertmichalski/) and [Tor-Bjorn F.](https://profiles.wordpress.org/tobifjellner/).
+  * **Danish**: ASE Free (completed) | ASE Pro (partial). Props to [Morten E.L.](https://profiles.wordpress.org/ellegaarddk/), [Helgi P.](https://profiles.wordpress.org/helgipetersen/) and [Kurt M.A.](https://profiles.wordpress.org/moskjaer/).
+
+  * **More strings** have been internationalized. Props to [@cooper08](https://wordpress.org/support/topic/missing-translations-notices-show-all-less/) and [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/) for pointing them out. @Translators, please visit the respective project pages for the Free and Pro versions to translate the new strings.
+  * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
+  * Note: simply change the language in your user profile editing screen to see the translations in action.
+
+### 6.9.9 (2024.04.23) - ASE Free and Pro
+
+* **[TRANSLATION]** ASE has now been translated into the following languages:
+  * **Chinese (China)**: ASE Free (completed) | ASE Pro (partial). Props to [@bricksvip](https://profiles.wordpress.org/bricksvip/).
+  * **Dutch**: ASE Free (completed) | ASE Pro (partial). Props to [Toine R](https://profiles.wordpress.org/toineenzo/) et al.
+  * **Hungarian**: ASE Free (completed) | ASE Pro (completed). Props to [R. József G.](https://profiles.wordpress.org/radicsjg/).
+  * **Polish**: ASE Free (completed) | ASE Pro (partial). Props to [Dariusz Z.](https://profiles.wordpress.org/dariobros/).
+  * **Portuguese (Brazil)**: ASE Free (completed) | ASE Pro (completed). Props to [Dennis F.](https://profiles.wordpress.org/dnn/).
+  * **Portuguese (Portugal)**: ASE Free (completed) | ASE Pro (partial). Props to [Ricardo C.](https://profiles.wordpress.org/madebyuh/).
+  * **Ukrainian**: ASE Free (completed) | ASE Pro (partial). Props to [Irina](https://profiles.wordpress.org/irinashl/).
+  * **Urdu**: ASE Free (completed) | ASE Pro (partial). Props to [Ayyaz A.](https://profiles.wordpress.org/ayyazahmad/).
+  * **Vietnamese**: ASE Free (completed) | ASE Pro (completed). Props to [Hoang N.Q.](https://profiles.wordpress.org/nguyenquanghoang/).
+  * **Interested to help translate or improve the translation?** Please go to [https://translate.wpase.com](https://translate.wpase.com) for more info.
+  
+* **[IMPROVED in Free and Pro] Content Management >> Content Duplication**: will properly detect if a 'product' post type is registered by WooCommerce or not. If it's registered by WooCommerce, content duplication will use WooCommerce's native feature. If it's not registered by WooCommerce, e.g. by ACF, then ASE's content duplication feature will be used. Props to [@rikhen](https://wordpress.org/support/users/rikhen/) for [reporting the issue](https://wordpress.org/support/topic/content-duplication-not-always-working-for-cpts/) which prompted the improvement.
+
+### 6.9.8 (2024.04.15) - ASE Free and Pro
+
+* **[TRANSLATION for Free and Pro]** ASE Free is now available in Dutch (props to Toine R. et al.) and Ukrainian (props to Irina), and ASE Pro is available in Hungarian (props to R. József G.) and Brazilian Portuguese (props to Dennis F.)! For ASE Free, once you switch your language to Nederland or Українська in your profile settings, please go to Dashboard >> Updates >> Translation and click on "Update translation" to download the translation from wordpress.org. Pro version already includes the translation. Interested to have ASE in your language(s)? Please go to [https://translate.wpase.com ](https://translate.wpase.com)on how to get involved. Thanks!
+
+* **[INTERNATIONALIZATION]** More strings have been internationalized, so they are available for translation into various languages.
+
+* **[CHANGED in Free]** Remove the nudge to donate in support of the development for the free version of ASE. This has been replaced with a simple ask to share about ASE with your communities, which is also a way to provide support. Overall, the support nudge at the top of ASE settings page has been simplified. So, if you find ASE has been useful on your sites and in your workflow, hopefully you will consider adding [a nice review](https://wordpress.org/plugins/admin-site-enhancements/#reviews), providing feedback, sharing about ASE or helping with translation efforts. Please do understand that by now, probably more than 300 hours have been spent on developing the free version of ASE over the course of one and a half year.
+
+* **[FIXED in Pro] Content Management >> Content Duplication**: fixed a bug where all user roles were selected after saving changes to ASE settings, despite unchecking several user roles before saving. Props to David M. for spotting and reporting the issue.
+
+* **[FIXED in Pro] Content Management >> Media Categories**: fixed CSS so filter bar items in the list view does not spill over to the second line.
+
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: properly output "Hide until toggle" text without raw PHP code.
+
+### 6.9.7 (2024.04.07) - ASE Free and Pro
+
+* **[TRANSLATE ASE] Are you interested to see ASE in your language?**: ASE has been fully internationalized and ready for localization / translation. If you're interested to get involved, please head over to [https://translate.wpase.com](https://translate.wpase.com/) for more info. Props to [Toine R.](https://wordpress.org/support/users/toineenzo/) for leading the Dutch translation efforts and [@radicsjg](https://profiles.wordpress.org/radicsjg/) for the Hungarian translation.
+
+* **[IMPROVED in Pro] Content Management >> Content Duplication**: added an option to choose on which post type(s) duplication is enabled. Props to Paul R. for prompting the improvement after reporting seeing double 'Duplicate' link on the ads listing of Advanced Ads plugin, which has it's own 'Duplicate' feature for their ads.
+
+* **[IMPROVED in Pro] Utilities >> Redirect 404**: added an option to redirect to a custom URL instead of the homepage.
+
+* **[CHANGED in Free and Pro] Utilities >> Search Engines Visibility Status**: Removed visibility status notice. Admin bar status should be enough. Props to Marco R. for prompting the change.
+
+* **[CHANGED and IMPROVED in Free and Pro] Admin Interface >> Show Custom Taxonomy Filter**: this has been taken out of Enhance List Tables module and is now it's own module. In ASE Pro, it's also possible to show additional filter(s) for non-hierarchical taxonomies, e.g. Post Tags.
+
+* **[CHANGED in Free] ASE Settings**: removed sponsorship ask/nudge. Simplify this nudge into an ask to add a review or share about ASE.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Options Pages**: fixed an issue where WYSIWYG field that is part of an options page will output the wrong content when rendered inside Breakdance builder's header. Props to Darren L. for reporting the issue with screencasts and facilitating troubleshooting further.
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Custom Field Groups**: Fixed PHP warning in WYSIWYG field. Fixed true/false field not showing SVG icon in Elementor.
+
+* **[FIXED in Pro] Admin Interface >> Admin Columns Manager**: fix for Elementor Templates >> Types column having duplicate values. Props to Steven Y. for reporting the issue.
+
+* **[FIXED in Pro] Custom Code >> Code Snippets Manager**: fix activate / deactivate toggle on snippets listing page not working properly, i.e. returning 'yes' / 'no' page instead of actually toggling and stays on the listing page. Props to Darren L. for reporting the issue.
+
+* **[FIXED in Pro] Admin Interface >> Admin Menu Organizer**: fixed PHP deprecation notice.
+
+### 6.9.6.2 (2024.04.01) - ASE Pro
+
+* **[FIXED in Pro] Content Management >> Content Order**: fixed PHP warnings as reported by Yoshihiro T. and a developer at mez#####e.co.
+
+### 6.9.6.1 (2024.04.01) - ASE Pro
+
+* **[FIXED in Pro] Content Management >> Custom Content Types >> Options Pages**: fixed an issue where getting an option page's option value in the frontend returns empty value. Props to Darren for reporting this with a short but clear screencast that illustrates the issue in Breakdance builder.
 
 ### 6.9.6 (2024.04.01) - ASE Free and Pro
 
@@ -20,7 +230,7 @@ Each **_point release_** usually corresponds with the addition of one new module
 
 * **[FIXED in Pro] Content Management >> Custom Content Types**: in some scenarios, the WYSIWYG field is not responsive, and thus, not usable when editing a post using that field type with the block editor. This is now fixed. Props to Philipp Z. for reporting the issue and facilitating the troubleshooting.
 
-* **[FIXED in Free] ASE Settings**: fixed PHP warning reported by [@osblaga](https://wordpress.org/support/users/osblaga/) in [this thread](https://wordpress.org/support/topic/error-when-activating-wp-ase-plugin/).
+* **[FIXED in Free and Pro] ASE Settings**: fixed PHP warning reported by [@osblaga](https://wordpress.org/support/users/osblaga/) in [this thread](https://wordpress.org/support/topic/error-when-activating-wp-ase-plugin/).
 
 ### 6.9.5 (2024.03.25) - ASE Free and Pro
 

@@ -12,8 +12,7 @@ defined('ABSPATH') || exit;
 /**
  * RequestAPI class.
  */
-class RequestAPI{
-
+class RequestAPI {
     private $api_endpoint = 'https://ultp.wpxpo.com/wp-json/restapi/v2/';
     
     public function __construct() {
@@ -83,100 +82,7 @@ class RequestAPI{
 				)
 			)
 		);
-        register_rest_route(
-			'ultp/v2',
-			'/template_action/',
-			array(
-				array(
-					'methods'  => 'POST',
-					'callback' => array($this, 'template_page_action'),
-					'permission_callback' => function () {
-						return current_user_can('manage_options');
-					},
-					'args' => array()
-				)
-			)
-		);
     }
-
-    /**
-	 * Delete Template Page
-     * 
-     * @since v.2.6.6
-     * @param STRING
-	 * @return ARRAY | Success Message
-	 */
-    public function template_page_action($server) {
-        $post = $server->get_params();
-        $message = '';
-        $s_Type = isset($post['type']) ? ultimate_post()->ultp_rest_sanitize_params($post['type']) : '';
-        $s_id = isset($post['id']) ? ultimate_post()->ultp_rest_sanitize_params($post['id']) : '';
-        $s_status = isset($post['status']) ? ultimate_post()->ultp_rest_sanitize_params($post['status']) : '';
-
-        if ( $s_Type && $s_id ) {
-            if ( $s_Type == 'delete' ) {
-                wp_delete_post( $s_id, true);
-                $message = __('Template has been deleted.', 'ultimate-post');
-            } else if ( $s_Type == 'duplicate') {
-                $post_id = $s_id;
-                $r_post = get_post( $post_id );
-                $current_user = wp_get_current_user();
-                $new_post_author = $current_user->ID;
-                if (isset( $r_post ) && $r_post != null) {
-                    $args = array(
-                        'post_author'    => $new_post_author,
-                        'post_content'   => str_replace('u0022', '\u0022', $r_post->post_content),
-                        'post_excerpt'   => $r_post->post_excerpt,
-                        'post_name'      => $r_post->post_name,
-                        'post_status'    => 'draft',
-                        'post_title'     => $r_post->post_title,
-                        'post_type'      => $r_post->post_type,
-                      );
-                }
-                $new_post_id = wp_insert_post( $args );
-                
-                $type = get_post_meta( $post_id, '__ultp_builder_type', true );
-                update_post_meta( $new_post_id, '__ultp_builder_type', $type );
-
-                $css = get_post_meta( $post_id, '_ultp_css', true );
-                update_post_meta( $new_post_id, '_ultp_css', $css );
-                
-                $width = get_post_meta( $post_id, '__container_width', true );
-                update_post_meta( $new_post_id, '__container_width', $width );
-                
-                $sidebar = get_post_meta( $post_id, '__builder_sidebar', true );
-                update_post_meta( $new_post_id, '__builder_sidebar', $sidebar );
-
-                $widget_area = get_post_meta( $post_id, '__builder_widget_area', true );
-                update_post_meta( $new_post_id, '__builder_widget_area', $widget_area );
-                
-                update_post_meta( $new_post_id, '_ultp_active', 'yes' );
-
-                $conditions = get_option('ultp_builder_conditions', array());
-                if ($conditions && $type) {
-                    if (isset($conditions[$type][$post_id])) {
-                        $conditions[$type][$new_post_id] = $conditions[$type][$post_id];
-                        update_option('ultp_builder_conditions', $conditions);
-                    }
-                }
-                $message = __('Template has been duplicated.', 'ultimate-post');
-            } else if ( $s_Type == 'status') {
-                if ( $s_status ) {
-                    wp_update_post(array(
-                        'ID' => $s_id,
-                        'post_status' => $s_status
-                    ));
-                }
-                $message = __('Status has been changed.', 'ultimate-post');
-            }
-        }
-        
-        return array(
-            'success' => true,
-            'message' => $message
-        );
-    }
-   
 
     /**
 	 * Builder Post Type Data

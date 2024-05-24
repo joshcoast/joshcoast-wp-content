@@ -38,12 +38,43 @@ class GenerateBlocks_Pro_Global_Styles {
 	 * Initiate class.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'add_custom_post_types' ) );
-		add_action( 'generateblocks_dashboard_tabs', array( $this, 'add_tab' ) );
+		// Disable this deprecated feature if no posts exist.
+		// We run this if `is_admin()` as we don't want the query on the frontend.
+		if ( is_admin() ) {
+			$global_styles = get_posts(
+				[
+					'post_type' => 'gblocks_global_style',
+					'post_status' => [ 'any', 'trash' ],
+					'posts_per_page' => 1,
+					'fields' => 'ids',
+				]
+			);
+
+			if ( 0 === count( (array) $global_styles ) ) {
+				$viewing_post_type = isset( $_GET['post_type'] ) && 'gblocks_global_style' === sanitize_text_field( $_GET['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+				if ( $viewing_post_type ) {
+					// Prevent an "invalid post type" error when deleting the last global style.
+					add_action( 'init', array( $this, 'add_custom_post_types' ), 100 );
+				}
+
+				return;
+			}
+		} else {
+			// If we have no Global Styles on the frontend, we can bail now.
+			$global_styles = get_option( 'generateblocks_global_styles', array() );
+
+			if ( empty( $global_styles ) ) {
+				return;
+			}
+		}
+
+		add_action( 'init', array( $this, 'add_custom_post_types' ), 100 );
 		add_action( 'save_post_gblocks_global_style', array( $this, 'build_css' ), 10, 2 );
 		add_filter( 'generateblocks_do_content', array( $this, 'do_blocks' ) );
 		add_filter( 'generateblocks_headline_selector_tagname', array( $this, 'change_headline_selector' ), 10, 2 );
 		add_filter( 'generateblocks_dashboard_screens', array( $this, 'add_to_dashboard_pages' ) );
+		add_filter( 'views_edit-gblocks_global_style', array( $this, 'deprecation_notice' ) );
 	}
 
 	/**
@@ -54,7 +85,7 @@ class GenerateBlocks_Pro_Global_Styles {
 			'gblocks_global_style',
 			array(
 				'labels' => array(
-					'name'                => _x( 'Global Styles', 'Post Type General Name', 'generateblocks-pro' ),
+					'name'                => _x( 'Global Styles (Legacy)', 'Post Type General Name', 'generateblocks-pro' ),
 					'singular_name'       => _x( 'Global Style', 'Post Type Singular Name', 'generateblocks-pro' ),
 					'menu_name'           => __( 'Global Styles', 'generateblocks-pro' ),
 					'parent_item_colon'   => __( 'Parent Global Style', 'generateblocks-pro' ),
@@ -76,10 +107,11 @@ class GenerateBlocks_Pro_Global_Styles {
 				'show_in_nav_menus'   => false,
 				'rewrite'             => false,
 				'hierarchical'        => false,
-				'show_in_menu'        => 'generateblocks',
+				'show_in_menu'        => false,
 				'show_in_admin_bar'   => true,
 				'show_in_rest'        => true,
 				'capabilities' => array(
+					'create_posts' => false,
 					'publish_posts' => 'manage_options',
 					'edit_posts' => 'manage_options',
 					'edit_others_posts' => 'manage_options',
@@ -97,23 +129,6 @@ class GenerateBlocks_Pro_Global_Styles {
 				),
 			)
 		);
-	}
-
-	/**
-	 * Add a Local Templates tab to the GB Dashboard tabs.
-	 *
-	 * @param array $tabs The existing tabs.
-	 */
-	public function add_tab( $tabs ) {
-		$screen = get_current_screen();
-
-		$tabs['global-styles'] = array(
-			'name' => __( 'Global Styles', 'generateblocks-pro' ),
-			'url' => admin_url( 'edit.php?post_type=gblocks_global_style' ),
-			'class' => 'edit-gblocks_global_style' === $screen->id ? 'active' : '',
-		);
-
-		return $tabs;
 	}
 
 	/**
@@ -203,7 +218,6 @@ class GenerateBlocks_Pro_Global_Styles {
 
 		// Force regenerate our static CSS files.
 		update_option( 'generateblocks_dynamic_css_posts', array() );
-
 		update_option( 'generateblocks_global_styles', $global_styles );
 		update_option( 'generateblocks_global_style_attrs', $global_style_attrs );
 	}
@@ -235,6 +249,52 @@ class GenerateBlocks_Pro_Global_Styles {
 		}
 
 		return $do;
+	}
+
+	/**
+	 * Show a deprecation notice in our post type.
+	 *
+	 * @param string $views Existing text in this filter.
+	 */
+	public function deprecation_notice( $views ) {
+		?>
+			<style>
+				.gb-deprecation-notice {
+					background: #fef8ee;
+					border-left: 5px solid #f0b849;
+					padding: 20px;
+					margin: 20px 0;
+				}
+
+				.gb-deprecation-notice p {
+					margin-top: 0;
+				}
+
+				.gb-deprecation-notice p:last-child {
+					margin-bottom: 0;
+				}
+			</style>
+			<div class="gb-deprecation-notice">
+				<p><?php esc_html_e( 'This Global Styles system has been deprecated. You can still edit and use existing styles, but you cannot add new ones.', 'generateblocks-pro' ); ?></p>
+				<p>
+					<?php
+						printf(
+							/* translators: %1$s and %2$s are placeholders for the opening and closing anchor tags */
+							esc_html__(
+								'Please use the new %1$sGlobal Styles%2$s system instead.',
+								'generateblocks-pro'
+							),
+							'<a href="' . esc_url( admin_url( 'admin.php?page=generateblocks-styles' ) ) . '">',
+							'</a>'
+						);
+					?>
+				</p>
+				<p>
+					<a href="https://docs.generateblocks.com/article/global-styles-overview/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more about the new Global Styles', 'generateblocks-pro' ); ?> <svg xmlns="http://www.w3.org/2000/svg" style="fill: currentColor;width: 15px;height:15px;position: relative;top: 3px;left: 3px;" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M19.5 4.5h-7V6h4.44l-5.97 5.97 1.06 1.06L18 7.06v4.44h1.5v-7Zm-13 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3H17v3a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h3V5.5h-3Z"></path></svg></a></p>
+			</div>
+		<?php
+
+		return $views;
 	}
 }
 

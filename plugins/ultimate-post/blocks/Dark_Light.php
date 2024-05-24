@@ -36,15 +36,19 @@ class Dark_Light {
     public function content($attr) {
         if ( ultimate_post()->is_lc_active() ) {
             $attr = wp_parse_args($attr, $this->get_attributes());
-            
-            $layout = isset($attr['layout']) ? $attr['layout'] : 'layout1'; 
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $layout = isset($attr['layout']) ? sanitize_html_class( $attr['layout'] ) : 'layout1'; 
             $reverseSwitcher = isset($attr['reverseSwitcher']) && $attr['reverseSwitcher'] ? 'ultp-dl-reverse' : ''; 
-            $enableText = isset($attr['enableText']) ? $attr['enableText'] : false; 
-            $textAppears = isset($attr['textAppears']) ? $attr['textAppears'] : 'both'; 
-            $lightText = isset($attr['lightText']) ? $attr['lightText'] : 'Light Mode'; 
-            $darkText = isset($attr['darkText']) ? $attr['darkText'] : 'Dark Mode'; 
-            $iconType = isset($attr['iconType']) ? $attr['iconType'] : 'solid';
-            $iconSize = isset($attr['iconSize']) ? $attr['iconSize'] : '24';
+            $enableText = isset($attr['enableText']) ? $attr['enableText'] == true : false; 
+            $textAppears = isset($attr['textAppears']) ? sanitize_html_class($attr['textAppears']) : 'both'; 
+            $iconType = isset($attr['iconType']) ? sanitize_html_class($attr['iconType']) : 'solid';
+            $iconSize = isset($attr['iconSize']) ? sanitize_html_class($attr['iconSize']) : '24';
+
+            $allowed_html_tags = ultimate_post()->ultp_allowed_html_tags();
+            $lightText = isset($attr['lightText']) ? wp_kses($attr["lightText"], $allowed_html_tags) : 'Light Mode'; 
+            $darkText = isset($attr['darkText']) ? wp_kses($attr["darkText"], $allowed_html_tags) : 'Dark Mode'; 
             $dlMode = isset($_COOKIE['ultplocalDLMode']) ? $_COOKIE['ultplocalDLMode'] : ultimate_post()->get_dl_mode();
 
             $dlIcons = array();
@@ -57,14 +61,14 @@ class Dark_Light {
             $wraper_before = '';
             $block_name = 'dark-light';
 
-            $wraper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+            $wraper_before .= '<div '.($attr['advanceId'] ? 'id="'.sanitize_html_class($attr['advanceId']).'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.sanitize_html_class($attr["blockId"]).''.( $attr["align"] ? ' align' .$attr["align"] :'').''.($attr["className"] ? ' '.$attr["className"]:'').'">';
                 $wraper_before .= '<div class="ultp-dark-light-block-wrapper ultp-block-wrapper '.$layout.'">';
                     ob_start();
                     ?>
                         <div class="ultp-dark-light-block-wrapper-content ultp-frontend <?php esc_attr_e($layout) ?>">
                             <div class="ultp-dl-after-before-con ultp-dl-light <?php echo $dlMode == 'ultplight' ? '' : 'inactive' ?> <?php esc_attr_e($reverseSwitcher) ?>" data-iconlay="<?php esc_attr_e($layout) ?>" data-iconsize="<?php esc_attr_e($iconSize) ?>" data-iconrev="<?php esc_attr_e($reverseSwitcher) ?>">
                                 <?php if ( $enableText && $layout != 'layout7' && in_array($textAppears, ['left', 'both'] ) ) : ?>
-                                    <div class="ultp-dl-before-after-text lightText"><?php echo esc_html( $lightText); ?></div>
+                                    <div class="ultp-dl-before-after-text lightText"><?php echo  $lightText; ?></div>
                                 <?php endif; ?>
                                 <div class="ultp-dl-con ultp-light-con <?php esc_attr_e($reverseSwitcher) ?>">
                                     <div class="ultp-dl-svg-con">
@@ -82,12 +86,12 @@ class Dark_Light {
                                     <?php endif; ?>
                                 </div>
                                 <?php if ( $enableText && $layout != 'layout7' && in_array($textAppears, ['right', 'both'] ) ) : ?>
-                                    <div class="ultp-dl-before-after-text <?php esc_attr_e($textAppears != 'both' ? 'lightText' : 'darkText')?>"><?php echo esc_html( $textAppears != 'both' ? $lightText : $darkText); ?></div>
+                                    <div class="ultp-dl-before-after-text <?php esc_attr_e($textAppears != 'both' ? 'lightText' : 'darkText')?>"><?php echo $textAppears != 'both' ? $lightText : $darkText; ?></div>
                                 <?php endif; ?>
                             </div>
                             <div class="ultp-dl-after-before-con ultp-dl-dark <?php echo $dlMode == 'ultplight' ? 'inactive' : '' ?> <?php esc_attr_e($reverseSwitcher) ?>" data-iconlay="<?php esc_attr_e($layout) ?>" data-iconsize="<?php esc_attr_e($iconSize) ?>" data-iconrev="<?php esc_attr_e($reverseSwitcher) ?>">
                                 <?php if ( $enableText && $layout != 'layout7' && in_array($textAppears, ['left', 'both'] ) ) : ?>
-                                    <div class="ultp-dl-before-after-text <?php esc_attr_e($textAppears != 'both' ? 'darkText' : 'lightText')?>"><?php echo esc_html( $textAppears != 'both' ? $darkText : $lightText); ?></div>
+                                    <div class="ultp-dl-before-after-text <?php esc_attr_e($textAppears != 'both' ? 'darkText' : 'lightText')?>"><?php echo $textAppears != 'both' ? $darkText : $lightText; ?></div>
                                 <?php endif; ?>
                                 <div class="ultp-dl-con ultp-dark-con <?php esc_attr_e($reverseSwitcher) ?>">
                                     <?php if ( in_array( $layout, ['layout5', 'layout6', 'layout7'] ) ) : ?>
@@ -105,7 +109,7 @@ class Dark_Light {
                                     </div>
                                 </div>
                                 <?php if ( $enableText && $layout != 'layout7' && in_array($textAppears, ['right', 'both'] ) ) : ?>
-                                    <div class="ultp-dl-before-after-text darkText"><?php echo esc_html( $darkText); ?></div>
+                                    <div class="ultp-dl-before-after-text darkText"><?php echo $darkText; ?></div>
                                 <?php endif; ?>
                             </div>
                         </div>

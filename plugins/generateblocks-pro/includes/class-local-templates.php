@@ -48,8 +48,8 @@ class GenerateBlocks_Pro_Local_Templates {
 		}
 
 		add_action( 'init', array( $this, 'add_custom_post_types' ) );
-		add_action( 'generateblocks_dashboard_tabs', array( $this, 'add_tab' ) );
-		add_filter( 'generateblocks_dashboard_screens', array( $this, 'add_to_dashboard_pages' ) );
+		add_action( 'admin_head', array( $this, 'fix_menu' ) );
+		add_action( 'admin_footer', [ $this, 'add_scripts' ] );
 	}
 
 	/**
@@ -60,7 +60,7 @@ class GenerateBlocks_Pro_Local_Templates {
 			'gblocks_templates',
 			array(
 				'labels' => array(
-					'name'                => _x( 'Local Patterns', 'Post Type General Name', 'generateblocks-pro' ),
+					'name'                => _x( 'Local Patterns (Legacy)', 'Post Type General Name', 'generateblocks-pro' ),
 					'singular_name'       => _x( 'Local Pattern', 'Post Type Singular Name', 'generateblocks-pro' ),
 					'menu_name'           => __( 'Local Patterns', 'generateblocks-pro' ),
 					'parent_item_colon'   => __( 'Parent Local Pattern', 'generateblocks-pro' ),
@@ -82,7 +82,7 @@ class GenerateBlocks_Pro_Local_Templates {
 				'show_in_nav_menus'   => false,
 				'rewrite'             => false,
 				'hierarchical'        => false,
-				'show_in_menu'        => 'generateblocks',
+				'show_in_menu'        => false,
 				'show_in_admin_bar'   => true,
 				'show_in_rest'        => true,
 				'capabilities' => array(
@@ -106,32 +106,49 @@ class GenerateBlocks_Pro_Local_Templates {
 	}
 
 	/**
-	 * Add a Local Templates tab to the GB Dashboard tabs.
-	 *
-	 * @param array $tabs The existing tabs.
+	 * Trick the WordPress menu to highlight our Patterns menu item
+	 * when we're dealing with collections or categories.
 	 */
-	public function add_tab( $tabs ) {
+	public function fix_menu() {
+		global $parent_file, $submenu_file, $post_type;
+
 		$screen = get_current_screen();
 
-		$tabs['local-templates'] = array(
-			'name' => __( 'Local Patterns', 'generateblocks-pro' ),
-			'url' => admin_url( 'edit.php?post_type=gblocks_templates' ),
-			'class' => 'edit-gblocks_templates' === $screen->id ? 'active' : '',
-		);
-
-		return $tabs;
+		if ( 'edit-gblocks_templates' === $screen->id ) {
+			$parent_file = 'generateblocks'; // phpcs:ignore -- Override necessary.
+			$submenu_file = 'edit.php?post_type=wp_block'; // phpcs:ignore -- Override necessary.
+		}
 	}
 
 	/**
-	 * Add to our Dashboard pages.
-	 *
-	 * @since 1.0.0
-	 * @param array $pages The existing pages.
+	 * Add a link to the new patterns.
 	 */
-	public function add_to_dashboard_pages( $pages ) {
-		$pages[] = 'edit-gblocks_templates';
+	public function add_scripts() {
+		$screen = get_current_screen();
 
-		return $pages;
+		if ( 'edit-gblocks_templates' !== $screen->id ) {
+			return;
+		}
+		?>
+		<script>
+			document.addEventListener( 'DOMContentLoaded', () => {
+				const button = document.querySelector( '.page-title-action' );
+
+				if ( ! button ) {
+					return;
+				}
+
+				button.style.pointerEvents = 'none';
+				button.style.opacity = '0.5';
+
+				const newPatternsButton = document.createElement( 'a' );
+				newPatternsButton.classList.add( 'page-title-action' );
+				newPatternsButton.href = '<?php echo esc_url( admin_url( 'edit.php?post_type=wp_block' ) ); ?>';
+				newPatternsButton.textContent = '<?php echo esc_html( __( 'New Pattern Library', 'generateblocks-pro' ) ); ?>';
+				button.parentNode.insertBefore( newPatternsButton, button );
+			} );
+		</script>
+		<?php
 	}
 }
 

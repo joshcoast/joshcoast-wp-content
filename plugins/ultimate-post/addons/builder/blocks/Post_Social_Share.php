@@ -83,8 +83,16 @@ class Post_Social_Share {
         $post_link =home_url(esc_url_raw($_SERVER['REQUEST_URI'])); //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
         $total_share = get_post_meta($post_id, 'share_count', true);
         $total_share = $total_share ? $total_share : 0;
+
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['shareLabelStyle'] = isset($attr['shareLabelStyle']) ? sanitize_html_class( $attr['shareLabelStyle'] ) : '';
+        $allowed_html_tags = ultimate_post()->ultp_allowed_html_tags();
+        $attr['shareCountLabel'] = wp_kses($attr['shareCountLabel'], $allowed_html_tags);
         
-        $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+        $wrapper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"]:'').''.( $attr["align"] ? ' align' .$attr["align"]:'').'">';
             $wrapper_before .= '<div class="ultp-block-wrapper">';
                 $wrapper_content .= '<div class="ultp-post-share">';
                     $wrapper_content .= '<div class="ultp-post-share-layout ultp-inline-'.($attr["disInline"]?'true':'false').' '.($attr['stopSticky'] && $attr['enableSticky'] ? 'ultp-disable-sticky-footer' : '').'">';
@@ -104,7 +112,9 @@ class Post_Social_Share {
                         $wrapper_content .= '<div class="ultp-post-share-item-inner-block" postId="'.$post_id.'" count="'.$total_share.'">';
 
                             foreach ($attr["repetableField"] as $key => $value) {
-                                $wrapper_content .= '<div class="ultp-post-share-item ultp-repeat-'.$key.' ultp-social-'.$value["type"].'">';
+                                $value["type"] = sanitize_html_class( $value["type"] );
+                                $value['label'] = wp_kses($value['label'], $allowed_html_tags);
+                                $wrapper_content .= '<div class="ultp-post-share-item ultp-repeat-'.sanitize_html_class( $key ).' ultp-social-'.$value["type"].'">';
                                     $wrapper_content .= '<a href="javascript:" class="ultp-post-share-item-'.$value["type"].'" url="'.$this->share_link($value['type'], $post_link).'">';
                                         $wrapper_content .= '<span class="ultp-post-share-item-icon">'.ultimate_post()->svg_icon($value['type']).'</span>';
                                         $wrapper_content .= ''.$value['enableLabel'] ? '<span class="ultp-post-share-item-label">'.$value['label'].'</span>' : "".' ';

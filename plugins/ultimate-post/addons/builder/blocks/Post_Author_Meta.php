@@ -61,9 +61,15 @@ class Post_Author_Meta {
         $block_name = 'post-author-meta';
         $wrapper_before = $wrapper_after = $content = '';
         $author_id = get_post_field('post_author' , get_the_ID());
+
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['authMetaLabelText'] = wp_kses($attr['authMetaLabelText'], ultimate_post()->ultp_allowed_html_tags());
         
         if ($author_id) {
-            $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+            $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"]:'' ).''.( $attr["align"] ? ' align' .$attr["align"]:'' ).'">';
                 $wrapper_before .= '<div class="ultp-block-wrapper">';
                     $content .= '<span class="ultp-authMeta-count">';
                         if ($attr["authMetaIconShow"] && ($attr["authMetaIconStyle"] != '')) {

@@ -483,7 +483,8 @@ class Styles {
 
 		// preset Colors
 		$ultpPresetColors = get_option('ultpPresetColors', []);
-		$rootCSS = ( isset($ultpPresetColors['rootCSS']) && $ultpPresetColors['rootCSS'] ) ? $ultpPresetColors['rootCSS'] : '{}';
+		
+		$rootCSS = ( isset($ultpPresetColors['rootCSS']) && $ultpPresetColors['rootCSS'] ) ? $ultpPresetColors['rootCSS'] : ':root { --postx_preset_Base_1_color: #f4f4ff; --postx_preset_Base_2_color: #dddff8; --postx_preset_Base_3_color: #B4B4D6; --postx_preset_Primary_color: #3323f0; --postx_preset_Secondary_color: #4a5fff; --postx_preset_Tertiary_color: #FFFFFF; --postx_preset_Contrast_3_color: #545472; --postx_preset_Contrast_2_color: #262657; --postx_preset_Contrast_1_color: #10102e; --postx_preset_Over_Primary_color: #ffffff;  }';
 		$savedDLMode = ( isset($global['enableDark']) && $global['enableDark'] ) ? 'ultpdark' : 'ultplight';
 		$localDLMode = isset($_COOKIE['ultplocalDLMode']) ? $_COOKIE['ultplocalDLMode'] : $savedDLMode;
 		
@@ -505,13 +506,13 @@ class Styles {
 		$ultpPresetGradients = get_option('ultpPresetGradients', []);
 		wp_register_style( 'ultp-preset-gradient-style', false, array(), ULTP_VER );
 		wp_enqueue_style( 'ultp-preset-gradient-style' );
-		wp_add_inline_style( 'ultp-preset-gradient-style', isset($ultpPresetGradients['rootCSS']) && $ultpPresetGradients['rootCSS'] ? $ultpPresetGradients['rootCSS'] : '{}' );
+		wp_add_inline_style( 'ultp-preset-gradient-style', isset($ultpPresetGradients['rootCSS']) && $ultpPresetGradients['rootCSS'] ? $ultpPresetGradients['rootCSS'] : ':root { --postx_preset_Primary_to_Secondary_to_Right_gradient: linear-gradient(90deg, var(--postx_preset_Primary_color) 0%, var(--postx_preset_Secondary_color) 100%); --postx_preset_Primary_to_Secondary_to_Bottom_gradient: linear-gradient(180deg, var(--postx_preset_Primary_color) 0%, var(--postx_preset_Secondary_color) 100%); --postx_preset_Secondary_to_Primary_to_Right_gradient: linear-gradient(90deg, var(--postx_preset_Secondary_color) 0%, var(--postx_preset_Primary_color) 100%); --postx_preset_Secondary_to_Primary_to_Bottom_gradient: linear-gradient(180deg, var(--postx_preset_Secondary_color) 0%, var(--postx_preset_Primary_color) 100%); --postx_preset_Cold_Evening_gradient: linear-gradient(0deg, rgb(12, 52, 131) 0%, rgb(162, 182, 223) 100%, rgb(107, 140, 206) 100%, rgb(162, 182, 223) 100%); --postx_preset_Purple_Division_gradient: linear-gradient(0deg, rgb(112, 40, 228) 0%, rgb(229, 178, 202) 100%); --postx_preset_Over_Sun_gradient: linear-gradient(60deg, rgb(171, 236, 214) 0%, rgb(251, 237, 150) 100%); --postx_preset_Morning_Salad_gradient: linear-gradient(-255deg, rgb(183, 248, 219) 0%, rgb(80, 167, 194) 100%); --postx_preset_Fabled_Sunset_gradient: linear-gradient(-270deg, rgb(35, 21, 87) 0%, rgb(68, 16, 122) 29%, rgb(255, 19, 97) 67%, rgb(255, 248, 0) 100%);  }' );
 		
 		// preset Typos
 		$ultpPresetTypos = get_option('ultpPresetTypos', []);
 		wp_register_style( 'ultp-preset-typo-style', false, array(), ULTP_VER );
 		wp_enqueue_style( 'ultp-preset-typo-style' );
-		wp_add_inline_style( 'ultp-preset-typo-style', isset($ultpPresetTypos['presetTypoCSS']) && $ultpPresetTypos['presetTypoCSS'] ? $ultpPresetTypos['presetTypoCSS'] : '{}'  );
+		wp_add_inline_style( 'ultp-preset-typo-style', isset($ultpPresetTypos['presetTypoCSS']) && $ultpPresetTypos['presetTypoCSS'] ? $ultpPresetTypos['presetTypoCSS'] : '@import url(\'https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i\'); :root { --postx_preset_Heading_typo_font_family: Roboto; --postx_preset_Heading_typo_font_family_type: sans-serif; --postx_preset_Heading_typo_font_weight: 600; --postx_preset_Heading_typo_text_transform: capitalize; --postx_preset_Body_and_Others_typo_font_family: Roboto; --postx_preset_Body_and_Others_typo_font_family_type: sans-serif; --postx_preset_Body_and_Others_typo_font_weight: 400; --postx_preset_Body_and_Others_typo_text_transform: lowercase; --postx_preset_body_typo_font_size_lg: 16px; --postx_preset_paragraph_1_typo_font_size_lg: 12px; --postx_preset_paragraph_2_typo_font_size_lg: 12px; --postx_preset_paragraph_3_typo_font_size_lg: 12px; --postx_preset_heading_h1_typo_font_size_lg: 42px; --postx_preset_heading_h2_typo_font_size_lg: 36px; --postx_preset_heading_h3_typo_font_size_lg: 30px; --postx_preset_heading_h4_typo_font_size_lg: 24px; --postx_preset_heading_h5_typo_font_size_lg: 20px; --postx_preset_heading_h6_typo_font_size_lg: 16px; }'  );
 	}
 
 	/**

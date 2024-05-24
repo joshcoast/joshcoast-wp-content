@@ -153,9 +153,6 @@ class Builder {
     }
 
     function init_metabox_callback() {
-        $all_types = get_post_types( array( 'public' => true ), 'names' );
-        
-        $post_type = array_diff_key($all_types, array('page' => 'page', 'attachment' => 'attachment' ));
         $title = '<div class="ultp-add-media-image-head"><img src="'.ULTP_URL.'assets/img/logo-sm.svg" /><span>PostX Settings</span></div>';
 
         add_meta_box(
@@ -169,8 +166,9 @@ class Builder {
             'ultp-feature-video',
             $title,
             array($this, 'video_source_callback'),
-            $post_type,
-            'side'
+            'post',
+            'side',
+            'high'
         );
     }
 

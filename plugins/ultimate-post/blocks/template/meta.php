@@ -14,6 +14,12 @@ if ( $attr['metaShow'] ) {
         $metaCondition = $idx == 0;
     }
 
+    $attr["metaAuthorPrefix"] = wp_kses($attr["metaAuthorPrefix"],  ultimate_post()->ultp_allowed_html_tags());
+    $attr['metaSeparator'] = sanitize_html_class( $attr['metaSeparator'] );
+    $attr['metaStyle'] = sanitize_html_class( $attr['metaStyle'] );
+    $attr['className'] = isset( $attr['className'] ) ? sanitize_html_class( $attr['className'] ) : '';
+
+
     $avatar         = get_avatar_url($user_id);
     $meta = $metaCondition ? $attr['metaList'] : ( isset($attr['metaListSmall']) ? $attr['metaListSmall'] : $attr['metaList'] );
     $meta = json_decode($meta);

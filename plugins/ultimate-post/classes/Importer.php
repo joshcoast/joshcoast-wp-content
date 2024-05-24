@@ -192,6 +192,7 @@ class Importer {
                 'body' => array(
                     'type' => 'site_posts',
                     'license' => get_option('edd_ultp_license_key'),
+                    'ultp_ver' => ULTP_VER,
                 )
             )
         );
@@ -244,6 +245,7 @@ class Importer {
                 'timeout' => 120,
                 'body' => array(
                     'license' => get_option('edd_ultp_license_key'),
+                    'ultp_ver' => ULTP_VER,
                 )
             )
         );
@@ -588,7 +590,7 @@ class Importer {
                     if ( get_post_type( $post_id ) == 'ultp_builder' ) {
                         $conditions = get_option('ultp_builder_conditions', array());
                         $builder_type = get_post_meta( $post_id, '__ultp_builder_type', true );
-                        if ( isset($builder_type) && isset($conditions) && isset($conditions[$builder_type]) && isset($conditions[$builder_type][$post_id])) {
+                        if ( isset($conditions[$builder_type][$post_id]) ) {
                             unset($conditions[$builder_type][$post_id]);
                             update_option('ultp_builder_conditions', $conditions);
                         }
@@ -636,6 +638,7 @@ class Importer {
                 'id'   => $id, 
                 'type' => 'single',
                 'license' => get_option('edd_ultp_license_key'),
+                'ultp_ver' => ULTP_VER,
             );
             $response = wp_remote_get(
                 $api_endpoint.'/wp-json/importer/single', 

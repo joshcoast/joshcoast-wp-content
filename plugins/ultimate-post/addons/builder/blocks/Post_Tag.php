@@ -58,7 +58,14 @@ class Post_Tag {
         $tag_list = get_the_tag_list('','');
 
         if ($tag_list) {
-            $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['tagLabel'] = wp_kses($attr['tagLabel'], ultimate_post()->ultp_allowed_html_tags());
+            
+            $wrapper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ? ' '.$attr["className"]:'').''.( $attr["align"] ? ' align' .$attr["align"] : '' ).'">';
                 $wrapper_before .= '<div class="ultp-block-wrapper">';
                     $content .= '<div class="ultp-builder-tag">';
                         if($attr["tagIconShow"]){

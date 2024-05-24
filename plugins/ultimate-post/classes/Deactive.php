@@ -30,20 +30,7 @@ class Deactive{
 	 */
     public function __construct() {
         add_action( 'admin_footer', array( $this, 'get_source_data_callback' ) );
-
-		$is_collect = ultimate_post()->get_tran('wpxpo_data_collect');
-
-		$is_frequency = get_transient( 'wpxpo_data_collect_every' );
-		if ($is_frequency == false && $is_collect == 'yes') {
-			add_action( 'init', array( $this, 'send_frequency_plugin_data' ) );
-			set_transient( 'wpxpo_data_collect_every', 'yes', MONTH_IN_SECONDS ); // every 30 days
-		}
-		
 		add_action( 'wp_ajax_ultp_deactive_plugin', array( $this, 'send_plugin_data' ) );
-	}
-
-	public function send_frequency_plugin_data() {
-		$this->send_plugin_data( 'allow' );
 	}
 
 
@@ -88,7 +75,7 @@ class Deactive{
 	 */
 	public function send_plugin_data( $type , $site = '' ) {
 		$data = $this->get_data();
-		$data['site_type'] = $site ? $site : get_option( '__ultp_site_type' );
+		$data['site_type'] = $site ? $site : get_option( '__ultp_site_type', '' );
 
 		$data['type'] = $type ? $type : 'deactive';
 		$form_data = isset($_POST) ? $this->sanitize_array($_POST) : array(); //phpcs:Ignore

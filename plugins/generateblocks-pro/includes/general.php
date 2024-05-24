@@ -33,19 +33,13 @@ function generateblocks_pro_do_block_editor_assets() { // phpcs:ignore
 		unset( $deps[3] );
 	}
 
-	$assets_file = GENERATEBLOCKS_PRO_DIR . 'dist/blocks.asset.php';
-	$compiled_assets = file_exists( $assets_file )
-		? require $assets_file
-		: false;
-
-	$assets =
-		isset( $compiled_assets['dependencies'] ) &&
-		isset( $compiled_assets['version'] )
-		? $compiled_assets
-		: array(
+	$assets = generateblocks_pro_get_enqueue_assets(
+		'blocks',
+		[
 			'dependencies' => $deps,
 			'version' => filemtime( GENERATEBLOCKS_PRO_DIR . 'dist/blocks.js' ),
-		);
+		]
+	);
 
 	wp_enqueue_script(
 		'generateblocks-pro',
@@ -80,6 +74,12 @@ function generateblocks_pro_do_block_editor_assets() { // phpcs:ignore
 			'generateblocksProVersion' => GENERATEBLOCKS_PRO_VERSION,
 			'blockStyles' => function_exists( 'generateblocks_get_default_styles' ) ? generateblocks_get_default_styles() : array(),
 			'showIncompatibleGlobalStyles' => apply_filters( 'generateblocks_show_incompatible_global_styles', false ),
+			'useLegacyPatternLibrary' => generateblocks_pro_has_legacy_patterns(),
+			'adminUrl' => admin_url(),
+			'canManageStyles' => GenerateBlocks_Pro_Styles::can_manage_styles(),
+			'mediaQueries' => function_exists( 'generateblocks_get_media_queries' )
+				? generateblocks_get_media_queries()
+				: [],
 		)
 	);
 

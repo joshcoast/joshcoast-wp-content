@@ -67,7 +67,7 @@ class Post_Slider_1{
             'headingText' => 'Post Slider #1',
             'headingURL' => '',
             'headingBtnText' => 'View More',
-            'headingStyle' => 'style9',
+            'headingStyle' => 'style1',
             'headingTag' => 'h2',
             'headingAlign' => 'left',
             'subHeadingShow' => false,
@@ -185,7 +185,23 @@ class Post_Slider_1{
         $slides = is_object($attr['slidesToShow']) ? json_decode(wp_json_encode($attr['slidesToShow']),true) : $attr['slidesToShow'];
     
         if ($recent_posts->have_posts() ) {
-            $wraper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['contentTag'] = in_array( $attr['contentTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['contentTag'] : 'div';
+            $attr['imgOverlayType'] = sanitize_html_class( $attr['imgOverlayType'] );
+            $attr['slideSpeed'] = sanitize_html_class( $attr['slideSpeed'] );
+            $attr['arrows'] =  $attr['arrows'] == true ;
+            $attr['dots'] =  $attr['dots'] == true ;
+            $attr['autoPlay'] =  $attr['autoPlay'] == true ;
+            $attr['fade'] =  $attr['fade'] == true ;
+            $attr['readMoreText'] = wp_kses($attr['readMoreText'], ultimate_post()->ultp_allowed_html_tags());
+            $attr['contentVerticalPosition'] = sanitize_html_class( $attr['contentVerticalPosition'] );
+            $attr['contentHorizontalPosition'] = sanitize_html_class( $attr['contentHorizontalPosition'] );
+
+            $wraper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.( $attr["align"] ? ' align' .$attr["align"]:'' ).''.( $attr["className"] ?' '.$attr["className"]: '' ).'">';
                 $wraper_before .= '<div class="ultp-block-wrapper">';
                     if ($attr['headingShow']) {
                         $wraper_before .= '<div class="ultp-heading-filter">';
@@ -195,7 +211,7 @@ class Post_Slider_1{
                         $wraper_before .= '</div>';
                     }
                     
-                    $wraper_before .= '<div class="ultp-block-items-wrap" data-arrows="'.$attr['arrows'].'" data-dots="'.$attr['dots'].'" data-autoplay="'.$attr['autoPlay'].'" data-slidespeed="'.$attr['slideSpeed'].'" data-fade="'.$attr['fade'].'" data-slidelg="'.(isset($slides['lg'])?$slides['lg']:1).'" data-slidesm="'.(isset($slides['sm'])?$slides['sm']:1).'" data-slidexs="'.(isset($slides['xs'])?$slides['xs']:1).'">';
+                    $wraper_before .= '<div class="ultp-block-items-wrap" data-arrows="'.$attr['arrows'].'" data-dots="'.$attr['dots'].'" data-autoplay="'.$attr['autoPlay'].'" data-slidespeed="'.$attr['slideSpeed'].'" data-fade="'.$attr['fade'].'" data-slidelg="'.(isset($slides['lg']) ? sanitize_html_class( $slides['lg'] ) : 1).'" data-slidesm="'.(isset($slides['sm']) ? sanitize_html_class( $slides['sm'] ) : 1).'" data-slidexs="'.(isset($slides['xs']) ? sanitize_html_class( $slides['xs'] ) : 1).'">';
                         $idx = $noAjax ? 1 : 0;
                         while ( $recent_posts->have_posts() ): $recent_posts->the_post();
                             

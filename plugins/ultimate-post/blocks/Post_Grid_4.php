@@ -67,7 +67,7 @@ class Post_Grid_4{
             'headingText' =>  'Post Grid #4',
             'headingURL' =>  '',
             'headingBtnText' =>   'View More',
-            'headingStyle' =>  'style9',
+            'headingStyle' =>  'style1',
             'headingTag' =>  'h2',
             'headingAlign' =>   'left',
             'subHeadingShow' =>  false,
@@ -176,6 +176,23 @@ class Post_Grid_4{
             'hideMobile' =>  false,
             'advanceCss' =>  '',
             'currentPostId' =>  '',
+
+            // --------------------------------
+            // Advance Filter Block Compatibility
+            // --------------------------------
+            'advFilterEnable' => false,
+            'querySearch' =>  '',
+
+            // --------------------------------
+            // Pagination block compatibility
+            // --------------------------------
+            'advPaginationEnable' => false,
+            'paginationAjax' => true,
+            'paginationText' =>  'Previous|Next',
+            'loadMoreText' =>  'Load More',
+            'queryNumPosts' =>  (object)['lg'=>3],
+            'queryNumber2' => 4,
+            'notFirstLoad' => false,
         );
     }
 
@@ -214,8 +231,26 @@ class Post_Grid_4{
             $current_unique_posts = $attr['ultp_current_unique_posts'];
         }
         
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['contentTag'] = in_array( $attr['contentTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['contentTag'] : 'div';
+        $attr['layout'] = sanitize_html_class( $attr['layout'] );
+        $attr['imgAnimation'] = sanitize_html_class( $attr['imgAnimation'] );
+        $attr['imgOverlayType'] = sanitize_html_class( $attr['imgOverlayType'] );
+        $attr['popupAutoPlay'] =  $attr['popupAutoPlay'] == true ;
+        $attr['readMoreText'] = wp_kses($attr['readMoreText'], ultimate_post()->ultp_allowed_html_tags());
+        $attr['titleAnimation'] = sanitize_html_class( $attr['titleAnimation'] );
+        $attr['overlayContentPosition'] = sanitize_html_class( $attr['overlayContentPosition'] );
+        $attr['columnFlip'] = $attr['columnFlip'] == true;
+
         if ($recent_posts->have_posts()) {
-            $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+
+            // Pagination Block Html
+            include ULTP_PATH . 'blocks/template/pagination_block.php';
+
+            $wraper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="ultp-post-grid-block wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.( $attr["align"] ? ' align' .$attr["align"]:'').''.( $attr["className"] ? ' '.$attr["className"]:''). '">';
                 $wraper_before .= '<div class="ultp-block-wrapper">';
 
                     // Loading
@@ -339,6 +374,10 @@ class Post_Grid_4{
                         if($attr['queryUnique']) {
                             $post_loop .= "<span style='display: none;' class='ultp-current-unique-posts' data-ultp-unique-ids= ".wp_json_encode($unique_ID)." data-current-unique-posts= ".wp_json_encode($current_unique_posts)."> </span>";
                         }
+
+                    if ( $attr['advPaginationEnable'] && ($attr['paginationType'] == 'loadMore')) {
+                        $wraper_after .= '<span class="ultp-loadmore-insert-before"></span>';
+                    }
     
                     $wraper_after .= '</div>';//ultp-block-items-wrap
               
@@ -348,6 +387,7 @@ class Post_Grid_4{
                     }
 
                 $wraper_after .= '</div>';
+                $wraper_after .= $pagi_block_html;
             $wraper_after .= '</div>';
 
             wp_reset_query();

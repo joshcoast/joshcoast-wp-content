@@ -3,9 +3,9 @@ Contributors: edge22
 Donate link: https://generateblocks.com
 Tags: blocks, gutenberg, container, headline, grid, columns, page builder, wysiwyg, block editor
 Requires at least: 5.9
-Tested up to: 6.2
-Requires PHP: 7.2
-Stable tag: 1.6.0
+Tested up to: 6.5
+Requires PHP: 7.4
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,18 @@ Check out our [documentation](https://docs.generateblocks.com) for more informat
 To learn how to install GenerateBlocks Pro, check out our documentation [here](https://docs.generateblocks.com/article/installing-generateblocks-pro).
 
 == Changelog ==
+
+= 1.7.0 =
+* Feature: New Global Styles system
+* Feature: Extend new Pattern Library with Pro collection
+* Feature: Use core patterns post type for local patterns
+* Feature: Add "collection" taxonomy to the core patterns post type
+* Feature: Add necessary a11y attributes to tabs/accordions by default
+* Fix: Wrong text domains
+* Fix: Use aria-selected in for tabs
+* Deprecation: Existing Global Styles system
+* Deprecation: Existing local patterns post type
+* Deprecation: Existing Pattern Library block
 
 = 1.6.0 =
 * Feature: Add FAQ schema option to accordions

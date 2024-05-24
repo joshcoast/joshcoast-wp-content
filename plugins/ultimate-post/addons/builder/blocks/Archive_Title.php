@@ -112,7 +112,14 @@ class Archive_Title{
         $wraper_before = $wraper_after = $post_loop = '';
         $block_name = 'archive-title';
 
-        $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['titleTag'] = in_array( $attr['titleTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['titleTag'] : 'h1';
+        $attr['layout'] = sanitize_html_class( $attr['layout'] );
+        $attr['prefixText'] = wp_kses($attr['prefixText'], ultimate_post()->ultp_allowed_html_tags());
+
+        $wraper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.( $attr["align"] ? ' align' .$attr["align"]:'' ).''.( $attr["className"] ?' '.$attr["className"]:'' ).'">';
             $wraper_before .= '<div class="ultp-block-wrapper">';
             $wraper_before .= '<div class="ultp-block-archive-title ultp-archive-layout-'.$attr['layout'].'">';
 

@@ -87,6 +87,7 @@ class Post_Module_2{
             'showSeoMeta' => false,
             'showSmallExcerpt' => false,
             'showFullExcerpt' => false,
+            'smallExcerptLimit' => 20,
             'excerptLimit' => 20,
             'excerptBigColor' => '#fff',
             
@@ -184,6 +185,20 @@ class Post_Module_2{
             'hideMobile' => false,
             'advanceCss' => '',
             'currentPostId' =>  '',
+
+                        // --------------------------------
+            // Advance Filter Block Compatibility
+            // --------------------------------
+            'advFilterEnable' => false,
+            'querySearch' =>  '',
+
+            // --------------------------------
+            // Pagination block compatibility
+            // --------------------------------
+            'advPaginationEnable' => false,
+            'paginationAjax' => true,
+            'paginationText' =>  'Previous|Next',
+            'loadMoreText' =>  'Load More',
         );
     }
 
@@ -224,8 +239,23 @@ class Post_Module_2{
         }
 
         if ($recent_posts->have_posts()) {
+
+            // Pagination Block Html
+            include ULTP_PATH . 'blocks/template/pagination_block.php';
+
+            $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+            $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+            $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+            $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+            $attr['contentTag'] = in_array( $attr['contentTag'],  ultimate_post()->ultp_allowed_block_tags() ) ? $attr['contentTag'] : 'div';
+            $attr['layout'] = sanitize_html_class( $attr['layout'] );
+            $attr['imgAnimation'] = sanitize_html_class( $attr['imgAnimation'] );
+            $attr['imgOverlayType'] = sanitize_html_class( $attr['imgOverlayType'] );
+            $attr['popupAutoPlay'] =  $attr['popupAutoPlay'] == true ;
+            $attr['readMoreText'] = wp_kses($attr['readMoreText'], ultimate_post()->ultp_allowed_html_tags());
+            $attr['varticalAlign'] = sanitize_html_class( $attr['varticalAlign'] );
             
-            $wraper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.(isset($attr["align"])? ' align' .$attr["align"]:'').''.(isset($attr["className"])?' '.$attr["className"]:'').'">';
+            $wraper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="ultp-post-grid-block wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].''.( $attr["align"] ? ' align' .$attr["align"]:'' ).''.( $attr["className"] ?' '.$attr["className"]:'' ) . '">';
                 $wraper_before .= '<div class="ultp-block-wrapper">';
 
                     // Loading
@@ -329,11 +359,14 @@ class Post_Module_2{
                                         if ($title && $attr['titleShow'] && $attr['titlePosition'] == 0) {
                                             include ULTP_PATH.'blocks/template/title.php';
                                         }
-                                        // Excerpt
-                                        if (($idx == 0 || $attr['showSmallExcerpt']) && $attr['excerptShow']) {
+                                        // Large Excerpt
+                                        if ($idx == 0 && $attr['excerptShow']) {
                                             $post_loop .= '<div class="ultp-block-excerpt">'.ultimate_post()->get_excerpt($post_id, $attr['showSeoMeta'], $attr['showFullExcerpt'], $attr['excerptLimit']).'</div>';
                                         }
-
+                                        // Small Excerpt
+                                        if ($idx != 0 && $attr['showSmallExcerpt']) {
+                                            $post_loop .= '<div class="ultp-block-excerpt">'.ultimate_post()->get_excerpt($post_id, $attr['showSeoMeta'], $attr['showFullExcerpt'], $attr['smallExcerptLimit']).'</div>';
+                                        }
                                         // Read More
                                         if ($attr['readMore'] && ($idx == 0 || $attr['showSmallBtn'])) {
                                             $post_loop .= '<div class="ultp-block-readmore"><a aria-label="'.$title.'" href="'.$titlelink.'" '.($attr['openInTab'] ? 'target="_blank"' : '').'>'.($attr['readMoreText'] ? $attr['readMoreText'] : esc_html__( "Read More", "ultimate-post" )).ultimate_post()->svg_icon($attr['readMoreIcon']).'</a></div>';
@@ -361,8 +394,13 @@ class Post_Module_2{
                         }
                         $bigloop = '<div class="ultp-big-post-module2">'.$bigloop.'</div>';
                         $post_loop = $bigloop.'<div class="ultp-small-post-module2">'.$post_loop.'</div>';
+
+                        if ( $attr['advPaginationEnable'] && ($attr['paginationType'] == 'loadMore')) {
+                            $wraper_after .= '<span class="ultp-loadmore-insert-before"></span>';
+                        }
                         
                     $wraper_after .= '</div>';//ultp-block-items-wrap
+                    $wraper_after .= $pagi_block_html;
                 $wraper_after .= '</div>';
             $wraper_after .= '</div>';
 

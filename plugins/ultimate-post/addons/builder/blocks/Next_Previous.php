@@ -27,8 +27,6 @@ class Next_Previous {
                 Navigation 
             ============================*/
             'titlePosition' => true,
-            'prevContentAlign' => "left",
-            'nextContentAlign' => "right",
             // Previous
             'prevHeadText' => 'Previous Post',
             // Next
@@ -76,10 +74,20 @@ class Next_Previous {
             $next_prev_img .= "next-prev-img";
         }
 
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['arrowIconStyle'] = sanitize_html_class( $attr['arrowIconStyle'] );
+        $attr['layout'] = sanitize_html_class( $attr['layout'] );
+        $allowed_html_tags = ultimate_post()->ultp_allowed_html_tags();
+        $attr['prevHeadText'] = wp_kses($attr['prevHeadText'], $allowed_html_tags);
+        $attr['nextHeadText'] = wp_kses($attr['nextHeadText'], $allowed_html_tags);
+
         $arrowLeft = '<span class="ultp-icon ultp-icon-'.$attr['arrowIconStyle'].'">'.ultimate_post()->svg_icon('left'.$attr['arrowIconStyle']).'</span>';
         $arrowRight = '<span class="ultp-icon ultp-icon-'.$attr['arrowIconStyle'].'">'.ultimate_post()->svg_icon('right'.$attr['arrowIconStyle']).'</span>';
 
-        $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+        $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"]:'' ).''.( $attr["align"] ? ' align' .$attr["align"]:'' ).'">';
             $wrapper_before .= '<div class="ultp-block-wrapper">';
                 $content .= '<div class="ultp-block-nav '.$next_prev_img.'">';
                     $content .= $this->renderHtml($attr, $arrowLeft, $arrowRight, true);
@@ -98,7 +106,8 @@ class Next_Previous {
         $output = '';
         $post_data = $left ? get_previous_post() : get_next_post();
         if ($post_data) {
-            $imageData = '<div class="ultp-nav-img">';
+            $img_overlay = $attr['iconShow'] && $attr['layout'] == 'style2' ? " ultp-npb-overlay" : '';
+            $imageData = '<div class="ultp-nav-img'.$img_overlay.'">';
                 $imageData .= ($attr['iconShow'] && $attr['layout'] == 'style2') ? ($left ? $arrowLeft : $arrowRight) : '';
                 if (has_post_thumbnail($post_data->ID)) {
                     $imageData .= $attr['imageShow'] ? get_the_post_thumbnail($post_data->ID) : '';

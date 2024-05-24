@@ -14,9 +14,10 @@ class Post_Featured_Image {
             /*============================
                 Post Featured Image Setting
             ============================*/
+            'defImgShow' => false,
             'altText'  => 'Image',
-            'imgScale' => 'cover',
-            'imgAlign' => (object)['lg' =>'left'],
+            'imgCrop' => 'full',
+            'imgSrcset' => false,
             
             /*============================
                 Dynamic Caption 
@@ -58,28 +59,35 @@ class Post_Featured_Image {
         $block_name = 'post-image';
         $wrapper_before = $wrapper_after = $content = '';
 
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['altText'] = wp_kses($attr['altText'], ultimate_post()->ultp_allowed_html_tags());
+
         $post_video = get_post_meta(get_the_ID(), '__builder_feature_video', true);
         $caption = get_post_meta(get_the_ID(), '__builder_feature_caption', true); 
 
         $embeded = $post_video ? ultimate_post()->get_embeded_video($post_video, false, true, false, true, true, false, true, array('width' => array('width' => $attr["videoWidth"])) ) : '';
         $post_thumb_id = get_post_thumbnail_id(get_the_ID());
-        $img_content = ultimate_post()->get_image($post_thumb_id, '', '', $attr['altText']);
+        $img_content = ultimate_post()->get_image($post_thumb_id, $attr['imgCrop'], '', $attr['altText'], $attr['imgSrcset']);
         $img_caption = wp_get_attachment_caption($post_thumb_id);
 
-        if ($embeded || has_post_thumbnail()) {
-            $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+        if ( $embeded || has_post_thumbnail() ) {
+            $isvideo = $embeded ? ( isset($attr['defImgShow']) && $attr['defImgShow'] && $post_thumb_id ? false : true ) : false;
+            $wrapper_before .= '<div '.( $attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'' ).' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"]:'' ).''.( $attr["align"] ? ' align' .$attr["align"]:'' ).'">';
                 $wrapper_before .= '<div class="ultp-block-wrapper">';
                     $wrapper_before .= '<div class="ultp-image-wrapper">';
-                        $wrapper_before .= '<div  class="ultp-builder-'.($embeded ? "video": "image").'">';
-                            $content .= '<div class="ultp-'.($embeded ? "video": "image").'-block'.($attr['stickyEnable'] ? " ultp-sticky-video": "").'">';
-                            $content .= $embeded ? $embeded : $img_content;
+                        $wrapper_before .= '<div  class="ultp-builder-'.($isvideo ? "video": "image").'">';
+                            $content .= '<div class="ultp-'.($isvideo ? "video": "image").'-block'.($attr['stickyEnable'] ? " ultp-sticky-video": "").'">';
+                            $content .=  $isvideo ? $embeded : $img_content ;
                         $wrapper_after .= '<span class="ultp-sticky-close"></span></div>';
                         $wrapper_after .= '</div>';
                     $wrapper_after .= '</div>';
 
                     if($attr['enableCaption'] && $img_caption || $caption && $attr['enableVideoCaption']){
                         $wrapper_after .= '<div class="ultp-featureImg-caption">';
-                        $wrapper_after .= $embeded ? $caption : $img_caption;
+                        $wrapper_after .= $isvideo ? $caption : $img_caption;
                         $wrapper_after .= '</div>';
                     }
                 $wrapper_after .= '</div>';

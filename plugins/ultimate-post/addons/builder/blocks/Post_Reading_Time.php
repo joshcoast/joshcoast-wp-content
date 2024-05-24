@@ -52,7 +52,13 @@ class Post_Reading_Time {
         $block_name = 'post-reading-time';
         $wrapper_before = $wrapper_after = $content = '';
 
-        $wrapper_before .= '<div '.($attr['advanceId']?'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].(isset($attr["className"])?' '.$attr["className"]:'').''.(isset($attr["align"])? ' align' .$attr["align"]:'').'">';
+        $attr['className'] = isset($attr['className']) && $attr['className'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['className']) : '';
+        $attr['align'] = isset($attr['align']) && $attr['align'] ? preg_replace('/[^A-Za-z0-9_ -]/', '', $attr['align']) : '';
+        $attr['advanceId'] = isset($attr['advanceId']) ? sanitize_html_class( $attr['advanceId'] ) : '';
+        $attr['blockId'] = isset($attr['blockId']) ? sanitize_html_class( $attr['blockId'] ) : '';
+        $attr['readLabelText'] = wp_kses($attr['readLabelText'], ultimate_post()->ultp_allowed_html_tags());
+
+        $wrapper_before .= '<div '.($attr['advanceId'] ? 'id="'.$attr['advanceId'].'" ':'').' class="wp-block-ultimate-post-'.$block_name.' ultp-block-'.$attr["blockId"].( $attr["className"] ?' '.$attr["className"] : '' ).''.( $attr["align"] ? ' align' .$attr["align"] : '' ).'">';
             $wrapper_before .= '<div class="ultp-block-wrapper">';
                 $content .= '<span class="ultp-read-count">';
                     if ($attr["readIconShow"] && ($attr["readIconStyle"] != '')) {

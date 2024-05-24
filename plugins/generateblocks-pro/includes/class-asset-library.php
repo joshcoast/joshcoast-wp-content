@@ -89,11 +89,19 @@ class GenerateBlocks_Asset_Library {
 		if ( 'generateblocks_page_generateblocks-asset-library' === $screen->id ) {
 			wp_enqueue_media();
 
+			$assets = generateblocks_pro_get_enqueue_assets(
+				'asset-library',
+				[
+					'dependencies' => array( 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-api-fetch' ),
+					'version' => GENERATEBLOCKS_PRO_VERSION,
+				]
+			);
+
 			wp_enqueue_script(
 				'generateblocks-pro-asset-library',
 				GENERATEBLOCKS_PRO_DIR_URL . 'dist/asset-library.js',
-				array( 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-api-fetch' ),
-				GENERATEBLOCKS_PRO_VERSION,
+				$assets['dependencies'],
+				$assets['version'],
 				true
 			);
 

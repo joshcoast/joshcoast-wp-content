@@ -22,19 +22,7 @@ class Caches {
 	 * @since v.1.0.0
 	*/
     public function __construct(){
-        $this->check_premade_sync();
         add_action('rest_api_init', array($this, 'get_template_data'));
-    }
-
-     /*
-	 * Check Sync
-	 * @return NULL
-	 */
-    public function check_premade_sync() {
-        $ultp_premade_packs_fetched = get_transient( 'ultp_premade_packs_fetched' );
-        if($ultp_premade_packs_fetched !== 'ultp_premade_packs_fetched') {
-            $this->fetch_all_data_callback([]);
-        }
     }
 
     /**
@@ -81,6 +69,11 @@ class Caches {
 
                 $upload_dir_url = wp_upload_dir();
                 $dir 			= trailingslashit($upload_dir_url['basedir']) . 'ultp/';
+
+                // sync after 3 days
+                if ( file_exists(trailingslashit(wp_upload_dir()['basedir']) . 'ultp/starter_lists.json') && time() - filemtime(trailingslashit(wp_upload_dir()['basedir']) . 'ultp/starter_lists.json') >= 2 * DAY_IN_SECONDS ) {
+                    $this->fetch_all_data_callback([]);
+                }
                 
                 if ( $type == 'get_starter_lists_nd_design' ) {
                     return array( 
@@ -111,7 +104,6 @@ class Caches {
 	 * @return ARRAY | Data of the Design
 	 */
     public function fetch_all_data_callback($request) {
-        set_transient( 'ultp_premade_packs_fetched', 'ultp_premade_packs_fetched', 2 * DAY_IN_SECONDS );
         $upload = wp_upload_dir();
         $upload_dir = trailingslashit($upload['basedir']) . 'ultp/';
 
@@ -147,15 +139,19 @@ class Caches {
         $file_names = $type == 'all' ? array( 'starter_lists', 'design' ) : array( $type );
         foreach ( $file_names as $key => $name ) {
             if ( $name == 'starter_lists' ) {
-                $response = wp_remote_get(
-                    'https://postxkit.wpxpo.com/wp-json/importer/list', 
+                $response = wp_remote_post(
+                    'https://postxkit.wpxpo.com/wp-json/importer/site_lists', 
                     array( 
-                        'method' => 'GET', 
-                        'timeout' => 120 
+                        'method' => 'POST', 
+                        'timeout' => 120,
+                        'body' => array(
+                            'ultp_ver' => ULTP_VER,
+                        )
+
                     )
                 );
             } else {
-                $response = wp_remote_post( 
+                $response = wp_remote_post(
                     $this->api_endpoint.'design', 
                     array( 
                         'method' => 'POST', 

@@ -61,6 +61,11 @@
     // *************************************
     // Add target blank for upgrade button
     // *************************************
+    const postxMenuHref = $('#toplevel_page_ultp-settings > a').attr('href');
+    if ( postxMenuHref.indexOf("?page=ultp-settings") > 0 ) {
+        $('#toplevel_page_ultp-settings > a').attr('href' , postxMenuHref+'#home' )
+    }
+
     $('#toplevel_page_ultp-settings ul > li > a').each(function (e) {
         if ($(this).attr('href') && $(this).attr('href').indexOf("?page=ultp-settings") > 0) {
             
